@@ -1,0 +1,23 @@
+{
+  "name": "order-suite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "isarray": "^0.0.1",
+    "lit": "^2.8.0",
+    "lit-element": "^3.3.2",
+    "lit-html": "^2.7.5",
+    "page": "^1.11.6",
+    "path-to-regexp": "^1.2.1",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

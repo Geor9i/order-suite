@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/src/styles/root.css">
+    <link rel="stylesheet" href="/src/styles/styles.css">
+    <link rel="stylesheet" href="/src/styles/calendar.css">
+    <link rel="stylesheet" href="/src/styles/order.css">
+    <link rel="stylesheet" href="/src/styles/storeTemplate.css">
+    <link rel="stylesheet" href="/src/styles/inventoryTemplate.css">
+    <script src="/src/app.js" type="module"></script>
+    <title>Next Order</title>
+</head>
+
+<body>
+    <main>
+
+        <section class="inventory-section__inactive">
+            <div class="inventory__main-container">
+                <div class="inventory__start-menu__active">
+                    <div id="inventory__start-menu__create-button" class="inventory__start-menu__selector">
+                        <h1>Create New</h1>
+                    </div>
+                    <div id="inventory__start-menu__edit-button" class="inventory__start-menu__selector">
+                        <h1>Edit</h1>
+                    </div>
+                </div>
+                <!-- Create screen -->
+                <div class="create-store-template__form__inactive">
+                    <label for="store-name__input-field">Enter Store Name</label>
+                    <input class="template__field" type="text" id="store-name__input-field">
+                    <div class="previous-template-password__container__inactive">
+                        <label class="previous-template-password-label" for="previous-template-password">Previous
+                            Password</label>
+                        <input class="template__field" type="password" id="previous-template-password">
+                    </div>
+                    <label for="template-password">Password</label>
+                    <input class="template__field" type="password" id="template-password">
+                    <label for="confirm-template-password">Confirm Password</label>
+                    <input class="template__field" type="password" id="confirm-template-password">
+                    <div class="template__next-button__container">
+                        <button class="template__next-button">Next</button>
+                    </div>
+                </div>
+
+                <div class="store__open-times__form__inactive">
+                    <h1 class="store__open-times__form-header">Farnborough Express</h1>
+                    <div class="store__details__bar">Store Details
+                    </div>
+                    <div class="store__details__container">
+                        <div class="weekday__main__container"></div>
+                    </div>
+                    <div id="analysis-bar" class="store__details__bar">Analysis</div>
+                    <div class="store__details-confirm-button__container">
+                        <button class="store__details-confirm-button">Confirm</button>
+                    </div>
+                </div>
+
+                <div class="inventory-template__create-form__inactive">
+                    <div class="inventory-template__main-container"></div>
+
+                    <!-- Edit screen -->
+                    <div class="edit-store-template__form__inactive">
+                        <h2 id="store-name__edit-template__header">Store:</h2>
+                        <label for="edit-template-password">Password</label>
+                        <input class="template__field" type="password" id="edit-template-password">
+                        <label for="edit-confirm-template-password">Confirm Password</label>
+                        <input class="template__field" type="password" id="edit-confirm-template-password">
+                        <div class="template__logn-button__container">
+                            <button class="template__login-button">Login</button>
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+    </main>
+    <script src="app.js" type="module"></script>
+    <script src="productUsage.js"></script>
+    <script src="appState.js"></script>
+    <script src="functions.js"></script>
+    <script src="calendarMonthMap.js"></script>
+    <script src="calendar.js"></script>
+    <script src="orderRequestForm.js"></script>
+    <script src="OrderPageButtons.js"></script>
+    <script src="DeliveryReportHarvest.js"></script>
+    <script src="searchSideBar.js"></script>
+    <script src="storeTemplateScreen.js"></script>
+    <script src="analysis.js"></script>
+    <script src="inventoryTemplate.js"></script>
+    <script src="invRep.js"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0SAxW2KV5h2y1CAjexLdjNKJO70GNdoE",
+            authDomain: "next-order-4d02b.firebaseapp.com",
+            databaseURL: "https://next-order-4d02b-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "next-order-4d02b",
+            storageBucket: "next-order-4d02b.appspot.com",
+            messagingSenderId: "1019190887523",
+            appId: "1:1019190887523:web:4ac80d9b6781b6a09ea456",
+            measurementId: "G-RD03LGBJC8"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+
+</body>
+
+</html>

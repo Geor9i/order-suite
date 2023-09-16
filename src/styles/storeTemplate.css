@@ -1,0 +1,458 @@
+.inventory-section__inactive {
+    display: none;
+}
+
+.inventory-section__active {
+    display: block;
+}
+
+.inventory__main-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.inventory__start-menu__active {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    width: 80%;
+    height: 45rem;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 60% 40%;
+}
+
+.inventory__start-menu__inactive {
+    display: none;
+}
+
+.inventory__start-menu__selector {
+    display: flex;
+    background-color: rgba(146, 146, 146, 0.9);
+    border: 0.1rem solid rgba(146, 146, 146, 0.2);
+    width: 12rem;
+    height: 12rem;
+    border-radius: 50%;
+    align-items: center;
+    font-size: 1.5rem;
+    text-align: center;
+    color: rgb(209, 209, 209);
+    justify-content: center;
+    box-shadow: inset 0 0 3rem 3rem rgba(179, 179, 179, 0.4);
+    transition: color 1s ease, background-color 0.3s ease, border 0.3s ease, box-shadow 0.30s ease, width 0.2s ease, height 0.2s ease;
+
+}
+
+
+.inventory__start-menu__selector:hover {
+    width: 14rem;
+    height: 14rem;
+    border: 0.2rem solid rgba(205, 248, 193, 0.5);
+    background-color: rgb(13, 224, 24);
+
+    box-shadow: inset 0 0 60px 30px rgba(255, 255, 255, 0.863), inset 0 0 60px 60px rgba(255, 225, 252, 0.068),  inset 5px 0 20px 15px rgba(255, 190, 116, 0.384);
+
+    color: rgb(240, 239, 239);
+
+    text-shadow: 2px 0 1px rgba(70, 70, 70, 0.185), -2px 0 1px rgba(92, 92, 92, 0.185), 2px 0 1px rgba(77, 77, 77, 0.185), -2px 0 1px rgba(0, 0, 0, 0.185),  1px 0 2px rgb(255, 255, 255), -1px 0 2px rgb(255, 255, 255), 0 -2px 5px var(--blue-glow__order-page), 0 2px 5px var(--blue-glow__order-page),  -2px 0 5px var(--blue-glow__order-page), 2px 0 5px var(--blue-glow__order-page);
+
+    transition: color 0.3s ease, background-color 0.1s ease, border 0.1s ease, box-shadow 0.15s ease, width 0.2s ease, height 0.2s ease;
+    cursor: pointer;
+}
+
+.create-store-template__form__inactive {
+    display: none;
+}
+
+.create-store-template__form__active {
+    display: flex;
+    flex-direction: column;
+    width: 35rem;
+    height: auto;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: rgb(192, 192, 192);
+    border: 1px solid black;
+}
+
+.template__field {
+    width: 20rem;
+    height: 2rem;
+}
+
+.previous-template-password__container__inactive {
+    display: none;
+}
+
+.previous-template-password-label {
+    display: block;
+}
+
+.previous-template-password__container__active {
+    text-align: center;
+    display: block;
+}
+
+.template__next-button__container {
+display: flex;
+align-items: center;
+justify-content: center;
+width: 10rem;
+height: 5rem;
+margin: 1rem;
+}
+
+.template__next-button {
+    width: 6rem;
+    height: 3rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.store__open-times__form__inactive {
+    display: none;
+}
+.store__open-times__form__active {
+    display: flex;
+    color: rgb(224, 224, 224);
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: auto;
+    width: 70%;
+    background-color: rgb(204, 204, 204);
+    border: 1px solid black;
+}
+
+.store__open-times__form-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 4rem;
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+    color: rgb(38, 57, 75);
+    background-color: rgb(197, 197, 197);
+}
+
+.store__details__bar {
+font-size: 1.8rem;
+color: rgb(231, 231, 231);
+border-bottom: 1px solid black;
+text-align: center;
+width: 100%;
+background-color: rgb(131, 131, 131);
+cursor: pointer;
+}
+
+.store__details__bar:hover {
+    background-color: rgb(150, 150, 150);
+}
+
+.store__details__container {
+    width: 100%;
+    height: 0rem;
+    overflow: hidden;
+    transition: height 0.3s ease;
+}
+
+.weekday__main__container {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    grid-gap: 5px;
+    grid-template-columns: repeat(7, 1fr);
+    background-color: rgb(255, 255, 255);
+  overflow-x: auto;
+}
+
+.weekday__main__container input, select {
+    color: white;
+}
+.weekday__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 22rem;
+    border: 1px solid black;
+    background-color: rgb(73, 73, 73);
+    text-align: center;
+}
+
+.weekday-button__active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin: 10px 0px;
+    text-align: center;
+    width: 90%;
+    height: 3rem;
+    border: 1px solid black;
+    color: black;
+    background-color: rgb(230, 230, 230);
+    cursor: pointer;
+}
+.weekday-button__inactive {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    text-decoration: line-through;
+    text-decoration-color: rgb(0, 0, 0);
+    text-decoration-thickness: 3px;
+    margin: 10px 0px;
+    width: 90%;
+    height: 3rem;
+    border: 1px solid black;
+    background-color: rgb(80, 80, 80);
+    cursor: pointer;
+}
+
+
+.weekday-button__active:hover {
+    background-color: rgb(250, 250, 250);
+}
+.weekday-button__inactive:hover {
+    background-color: rgb(99, 99, 99);
+}
+
+.store-details__main-container__active {
+    display: block;
+    width: 100%;
+}
+.store-details__main-container__inactive {
+    display: none;
+}
+
+.time-selector__main-container {
+    display: flex;
+    width: 100%;
+}
+.time-selector__inner-container {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    width: 45%;
+}
+.time-selector__inner-container + .time-selector__inner-container {
+    margin-left: 15px;
+}
+
+.time-selector-label {
+    margin: 0;
+    margin-right: 12px;
+}
+
+.time-selector {
+    margin: 0;
+    width: 80%;
+    text-align: center;
+    background-color: rgb(80, 80, 80);
+    color: rgb(255, 255, 255);
+    display: inline-block;
+}
+
+.sales-percentage-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 30px;
+    width: 100%;
+}
+
+.sales-percentage-label {
+    margin: 0;
+    margin-right: 10px;
+    display: inline-block;
+    font-size: 1rem;
+}
+.sales-percentage-input {
+    display: inline-block;
+    background-color: rgba(218, 218, 218, 0.1);
+    font-size: 1rem;
+    font-weight: bold;
+    width: 30%;
+    text-align: right;
+    border: 0;
+}
+.sales-percentage-input::placeholder {
+    color: white;
+    opacity: 1;
+}
+
+.sales-percentage-input-sign {
+    display: inline-block;
+    margin: 0;
+    margin: 0 5px;
+}
+
+.delivery-day-input-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: right;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.delivery-day-label {
+    margin: 0;
+    font-size: 1rem;
+    display: inline-block;
+}
+
+.delivery-day-checkbox {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 10px;
+}
+
+    .delivery-day-info__container__inactive {
+        display: none;
+    }
+    .delivery-day-info__container__active {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+    .delivery-day-arrival-time-text {
+        display: inline-block;
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    .delivery-arrival-selector {
+        background-color: rgb(80, 80, 80);
+        text-align: center;
+        width: 50%;
+        margin: 0;
+    }
+
+    .delivery-arrival-cutoff-time {
+        text-align: center;
+        margin:0;
+        width: 100%;
+        background-color: rgb(80, 80, 80);
+    }
+
+    .delivery-arrival-cutoff-weekday {
+        text-align: center;
+        margin-bottom: 5px;
+        margin:0;
+        width: 100%;
+        background-color: rgb(80, 80, 80);
+    }
+
+   
+    .order-cutoff-details__container, .delivery-day-eta__container {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+
+        margin-bottom: 0.5rem;
+    }
+
+    /* ANALYSIS CONTAINER */
+
+.analysis__container {
+    width: 100%;
+}
+
+.analysis__inner-bar {
+    font-size: 1.2rem;
+    color: rgb(231, 231, 231);
+    text-align: center;
+    width: 100%;
+    background-color: rgb(82, 82, 82);
+    border-bottom: 1px solid black;
+    cursor: pointer;
+    }
+    
+    .analysis__inner-bar:hover {
+        background-color: rgb(97, 97, 97);
+    }
+    
+    .analysis__inner-dropdown {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 0rem;
+        overflow: hidden;
+        transition: height 0.3s ease;
+    }
+
+    .analysis__inner-content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .analysis__inner-content label {
+        font-size: 1.5rem;
+        color: black;
+    }
+    .analysis__inner-content-input {
+        background-color: black;
+        color: white;
+        border-radius: 2%;
+        margin: 1rem;
+        margin-bottom: 0;
+        width: 30%;
+        height: 5rem;
+    }
+    .analysis__inner-content-button {
+        width: 30%;
+        height: 2rem;
+        cursor: pointer;
+    }
+
+    .store__details-confirm-button__container {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 2rem;
+    }
+
+    .store__details-confirm-button {
+        width: 50%;
+        height: 100%;
+        cursor: pointer;
+    }
+/* Edit Template */
+
+
+.edit-store-template__form__inactive {
+    display: none;
+}
+
+.edit-store-template__form__active {
+    display: flex;
+    flex-direction: column;
+    width: 35rem;
+    height: 20rem;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: rgb(192, 192, 192);
+    border: 1px solid black;
+}
+
