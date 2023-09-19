@@ -1,6 +1,9 @@
 export class Processor {
   constructor(utility) {
     this.utility = utility;
+    this.products = null;
+    this.previousSales = null;
+    this.salesForecast = null;
   }
     // FUNCTIONS
 
@@ -40,56 +43,51 @@ export class Processor {
   
     let dataTable;
   
-    outputAreaElement.appendChild(dataTable);
+    // outputAreaElement.appendChild(dataTable);
   
     let currentOrderProducts = {
       counter: 0,
     };
-  
+
     for (let product in products) {
-      let nextOrderDate = findDeliveryDate(orderInvoiceDate, true);
-      let productUsageMap = findDeliveryDate(
-        placementDate,
-        false,
-        true,
-        true,
-        nextOrderDate,
-        true
-      );
+      let nextOrderDate = this.utility.findDeliveryDate(orderInvoiceDate, {asDate: true});
+      let productUsageMap = this.utility.findDeliveryDate(placementDate, {asArray: true, dateTo: nextOrderDate, asDateMap: true});
+      console.log(productUsageMap);
   
       // date object from stored date string!
       let productLastOrderedOn = new Date(products[product].previousOrderDate);
-  
-      let productArrivalDate = findDeliveryDate(productLastOrderedOn, true);
-      productArrivalDate = dateConverter(productArrivalDate, true);
-  
+      let productArrivalDate = this.utility.findDeliveryDate(productLastOrderedOn, {asDate: true});
+      productArrivalDate = this.utility.dateConverter(productArrivalDate,  {deconstruct: true});
       //Pre-define variables to store product object params
-      let onHand = products[product].onHand;
-      let currentDemand = products[product].previousWeeksUsage;
-      let lastOrderQuantity = products[product].previousOrderQuantity;
-      let price = products[product].price;
-      //  let productSize = products[product].case;
-      let quotaReverse = products[product].quotaReverse ? true : false;
-      let dailyUse = products[product].dailyUse;
-      let deviational = 0;
-      if (products[product].sustainAmount) {
-        deviational = products[product].sustainAmount;
+      let currProd = {
+        weeklyUsage: products[product].previousWeeksUsage,
+        onHand: products[product].onHand,
+        currentDemand: products[product].previousWeeksUsage,
+        lastOrderQuantity: products[product].previousOrderQuantity,
+        price: products[product].price,
+        dailyUse: products[product].dailyUse ? products[product].dailyUse : 0,
+        deviational: products[product].sustainAmount ? products[product].sustainAmount : 0,
+        safeQuantity: orderInvoiceDate.getDay() >= 5 ? products[product].safeQuantity * 1 : products[product].safeQuantity
       }
-      let safeQuantity = products[product].safeQuantity;
-      safeQuantity =
-        orderInvoiceDate.getDay() >= 5 ? safeQuantity * 1 : safeQuantity;
+      // let onHand = products[product].onHand;
+      // let currentDemand = products[product].previousWeeksUsage;
+      // let lastOrderQuantity = products[product].previousOrderQuantity;
+      // let price = products[product].price;
+      // //  let productSize = products[product].case;
+      // let quotaReverse = products[product].quotaReverse ? true : false;
+      // let dailyUse = products[product].dailyUse;
+      // let deviational = 0;
+      // if (products[product].sustainAmount) {
+      //   deviational = products[product].sustainAmount;
+      // }
+      // let safeQuantity = products[product].safeQuantity;
+      // safeQuantity =
+      //   orderInvoiceDate.getDay() >= 5 ? safeQuantity * 1 : safeQuantity;
   
       //Map onHand and daily usage figures
-      productUsageDaily(
-        currentDemand,
-        productUsageMap,
-        onHand,
-        lastOrderQuantity,
-        productLastOrderedOn,
-        quotaReverse,
-        dailyUse
-      );
+      this.productUsageDaily(productUsageMap, currProd);
   
+      console.log(productUsageMap);
       //Extract Data for UsageGraph
       productEvolution[product] = productUsageMap;
   
@@ -156,91 +154,90 @@ export class Processor {
 }
     /**======================================================================
      *
-     * @param {Number} weeklyUsage Usage for previous week
      * @param {map} productMap date range map
-     * @param {Number} onHand Current on hand quantity
-     * @param {Number} incomingStock Amount of incoming stock
-     * @param {date} incomingStockDate Arrival date for incoming stock
-     * @param {boolean} quotaReverse Inverse week and weekend usage!
-     * @param {number} dailyUse Added usage regardless of stats!
+     * @param {Object} p current product
+     * @param {Number} [p.weeklyUsage] Usage for previous week
+     * @param {Number} [p.onHand] Current on hand quantity
+     * @param {Number} [p.incomingStock] Amount of incoming stock
+     * @param {date} [p.incomingStockDate] Arrival date for incoming stock
+     * @param {number} [p.dailyUse] Added usage regardless of stats!
      * @returns Filled map with daily requirement data!
      */
      productUsageDaily(
-      weeklyUsage,
-      productMap,
-      onHand,
-      incomingStock,
-      incomingStockDate,
-      quotaReverse,
-      dailyUse
+       productMap,
+       p
+      // weeklyUsage,
+      // onHand,
+      // incomingStock,
+      // incomingStockDate,
+      // quotaReverse,
+      // dailyUse
     ) {
       //Check if there is incoming stock
-      if (incomingStock > 0) {
-        incomingStockDate = findDeliveryDate(incomingStockDate, true);
-        incomingStockDate = dateConverter(incomingStockDate, true);
+      const { weekendSalesPercent } = this.utility.storeSettings;
+      if (p.incomingStock > 0) {
+        incomingStockDate = findDeliveryDate(incomingStockDate, {asDate: true});
+        incomingStockDate = dateConverter(incomingStockDate, {asDate: true});
       }
   
+      console.log(p.dailyUse);
       // Estimate days to cover sales quota
-      let weekDayQuota = Math.abs((100 - salesQuotaWeekend) / 4);
-      let weekendQuota = salesQuotaWeekend / 3;
-      if (quotaReverse) {
-        weekendQuota = Math.abs((100 - salesQuotaWeekend) / 3);
-        weekDayQuota = salesQuotaWeekend / 4;
-      }
+      let weekdaySales = Math.abs((100 - weekendSalesPercent) / 4);
+      let weekendSales = weekendSalesPercent / 3;
   
       // Adjust previous weeks usage based on sales forecast!
-      let usagePerThousand = (weeklyUsage / salesTotalLastWeek) * 1000;
-      weeklyUsage = usagePerThousand * (weeklySalesForecast / 1000);
+      let usagePerThousand = (p.weeklyUsage / this.previousSales) * 1000;
+      p.weeklyUsage = usagePerThousand * (this.salesForecast / 1000);
       //DeliveryDay Reached marker
       let deliveryDayMarker = false;
   
       // map out usage and onHand within productMap
       for (let [key, object] of productMap.entries()) {
         //Check if this is a weekend day or weekday
-        let dayType = weekDays.indexOf(key.split("<=>")[0].trim()) + 1;
+        let dayType = this.utility.getWeekDay(key.split("<=>")[0].trim()) + 1;
         let dayDate = key.split("<=>")[1].trim();
         let currentUsage;
-        if (dayType >= 5) currentUsage = weeklyUsage * (weekendQuota / 100);
-        else currentUsage = weeklyUsage * (weekDayQuota / 100);
+        if (dayType >= 5) currentUsage = p.weeklyUsage * (weekendSales / 100);
+        else currentUsage = p.weeklyUsage * (weekdaySales / 100);
         currentUsage += dailyUse;
         //If placing order end of day!
-        if (dayDate === dateConverter(placementDate, true) && checkTime) {
+        if (dayDate === dateConverter(placementDate, {deconstruct: true}) && checkTime) {
           currentUsage = currentUsage - currentUsage * openTimePercentage;
         }
         //If previous order is invoiced
         if (incomingStockDate === dayDate) {
           if (!receivedToday) {
-            incomingStock = previousIsInvoiced ? 0 : incomingStock;
+            p.incomingStock = previousIsInvoiced ? 0 : p.incomingStock;
           } else {
             if (previousIsInvoiced) {
-              incomingStock = 0;
+              p.incomingStock = 0;
             } else {
-              if (incomingStockDate === dateConverter(placementDate, true)) {
-                incomingStock = 0;
+              if (incomingStockDate === dateConverter(placementDate, {deconstruct: true})) {
+                p.incomingStock = 0;
               }
             }
           }
-          onHand += incomingStock;
+          p.onHand += p.incomingStock;
         }
   
         // Zero out minus quantities that add up to onHand before deliveryDay
         deliveryDayMarker =
-          dayDate === dateConverter(orderInvoiceDate, true)
+          dayDate === dateConverter(orderInvoiceDate, {deconstruct: true})
             ? true
             : deliveryDayMarker;
-        if (onHand <= 0 && !deliveryDayMarker) {
-          onHand = 0;
+        if (p.onHand <= 0 && !deliveryDayMarker) {
+          p.onHand = 0;
           currentUsage = 0;
         }
   
         //set usage for the date in the map object
   
         let innerProperties = {
-          onHand: onHand,
+          onHand: p.onHand,
           usage: currentUsage,
         };
         productMap.set(key, innerProperties);
-        onHand -= currentUsage;
+        p.onHand -= currentUsage;
       }
   
       return productMap;

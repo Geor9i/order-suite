@@ -44,17 +44,33 @@ export class Utility {
 
 //======================================================
       //DATES
-      getWeekDay(index) {
-        let daysOfWeek = [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-          "Sunday",
-        ];
-        return daysOfWeek[index];
+      /**
+       * 
+       * @param {Number|String} param Either index of weekday or weekday as string 
+       * @returns the opposite (Number or String) of what is entered
+       */
+      getWeekDay(param) {
+
+        let daysOfWeek = {
+          0:"Monday",
+          1:"Tuesday",
+          2:"Wednesday",
+          3:"Thursday",
+          4:"Friday",
+          5:"Saturday",
+          6:"Sunday",
+        };
+
+        if (isNaN(param)) {
+          let index = Object.entries(daysOfWeek).reduce((acc, curr) => {
+            if(curr[1].toLowerCase() === param.toLowerCase()) {
+              acc = curr[0];
+            }
+            return acc;
+          }, 0)
+          return Number(index);
+        }
+        return daysOfWeek[param];
       }
       
        getMonth(index) {
@@ -116,27 +132,35 @@ export class Utility {
 
   /**
    * This function finds the next or previous order date!
-   * @param {boolean} isArray Return an array?
-   * @param {boolean} asDateMap Return an object of date Ranges
-   * @param {boolean} goForward - Preset to go forward, if false is supplied it goes backwards!
-   * @param {object} dateFrom - Provide a date object for the start date! For example today!
-   * @param {boolean} asDate returns result as a date Object!
-   * @param {object} dateTo Will return complete day sequence between two dates if specified!
-   * @returns {any} Depending on option selected 1.date, 2.array, 3.number
+   * @param {object} [dateFrom] - Provide a date object for the start date! For example today!
+   * @param {Object} [options] - An options object for customization.
+   * @param {boolean} [options.asDate = false] returns result as a date Object!
+   * @param {boolean} [options.asArray = false] Return an array?
+   * @param {boolean} [options.asDateMap = false] Return an object of date Ranges
+    * @param {boolean} [options.goForward= true] Preset to go forward, if false is supplied it goes backwards!
+    * @param {object} [options.dateTo = null] Will return complete day sequence between two dates if specified!
+    * @returns {any} Depending on option selected 1.date, 2.array, 3.number
    */
    findDeliveryDate(
     dateFrom,
-    asDate = false,
-    isArray = false,
-    goForward = true,
-    dateTo = null,
-    asDateMap = false
+    options = {
+      asDate: false,
+      asArray: false,
+      goBack: false,
+      dateTo: null,
+      asDateMap: false
+    }
+    // asDate = false,
+    // asArray = false,
+    // goBack = true,
+    // dateTo = null,
+    // asDateMap = false
   ) {
-    let orderDays = [1, 3, 5];
-    let step = goForward ? 1 : -1;
+    let orderDays = this.storeSettings.orderDays;
+    let step = options.goBack ? -1 : 1;
     let i = dateFrom.getDay();
     let arr = [];
-    let countDown = dateTo !== null ? this.dateDifference(dateFrom, dateTo) : 0;
+    let countDown = options.dateTo ? this.dateDifference(dateFrom, options.dateTo) : 0;
   
     //Fill an array with a range of weekdays matching the selected dates!
     arr.push(i);
@@ -149,18 +173,18 @@ export class Utility {
     } while (countDown !== 0 || !orderDays.includes(i));
   
     //If array has been selected as output
-    if (isArray) {
-      arr = goForward ? arr : arr.reverse();
+    if (options.asArray) {
+      arr = options.goForward ? arr : arr.reverse();
       //If asDateMap is true convert dates to a map of weekly stats and estimates
-      if (asDateMap) {
+      if (options.asDateMap) {
         let map = new Map();
         let dateStamp = new Date(dateFrom);
         let dateStampFormat;
         let properties = {};
         for (let i = 0; i < arr.length; i++) {
           dateStampFormat = `${
-            weekDays[dateStamp.getDay() === 0 ? 6 : dateStamp.getDay() - 1]
-          } <=> ${this.dateConverter(dateStamp, true)}`;
+            this.getWeekDay(dateStamp.getDay() === 0 ? 6 : dateStamp.getDay() - 1)
+          } <=> ${this.dateConverter(dateStamp, {deconstruct: true})}`;
           map.set(dateStampFormat, properties);
           dateStamp = new Date(dateStamp.setDate(dateStamp.getDate() + 1));
         }
@@ -168,18 +192,16 @@ export class Utility {
         return map;
       }
       return arr;
-    } else {
+    }
       //if date has been selected as output
-      if (asDate) {
+      if (options.asDate) {
         let date = new Date(dateFrom);
-        if (goForward) {
-          date = new Date(date.setDate(dateFrom.getDate() + arr.length - 1));
-        } else {
+        if (options.goBack) {
           date = new Date(date.setDate(dateFrom.getDate() - arr.length - 1));
         }
+          date = new Date(date.setDate(dateFrom.getDate() + arr.length - 1));
         return date;
       }
-    }
   }
 
    /**
@@ -193,6 +215,8 @@ export class Utility {
  * @returns {Date|string|null} The converted Date object or string, or null if parsing fails.
  */
    dateConverter(date, options = {delimeter: '/', deconstruct:false, toRMFDate:false}) {
+
+    options.delimeter = options.delimeter ? options.delimeter : '/';
     if (typeof date === "object") {
       if (options.deconstruct) {
         if (options.toRMFDate) {

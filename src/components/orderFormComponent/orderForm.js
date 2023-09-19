@@ -45,10 +45,8 @@ export class OrderFormComponent {
 
   _dateInputFieldStartingDate() {
     let currentDate = new Date();
-    let nextAvailableDeliveryDate = this.utility.findDeliveryDate(
-      currentDate,
-      true
-    );
+    let nextAvailableDeliveryDate = this.utility.findDeliveryDate(currentDate, {asDate: true});
+
     return `${nextAvailableDeliveryDate.getDate()}/${
       nextAvailableDeliveryDate.getMonth() + 1
     }/${nextAvailableDeliveryDate.getFullYear()} - ${this.utility.getWeekDay(
@@ -73,7 +71,9 @@ export class OrderFormComponent {
     
     if (this.formValidator(formData)) {
       formData.products = this.deliveryHarvestProducts;
-      // this.processor.nextOrder(formData)
+      this.processor.previousSales = Number(formData['previous-sales']);
+      this.processor.salesForecast = Number(formData['sales-forecast']);
+      this.processor.products = this.processor.nextOrder(formData);
     }
   }
 
@@ -184,7 +184,7 @@ export class OrderFormComponent {
     if (this.deliveryHarvestProducts) {
       for (let product in this.deliveryHarvestProducts) {
         let productLastOrderedOn = new Date(this.deliveryHarvestProducts[product].previousOrderDate);
-        let lastOrderedArrival = this.utility.findDeliveryDate(productLastOrderedOn, true);
+        let lastOrderedArrival = this.utility.findDeliveryDate(productLastOrderedOn, {asDate:true});
         if (this.utility.dateConverter(lastOrderedArrival, {deconstruct: true}) === this.utility.dateConverter(orderInvoiceDate, {deconstruct: true})) {
           return true;
         }

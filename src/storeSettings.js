@@ -1,6 +1,6 @@
 export const storeSettings = {
     orderDays : [1, 3, 5],
-    salesQuotaWeekend: 51,
+    weekendSalesPercent: 51,
     openTimes : {
         1: '11:00 - 22:00',
         2: '11:00 - 22:00',
