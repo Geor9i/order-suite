@@ -5,8 +5,8 @@ export const orderFormTemplate = (submitHandler, openCalendar, dateInputFieldSta
  <section class="order-page__section">
             <div class="order__form__main__container">
                 <div class="order__form__container" id="order__form__container">
-                        <form novalidate class="order__form__area" @click=${closeCalendar} @submit="${submitHandler}">
-
+                        <div class="calendar-backdrop" id="calendar-backdrop" @click=${closeCalendar}></div>
+                        <form novalidate class="order__form__area" @submit="${submitHandler}">
                             <label for="RMF-data-dump">Paste RMF order page</label>
                             <textarea name="RMF-data-dump" class="rmf-data-dump" placeholder="Paste RMF page here!"
                                 id="rmf-data-dump" cols="30" rows="10"></textarea>

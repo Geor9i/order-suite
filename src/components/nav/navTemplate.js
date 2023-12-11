@@ -16,4 +16,5 @@ export const navTemplate = (dropDown) => html`
                 <div class="menu__pulldown"></div>
             </div>
         </div>
+        <div class="menu-backdrop" @click=${dropDown}></div>
 `;

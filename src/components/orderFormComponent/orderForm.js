@@ -19,7 +19,7 @@ export class OrderFormComponent {
     this.openCalendar = this._openCalendar.bind(this);
     this.submitHandler = this._submitHandler.bind(this);
     this.dateInputFieldStartingDate =
-    this._dateInputFieldStartingDate.bind(this);
+      this._dateInputFieldStartingDate.bind(this);
     this.closeCalendar = this._closeCalendar.bind(this);
     this.deliveryHarvestProducts = null;
   }
@@ -39,24 +39,27 @@ export class OrderFormComponent {
   _openCalendar(e) {
     e.preventDefault();
     let calendarContainer = document.getElementById("calendar-container");
+    let backDrop = document.getElementById("calendar-backdrop");
     this.utility.toggleVisibility(calendarContainer);
+    this.utility.toggleVisibility(backDrop);
     this.calendarComponent.showView(calendarContainer);
   }
 
   _dateInputFieldStartingDate() {
     let currentDate = new Date();
-    let nextAvailableDeliveryDate = this.utility.findDeliveryDate(currentDate, {asDate: true});
+    let nextAvailableDeliveryDate = this.utility.findDeliveryDate(currentDate, { asDate: true });
 
-    return `${nextAvailableDeliveryDate.getDate()}/${
-      nextAvailableDeliveryDate.getMonth() + 1
-    }/${nextAvailableDeliveryDate.getFullYear()} - ${this.utility.getWeekDay(
-      nextAvailableDeliveryDate.getDay() - 1
-    )}`;
+    return `${nextAvailableDeliveryDate.getDate()}/${nextAvailableDeliveryDate.getMonth() + 1
+      }/${nextAvailableDeliveryDate.getFullYear()} - ${this.utility.getWeekDay(
+        nextAvailableDeliveryDate.getDay() - 1
+      )}`;
   }
 
   _closeCalendar() {
     let calendarContainer = document.getElementById("calendar-container");
-    this.utility.toggleVisibility(calendarContainer, undefined, true);
+    let backDrop = document.getElementById("calendar-backdrop");
+    this.utility.toggleVisibility(backDrop, { off: true });
+    this.utility.toggleVisibility(calendarContainer, { off: true });
   }
 
   _submitHandler(e) {
@@ -68,7 +71,7 @@ export class OrderFormComponent {
     formData.radioYes = radioElementYes.checked;
     formData.radioNo = radioElementNo.checked;
     // this.processor.nextOrder(formData)
-    
+
     if (this.formValidator(formData)) {
       formData.products = this.deliveryHarvestProducts;
       this.processor.previousSales = Number(formData['previous-sales']);
@@ -139,22 +142,22 @@ export class OrderFormComponent {
       this.print("Select a valid delivery date!");
       pass = false;
     } else {
-        // Receive and parse date input data
-        let orderInvoiceDate = formData["date-input"].split(" - ")[0];
-        //Check if parsed date is valid
-        let dateCheckPattern = /[0-9]{1,2}(\D+)[0-9]{1,2}\1[0-9]{4}/g;
-        if ((orderInvoiceDate.match(dateCheckPattern) !== null)) {
-          orderInvoiceDate = this.utility.dateConverter(orderInvoiceDate);
-          if (!this.utility.storeSettings.orderDays.includes(orderInvoiceDate.getDay())) {
-            this.print('Select an available delivery date!')
-          }
-
-          if (this.isOrderPlacedForDate(orderInvoiceDate)) {
-            this.print("An order for the selected date has already been placed!");
-          }
+      // Receive and parse date input data
+      let orderInvoiceDate = formData["date-input"].split(" - ")[0];
+      //Check if parsed date is valid
+      let dateCheckPattern = /[0-9]{1,2}(\D+)[0-9]{1,2}\1[0-9]{4}/g;
+      if ((orderInvoiceDate.match(dateCheckPattern) !== null)) {
+        orderInvoiceDate = this.utility.dateConverter(orderInvoiceDate);
+        if (!this.utility.storeSettings.orderDays.includes(orderInvoiceDate.getDay())) {
+          this.print('Select an available delivery date!')
         }
+
+        if (this.isOrderPlacedForDate(orderInvoiceDate)) {
+          this.print("An order for the selected date has already been placed!");
+        }
+      }
     }
-      
+
     if (
       formData["previous-sales"] === "" ||
       isNaN(formData["previous-sales"])
@@ -184,12 +187,12 @@ export class OrderFormComponent {
     if (this.deliveryHarvestProducts) {
       for (let product in this.deliveryHarvestProducts) {
         let productLastOrderedOn = new Date(this.deliveryHarvestProducts[product].previousOrderDate);
-        let lastOrderedArrival = this.utility.findDeliveryDate(productLastOrderedOn, {asDate:true});
-        if (this.utility.dateConverter(lastOrderedArrival, {deconstruct: true}) === this.utility.dateConverter(orderInvoiceDate, {deconstruct: true})) {
+        let lastOrderedArrival = this.utility.findDeliveryDate(productLastOrderedOn, { asDate: true });
+        if (this.utility.dateConverter(lastOrderedArrival, { deconstruct: true }) === this.utility.dateConverter(orderInvoiceDate, { deconstruct: true })) {
           return true;
         }
       }
     }
     return false;
-}
+  }
 }

@@ -14,7 +14,7 @@ export class Calendar {
     this.month = this.today.getMonth();
     this.originMonth = this.today.getMonth()
     this.originYear = this.today.getFullYear();
-    
+
   }
 
 
@@ -31,108 +31,111 @@ export class Calendar {
       let selectedDate = e.target.getAttribute("date");
       let dateInputField = document.getElementById('date-input');
       dateInputField.value = selectedDate;
-      this.utility.toggleVisibility(document.getElementById('calendar-container'))
+      let calendarContainer = document.getElementById('calendar-container');
+      let backDrop = document.getElementById('calendar-backdrop');
+      this.utility.toggleVisibility(calendarContainer, { off: true })
+      this.utility.toggleVisibility(backDrop, { off: true })
     }
   }
 
 
-   //Function to fill the dates in the calendar
-   _fillCalendar() {
+  //Function to fill the dates in the calendar
+  _fillCalendar() {
 
-      let calenderHeaderTextElement = document.getElementById("calendar-header-text");
-      let calendarTrCollection = document.querySelectorAll(`#day-table tr`);
-      let todayDate = this.today;
-      let year = this.year;
-      let month = this.month;
-      let day = todayDate.getDate();
+    let calenderHeaderTextElement = document.getElementById("calendar-header-text");
+    let calendarTrCollection = document.querySelectorAll(`#day-table tr`);
+    let todayDate = this.today;
+    let year = this.year;
+    let month = this.month;
+    let day = todayDate.getDate();
 
-      let selectedMonth = [...this.calendarMonth(year, month)];
-      let prevMonth = this.getRightDate(year, month, 'back');
-      prevMonth = [...this.calendarMonth(prevMonth.year, prevMonth.month - 1)];
+    let selectedMonth = [...this.calendarMonth(year, month)];
+    let prevMonth = this.getRightDate(year, month, 'back');
+    prevMonth = [...this.calendarMonth(prevMonth.year, prevMonth.month - 1)];
 
-      let nextMonth = this.getRightDate(year, month, 'next');
-      nextMonth = [...this.calendarMonth(nextMonth.year, nextMonth.month - 1)];
-      let isCurrent = false;
+    let nextMonth = this.getRightDate(year, month, 'next');
+    nextMonth = [...this.calendarMonth(nextMonth.year, nextMonth.month - 1)];
+    let isCurrent = false;
 
-      //Get the index for the last monday of the previous month
-      let prevMonthIndex = prevMonth.reduce((acc, curr, i) => {
-        if (curr[1] === "Monday") {
-          acc.pop();
-          acc.push(i);
+    //Get the index for the last monday of the previous month
+    let prevMonthIndex = prevMonth.reduce((acc, curr, i) => {
+      if (curr[1] === "Monday") {
+        acc.pop();
+        acc.push(i);
+      }
+      return acc;
+    }, [])[0];
+    let currentMonthIndex = 0;
+    let nextMonthIndex = 0;
+    calenderHeaderTextElement.innerText = `${year} ${this.utility.getMonth(month)}`;
+
+    let activeRows = Array.from(calendarTrCollection).slice(1);
+
+    //iterate over calendar table to map dates
+    //row iteration
+    for (let row = 0; row < activeRows.length; row++) {
+      let colCollection = activeRows[row].cells;
+      //col iteration
+      for (let col = 0; col < colCollection.length; col++) {
+        //if the current date's weekday calender mapping does not match the first weekday of the selected month
+        if (!isCurrent && prevMonth.length > prevMonthIndex) {
+          colCollection[col].innerText = prevMonth[prevMonthIndex][0];
+          colCollection[col].style.backgroundColor = "rgba(200,200,200,0.5)";
+          colCollection[col].style.color = "rgba(100,100,100,0.5)";
+
+          let dateValues = this.getRightDate(year, month, "back");
+          colCollection[col].setAttribute(
+            "date",
+            `${colCollection[col].innerText}/${dateValues.month}/${dateValues.year} - ${this.utility.getWeekDay(col)}`
+          );
+          prevMonthIndex++;
         }
-        return acc;
-      }, [])[0];
-      let currentMonthIndex = 0;
-      let nextMonthIndex = 0;
-      calenderHeaderTextElement.innerText = `${year} ${this.utility.getMonth(month)}`;
-
-      let activeRows = Array.from(calendarTrCollection).slice(1);
-
-      //iterate over calendar table to map dates
-      //row iteration
-      for (let row = 0; row < activeRows.length; row++) {
-        let colCollection = activeRows[row].cells;
-        //col iteration
-        for (let col = 0; col < colCollection.length; col++) {
-          //if the current date's weekday calender mapping does not match the first weekday of the selected month
-          if (!isCurrent && prevMonth.length > prevMonthIndex) {
-            colCollection[col].innerText = prevMonth[prevMonthIndex][0];
+        //if the two weekdays match confirm in boolean
+        if (this.utility.getWeekDay(col) === selectedMonth[0][1]) {
+          isCurrent = true;
+        }
+        //begin printing current month
+        if (isCurrent) {
+          //if there are no more days in the current month begin priniting next month
+          if (currentMonthIndex > selectedMonth.length - 1) {
+            colCollection[col].innerText = nextMonth[nextMonthIndex][0];
+            //styles
             colCollection[col].style.backgroundColor = "rgba(200,200,200,0.5)";
             colCollection[col].style.color = "rgba(100,100,100,0.5)";
+            nextMonthIndex++;
 
-            let dateValues = this.getRightDate(year, month, "back");
+            let dateValues = this.getRightDate(year, month, "next");
             colCollection[col].setAttribute(
               "date",
               `${colCollection[col].innerText}/${dateValues.month}/${dateValues.year} - ${this.utility.getWeekDay(col)}`
             );
-            prevMonthIndex++;
+            continue;
           }
-          //if the two weekdays match confirm in boolean
-          if (this.utility.getWeekDay(col) === selectedMonth[0][1]) {
-            isCurrent = true;
-          }
-          //begin printing current month
-          if (isCurrent) {
-            //if there are no more days in the current month begin priniting next month
-            if (currentMonthIndex > selectedMonth.length - 1) {
-              colCollection[col].innerText = nextMonth[nextMonthIndex][0];
-              //styles
-              colCollection[col].style.backgroundColor = "rgba(200,200,200,0.5)";
-              colCollection[col].style.color = "rgba(100,100,100,0.5)";
-              nextMonthIndex++;
-
-              let dateValues = this.getRightDate(year, month, "next");
-              colCollection[col].setAttribute(
-                "date",
-                `${colCollection[col].innerText}/${dateValues.month}/${dateValues.year} - ${this.utility.getWeekDay(col)}`
-              );
-              continue;
+          // else print current month
+          //-------------------------
+          //have the current date always selected on the calender
+          if (selectedMonth[currentMonthIndex][0] === day) {
+            if (month === this.originMonth && year === this.originYear) {
+              colCollection[col].style.border = "1px solid rgba(255,72,0, 0.5)";
             }
-            // else print current month
-            //-------------------------
-            //have the current date always selected on the calender
-            if (selectedMonth[currentMonthIndex][0] === day) {
-              if (month === this.originMonth && year === this.originYear) {
-                colCollection[col].style.border = "1px solid rgba(255,72,0, 0.5)";
-              }
-            } else {
-              colCollection[col].style.border = "";
-            }
-            colCollection[col].innerText = selectedMonth[currentMonthIndex][0];
-            colCollection[col].style.backgroundColor = "rgba(243,243,243,1)";
-            colCollection[col].style.color = "rgba(0,0,0,0.8)";
-            currentMonthIndex++;
-            colCollection[col].setAttribute(
-              "date",
-              `${colCollection[col].innerText}/${month + 1}/${year} - ${this.utility.getWeekDay(col)}`
-            );
+          } else {
+            colCollection[col].style.border = "";
           }
+          colCollection[col].innerText = selectedMonth[currentMonthIndex][0];
+          colCollection[col].style.backgroundColor = "rgba(243,243,243,1)";
+          colCollection[col].style.color = "rgba(0,0,0,0.8)";
+          currentMonthIndex++;
+          colCollection[col].setAttribute(
+            "date",
+            `${colCollection[col].innerText}/${month + 1}/${year} - ${this.utility.getWeekDay(col)}`
+          );
         }
       }
-  //Update Value in Calendar
-      this.year = year;
-      this.month = month;
-    
+    }
+    //Update Value in Calendar
+    this.year = year;
+    this.month = month;
+
   }
 
 
@@ -214,7 +217,7 @@ export class Calendar {
     return monthDataMap(year, month)
   }
 
-  
+
 
   // Get mm/yy for previous or next month in the calendar
   getRightDate(year, month, direction) {
@@ -237,7 +240,7 @@ export class Calendar {
         }
         break;
     }
-    return {year, month};
+    return { year, month };
   }
 
   //On click functions to change dates

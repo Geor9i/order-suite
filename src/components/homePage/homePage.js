@@ -8,7 +8,6 @@ export class HomeComponent {
     }
 
     _showView(ctx) {
-        console.log('here');
         let template = this.templateFunction();
         this.renderHandler(template);
     }
