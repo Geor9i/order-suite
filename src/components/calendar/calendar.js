@@ -1,4 +1,4 @@
-export class Calendar {
+export default class Calendar {
 
   constructor(utility, templateFunc, renderCalender) {
     this.utility = utility;

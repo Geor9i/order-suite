@@ -1,11 +1,11 @@
-export class OrderFormComponent {
+export default class OrderFormComponent {
   constructor(
     utility,
     renderHandler,
     templateFunction,
     router,
     calendarComponent,
-    reportHarvest,
+    harvester,
     processor
   ) {
     this.utility = utility;
@@ -13,7 +13,7 @@ export class OrderFormComponent {
     this.templateFunction = templateFunction;
     this.router = router;
     this.calendarComponent = calendarComponent;
-    this.reportHarvest = reportHarvest;
+    this.harvester = harvester;
     this.processor = processor;
     this.showView = this._showView.bind(this);
     this.openCalendar = this._openCalendar.bind(this);
@@ -87,7 +87,7 @@ export class OrderFormComponent {
     let rmfDataDumpElement = document.getElementById("rmf-data-dump");
     rmfDataDumpElement.addEventListener("input", (e) => {
       if (rmfDataDumpElement.value.length >= 1) {
-        this.deliveryHarvestProducts = this.reportHarvest([rmfDataDumpElement.value]);
+        this.deliveryHarvestProducts = this.harvester.reportHarvest([rmfDataDumpElement.value]);
         //If valid products have been discovered on entry
         if (this.deliveryHarvestProducts) {
           rmfDataDumpElement.value = "Data Received!";

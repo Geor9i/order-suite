@@ -1,12 +1,12 @@
-export class Processor {
+export default class Processor {
   constructor(utility) {
     this.utility = utility;
     this.products = null;
     this.receivedToday = null;
     this.previousSales = null;
     this.salesForecast = null;
-    this.placementDate = null;
-    this.orderInvoiceDate = new Date();
+    this.orderInvoiceDate = null;
+    this.placementDate = new Date();
   }
   // FUNCTIONS
 
@@ -33,7 +33,6 @@ export class Processor {
     this.previousSales = formData['previous-sales'];
     this.salesForecast = formData['sales-forecast'];
     let salesQuotaWeekend = this.utility.storeSettings.salesQuotaWeekend;
-    let checkTime = true;
     let workHours = this.utility.currentWorkHours();
 
     let productEvolution = {};
@@ -55,7 +54,7 @@ export class Processor {
 
     for (let product in this.products) {
       let nextOrderDate = this.utility.findDeliveryDate(this.orderInvoiceDate, { asDate: true });
-      let productUsageMap = this.utility.findDeliveryDate(placementDate, { asArray: true, dateTo: nextOrderDate, asDateMap: true });
+      let productUsageMap = this.utility.findDeliveryDate(this.placementDate, { asArray: true, dateTo: nextOrderDate, asDateMap: true });
 
       // date object from stored date string!
       let productLastOrderedOn = new Date(this.products[product].previousOrderDate);
@@ -204,7 +203,7 @@ export class Processor {
       else currentUsage = p.weeklyUsage * (weekdaySales / 100);
       currentUsage += p.dailyUse;
       //If placing order end of day!
-      if (dayDate === this.utility.dateConverter(placementDate, { deconstruct: true }) && checkTime) {
+      if (dayDate === this.utility.dateConverter(this.placementDate, { deconstruct: true })) {
         currentUsage = currentUsage - currentUsage * openTimePercentage;
       }
       //If previous order is invoiced
@@ -215,7 +214,7 @@ export class Processor {
           if (previousIsInvoiced) {
             p.incomingStock = 0;
           } else {
-            if (incomingStockDate === this.utility.dateConverter(placementDate, { deconstruct: true })) {
+            if (incomingStockDate === this.utility.dateConverter(this.placementDate, { deconstruct: true })) {
               p.incomingStock = 0;
             }
           }

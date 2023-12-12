@@ -1,4 +1,4 @@
-export class OrderPage {
+export default class OrderPage {
     constructor(utility, renderHandler, templateFunction, router) {
         this.utility = utility;
         this.renderHandler = renderHandler;

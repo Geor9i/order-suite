@@ -1,4 +1,4 @@
-export class NavComponent {
+export default class NavComponent {
     constructor (utility, renderHandler, templateFunction, router) {
         this.utility = utility;
         this.renderHandler = renderHandler;

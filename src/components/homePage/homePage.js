@@ -1,4 +1,4 @@
-export class HomeComponent {
+export default class HomeComponent {
     constructor (utility, renderHandler, templateFunction, router) {
         this.utility = utility;
         this.renderHandler = renderHandler;
