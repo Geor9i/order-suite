@@ -74,6 +74,7 @@ main {
 }
 
 .menu-backdrop {
+    display: none;
     position: absolute;
     width: 100vw;
     height: 100vh;

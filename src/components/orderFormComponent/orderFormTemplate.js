@@ -25,7 +25,7 @@ export const orderFormTemplate = (submitHandler, openCalendar, dateInputFieldSta
 
                             <label id="date-label" for="date-input" >Order Date</label>
                             <div id="calendar-input-container">
-                                <input type="text" required="true" id="date-input" name="date-input" .value=${dateInputFieldStartingDate()}>
+                                <input type="text" required="true" id="date-input" name="date" .value=${dateInputFieldStartingDate()}>
                                 <button id="date-button" @click=${openCalendar}>📆</button>
                             </div>
                             <div id="calendar-container"></div>

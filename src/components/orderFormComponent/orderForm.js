@@ -73,6 +73,9 @@ export class OrderFormComponent {
     // this.processor.nextOrder(formData)
 
     if (this.formValidator(formData)) {
+      let [date, weekday] = formData.date.split('-');
+      formData.date = this.utility.dateConverter(date)
+      formData.weekday = weekday;
       formData.products = this.deliveryHarvestProducts;
       this.processor.previousSales = Number(formData['previous-sales']);
       this.processor.salesForecast = Number(formData['sales-forecast']);
@@ -138,12 +141,12 @@ export class OrderFormComponent {
       pass = false;
     }
 
-    if (formData["date-input"] === "") {
+    if (formData.date === "") {
       this.print("Select a valid delivery date!");
       pass = false;
     } else {
       // Receive and parse date input data
-      let orderInvoiceDate = formData["date-input"].split(" - ")[0];
+      let orderInvoiceDate = formData.date.split(" - ")[0];
       //Check if parsed date is valid
       let dateCheckPattern = /[0-9]{1,2}(\D+)[0-9]{1,2}\1[0-9]{4}/g;
       if ((orderInvoiceDate.match(dateCheckPattern) !== null)) {
