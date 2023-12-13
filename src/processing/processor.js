@@ -1,15 +1,22 @@
 export default class Processor {
-  constructor(utility) {
-    this.utility = utility;
-    this.products = null;
+  constructor(storeSettings, utils) {
+    this.storeSettings = storeSettings;
+    this.dateUtil = utils.dateUtil;
+    this.timeUtil = utils.timeUtil;
+    this.objUtil = utils.objUtil;
+    this.products = {};
+    this.currentOrderProducts = {};
+    this.productEvolution = {};
     this.receivedToday = null;
     this.previousSales = null;
     this.salesForecast = null;
     this.orderInvoiceDate = null;
+    this.nextOrderInvoiceDate = null;
     this.placementDate = new Date();
+    this.previousIsInvoiced = null;
+    this.workHoursPercentage = this.timeUtil.currentWorkHoursPercentage();
+    this.productCounter = 0;
   }
-  // FUNCTIONS
-
   /**
    *
    * @param {Object} deliveryHarvestProducts Products object harvested from deliveryReportHarvest
@@ -23,43 +30,36 @@ export default class Processor {
    * @returns Forecasted order requirements as an Object!
    */
   nextOrder(formData) {
-
-    console.log(formData);
-
     this.products = formData.products;
     this.orderInvoiceDate = formData.date;
-    let previousIsInvoiced = formData.radioYes ? true : false;
-    this.receivedToday = formData['received-today'] ? true : false;
-    this.previousSales = formData['previous-sales'];
-    this.salesForecast = formData['sales-forecast'];
-    let salesQuotaWeekend = this.utility.storeSettings.salesQuotaWeekend;
-    let workHours = this.utility.currentWorkHours();
-
-    let productEvolution = {};
-    // Variable to hold cost amount
-    let orderTotal = 0;
-
-    //HTML Visualize Table headers
-
-    let dataTableHeader;
-
-
-    let dataTable;
-
-    // outputAreaElement.appendChild(dataTable);
-
-    let currentOrderProducts = {
-      counter: 0,
-    };
+    this.nextOrderInvoiceDate = this.dateUtil.findDeliveryDate(formData.date, {
+      asDate: true,
+    });
+    this.previousIsInvoiced = formData.radioYes ? true : false;
+    this.receivedToday =
+      formData["received-today"] !== undefined
+        ? !!formData["received-today"]
+        : null;
+    this.previousSales = Number(formData["previous-sales"]);
+    this.salesForecast = Number(formData["sales-forecast"]);
 
     for (let product in this.products) {
-      let nextOrderDate = this.utility.findDeliveryDate(this.orderInvoiceDate, { asDate: true });
-      let productUsageMap = this.utility.findDeliveryDate(this.placementDate, { asArray: true, dateTo: nextOrderDate, asDateMap: true });
+      let nextOrderDate = this.dateUtil.findDeliveryDate(
+        this.orderInvoiceDate,
+        {
+          asDate: true,
+        }
+      );
+      let productUsageMap = this.dateUtil.findDeliveryDate(this.placementDate, {
+        asArray: true,
+        dateTo: nextOrderDate,
+        asDateMap: true,
+      });
 
       // date object from stored date string!
-      let productLastOrderedOn = new Date(this.products[product].previousOrderDate);
-      let productArrivalDate = this.utility.findDeliveryDate(productLastOrderedOn, { asDate: true });
-      productArrivalDate = this.utility.dateConverter(productArrivalDate, { deconstruct: true });
+      let productLastOrderedOn = new Date(
+        this.products[product].previousOrderDate
+      );
       //Pre-define variables to store product object params
       let currProd = {
         weeklyUsage: this.products[product].previousWeeksUsage,
@@ -67,164 +67,102 @@ export default class Processor {
         currentDemand: this.products[product].previousWeeksUsage,
         lastOrderQuantity: this.products[product].previousOrderQuantity,
         price: this.products[product].price,
-        dailyUse: this.products[product].dailyUse ? this.products[product].dailyUse : 0,
-        deviational: this.products[product].sustainAmount ? this.products[product].sustainAmount : 0,
-        safeQuantity: this.orderInvoiceDate.getDay() >= 5 ? this.products[product].safeQuantity * 1 : this.products[product].safeQuantity
-      }
-      // let onHand = products[product].onHand;
-      // let currentDemand = products[product].previousWeeksUsage;
-      // let lastOrderQuantity = products[product].previousOrderQuantity;
-      // let price = products[product].price;
-      // //  let productSize = products[product].case;
-      // let quotaReverse = products[product].quotaReverse ? true : false;
-      // let dailyUse = products[product].dailyUse;
-      // let deviational = 0;
-      // if (products[product].sustainAmount) {
-      //   deviational = products[product].sustainAmount;
-      // }
-      // let safeQuantity = products[product].safeQuantity;
-      // safeQuantity =
-      //   orderInvoiceDate.getDay() >= 5 ? safeQuantity * 1 : safeQuantity;
+        safeQuantity: this.products[product].safeQuantity || 0,
+        productArrivalDate: this.dateUtil.findDeliveryDate(
+          productLastOrderedOn,
+          { asDate: true }
+        ),
+      };
 
       //Map onHand and daily usage figures
-      this.productUsageDaily(productUsageMap, currProd);
+      const populatedUsageMap = this.productUsageDaily(
+        productUsageMap,
+        currProd
+      );
 
-      console.log(productUsageMap);
-      //Extract Data for UsageGraph
-      productEvolution[product] = productUsageMap;
+      this.productEvolution[product] = new Map(populatedUsageMap);
 
-      /**
-       *  Calculate order amount!
-       */ //================================================
-
-      //Iterate through the map and get the last entry (last date's params)
-      let lastMapEntry;
-      for (lastMapEntry of productUsageMap.entries()) {
-        lastMapEntry = lastMapEntry[1];
-      }
-      let productRemain = lastMapEntry.onHand;
-
+      let productRemain =
+        this.objUtil.getLastMapEntry(populatedUsageMap)[1].onHand;
       let orderNow = 0;
       if (productRemain < 0) {
-        productRemain = Math.abs(productRemain);
-        orderNow = productRemain + safeQuantity + deviational;
-      } else if (productRemain >= 0) {
+        orderNow = Math.abs(productRemain) + currProd.safeQuantity;
+      } else {
         orderNow =
-          productRemain >= safeQuantity + deviational
+          productRemain >= currProd.safeQuantity
             ? 0
-            : safeQuantity + deviational - productRemain;
+            : currProd.safeQuantity - productRemain;
       }
 
       //Get Delivery day date
       let orderDayOnHand;
-      for (let entry of productUsageMap.entries()) {
-        if (
-          entry[0].split("<=>")[1].trim() ===
-          dateConverter(this.orderInvoiceDate, true)
-        ) {
+      for (let entry of populatedUsageMap.entries()) {
+        let currentDate = entry[0].split("<=>")[1].trim();
+        if (currentDate === this.dateUtil.op(this.orderInvoiceDate).format()) {
           orderDayOnHand = entry[1].onHand;
           break;
         }
       }
+      let order = Math.max(0, Math.ceil(orderNow));
+      let count = order > 0 ? this.productCounter++ : null;
 
-      if (!currentOrderProducts.hasOwnProperty(product)) {
-        currentOrderProducts[product] = {
-          order: Math.max(0, Math.ceil(orderNow)),
-          isInvoiced: previousIsInvoiced,
-          price: price,
-          usage: currentDemand.toFixed(2),
-          onHand: onHand,
-          stockOnOrderDay: orderDayOnHand.toFixed(2),
-          nextOrderDayOnHand: lastMapEntry.onHand.toFixed(2),
-          arrivalDate: productArrivalDate,
+      if (!this.currentOrderProducts.hasOwnProperty(product)) {
+        this.currentOrderProducts[product] = {
+          ...currProd,
+          order,
+          count,
+          stockOnOrderDay: Number(orderDayOnHand.toFixed(2)),
+          nextOrderDayOnHand: Number(productRemain.toFixed(2)),
           id: null,
           isInDataTable: false,
           readyToAdd: false,
         };
-        currentOrderProducts[product].count =
-          currentOrderProducts[product].order > 0
-            ? currentOrderProducts.counter++
-            : null;
-        if (currentOrderProducts[product].order > 0) {
-          productTableConstructor(currentOrderProducts, product);
-        }
       }
     }
-
-    // console.log(currentOrderProducts);
-    return currentOrderProducts;
+    return this.currentOrderProducts;
   }
-  /**======================================================================
-   *
-   * @param {map} productMap date range map
-   * @param {Object} p current product
-   * @param {Number} [p.weeklyUsage] Usage for previous week
-   * @param {Number} [p.onHand] Current on hand quantity
-   * @param {Number} [p.incomingStock] Amount of incoming stock
-   * @param {date} [p.incomingStockDate] Arrival date for incoming stock
-   * @param {number} [p.dailyUse] Added usage regardless of stats!
-   * @returns Filled map with daily requirement data!
-   */
-  productUsageDaily(
-    productMap,
-    p
-    // weeklyUsage,
-    // onHand,
-    // incomingStock,
-    // incomingStockDate,
-    // quotaReverse,
-    // dailyUse
-  ) {
-    //Check if there is incoming stock
-    const { weekendSalesPercent } = this.utility.storeSettings;
-    if (p.incomingStock > 0) {
-      incomingStockDate = findDeliveryDate(incomingStockDate, { asDate: true });
-      incomingStockDate = dateConverter(incomingStockDate, { asDate: true });
-    }
 
-    console.log(p.dailyUse);
+  productUsageDaily(prodMap, product) {
+    //Check if there is incoming stock
+
+    const productMap = new Map(prodMap);
+    const p = { ...product };
+    const { weekendSalesPercent } = this.storeSettings;
+    const weekGuide = this.dateUtil.getWeekdays([]);
     // Estimate days to cover sales quota
     let weekdaySales = Math.abs((100 - weekendSalesPercent) / 4);
     let weekendSales = weekendSalesPercent / 3;
-
     // Adjust previous weeks usage based on sales forecast!
     let usagePerThousand = (p.weeklyUsage / this.previousSales) * 1000;
     p.weeklyUsage = usagePerThousand * (this.salesForecast / 1000);
     //DeliveryDay Reached marker
     let deliveryDayMarker = false;
-
     // map out usage and onHand within productMap
     for (let [key, object] of productMap.entries()) {
       //Check if this is a weekend day or weekday
-      let dayType = this.utility.getWeekDay(key.split("<=>")[0].trim()) + 1;
-      let dayDate = key.split("<=>")[1].trim();
-      let currentUsage;
-      if (dayType >= 5) currentUsage = p.weeklyUsage * (weekendSales / 100);
-      else currentUsage = p.weeklyUsage * (weekdaySales / 100);
-      currentUsage += p.dailyUse;
-      //If placing order end of day!
-      if (dayDate === this.utility.dateConverter(this.placementDate, { deconstruct: true })) {
-        currentUsage = currentUsage - currentUsage * openTimePercentage;
+      let [currentWeekday, currentDate] = key
+        .split("<=>")
+        .map((el) => el.trim());
+      let weekdayNum = weekGuide.indexOf(currentWeekday) + 1;
+      let currentUsage =
+        p.weeklyUsage * ((weekdayNum >= 5 ? weekendSales : weekdaySales) / 100);
+      //Adjust currentUsage based on time passed if current day is today
+      if (currentDate === this.dateUtil.op(this.placementDate).format()) {
+        currentUsage -= currentUsage * this.workHoursPercentage;
       }
-      //If previous order is invoiced
-      if (incomingStockDate === dayDate) {
-        if (!receivedToday) {
-          p.incomingStock = previousIsInvoiced ? 0 : p.incomingStock;
-        } else {
-          if (previousIsInvoiced) {
-            p.incomingStock = 0;
-          } else {
-            if (incomingStockDate === this.utility.dateConverter(this.placementDate, { deconstruct: true })) {
-              p.incomingStock = 0;
-            }
-          }
+      //  Upon reaching order reception date check if previous orders are still on the system and adjust order quantity
+      if (this.dateUtil.op(p.productArrivalDate).format() === currentDate) {
+        if (
+          !this.previousIsInvoiced ||
+          (this.receivedToday !== true && this.receivedToday !== null)
+        ) {
+          p.onHand += p.lastOrderQuantity;
         }
-        p.onHand += p.incomingStock;
       }
 
       // Zero out minus quantities that add up to onHand before deliveryDay
       deliveryDayMarker =
-        dayDate === this.utility.dateConverter(this.orderInvoiceDate, { deconstruct: true })
+        currentDate === this.dateUtil.op(this.orderInvoiceDate).format()
           ? true
           : deliveryDayMarker;
       if (p.onHand <= 0 && !deliveryDayMarker) {
@@ -241,7 +179,6 @@ export default class Processor {
       productMap.set(key, innerProperties);
       p.onHand -= currentUsage;
     }
-
     return productMap;
   }
 }

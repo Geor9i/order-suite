@@ -1,7 +1,11 @@
 import { html } from "../../../node_modules/lit-html/lit-html.js";
 
 
-export const calendarTemplate = (utility, upArrowClick, downArrowClick, clickDate) => html`
+export const calendarTemplate = (dateUtil, stringUtil, upArrowClick, downArrowClick, clickDate) => {
+    const weekdays = dateUtil.getWeekdays([]).map(day => stringUtil.toPascalCase(day));
+    
+    
+    return html`
 <div id="calendar-body">
     <div id="calendar-header">
         <div class="in-header-container">
@@ -23,7 +27,7 @@ export const calendarTemplate = (utility, upArrowClick, downArrowClick, clickDat
             Array.from({ length: 7 }, (_, i) => html`
                 <tr>
                 ${Array.from({ length: 7 }, (_, d) => html`
-                    ${i === 0 ? html`<th>${utility.getWeekDay(d).slice(0, 3)}</th>` : html`<td>NA</td>`}
+                    ${i === 0 ? html`<th>${weekdays[d].slice(0, 3)}</th>` : html`<td>NA</td>`}
                 `)}
                 </tr>
             `)
@@ -31,5 +35,5 @@ export const calendarTemplate = (utility, upArrowClick, downArrowClick, clickDat
     </tbody>
     </table>
 </div>
-`;
+`};
 

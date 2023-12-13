@@ -60,7 +60,7 @@ main {
     position: absolute;
     width: 100%;
     transform: translateY(-60rem);
-    z-index: 10;
+    z-index: 100;
     transition: transform 0.5s ease;
 }
 
@@ -70,7 +70,7 @@ main {
     width: 100%;
     transform: translateY(-5rem);
     transition: transform 0.7s ease;
-    z-index: 10;
+    z-index: 100;
 }
 
 .menu-backdrop {
@@ -78,7 +78,7 @@ main {
     position: absolute;
     width: 100vw;
     height: 100vh;
-    z-index: 9;
+    z-index: 99;
 }
 
 .menu__container {
@@ -180,35 +180,22 @@ main {
 .order__form__main__container {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    flex-direction: column;
+    justify-content: center;
     width: 100%;
     height: 100%;
 }
 
 .order__form__container {
+    position: absolute;
     margin-top: 5rem;
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: column;
+    align-items: start;
+    justify-content: center;
     width: 100%;
     height: 100%;
+    z-index: 98;
 }
 
-.order__form__area {
-    display: flex;
-    background-color: rgba(168, 168, 168, 0.76);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    width: 20rem;
-    height: 32rem;
-    margin: 0;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    border-radius: 2%;
-    box-shadow: 0.5rem 0 0.5rem 0.10rem rgba(0, 0, 0, 0.507);
-}
 
 .order__form__area {
     display: flex;
@@ -239,7 +226,7 @@ main {
     resize: none;
     text-align: center;
     background-color: black;
-    border-radius: 2%;
+    border-radius: 13px;
     color: white;
     font-weight: bold;
     font-size: 1rem;
@@ -352,8 +339,6 @@ input:focus {
     cursor: pointer;
 }
 
-
-
 #create-button {
     box-shadow: 1px 1px 0 1px rgb(94, 94, 94);
     background-color: rgb(238, 238, 238);
@@ -374,14 +359,14 @@ input:focus {
 
 #warning-message {
     position: absolute;
-    display: block;
-    width: 20rem;
-    height: 5rem;
-    /* border: 1px solid black; */
-    transform: translateY(-15rem) translateX(-25rem);
-    text-align: center;
-    bottom: 20%;
-    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    top: 10%;
+    right: 25%;
+    height: 100%;
+    width: 100%;
     color: rgb(255, 78, 78);
 }
 
@@ -390,10 +375,10 @@ input:focus {
     margin-left: auto;
 }
 
-.calendar-backdrop {
+#calendar-backdrop {
     display: none;
     position: absolute;
-    top: 0;
+    top: -10%;
     right: 0;
     width: 100vw;
     height: 100vh;

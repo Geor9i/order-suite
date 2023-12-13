@@ -1,9 +1,7 @@
 #calendar-container {
     display: none;
     position: absolute;
-    transform: translateY(65%);
     margin: auto;
-    /* transform: translate(-50%, 250%); */
     width: 100px;
     height: 100px;
     z-index: 102;

@@ -10,10 +10,6 @@
   z-index: 1;
 }
 
-#warning-message {
-  display: block;
-}
-
 .warning-message-container {
   display: flex;
   justify-content: center;
@@ -70,7 +66,6 @@
 /* GENERATED ORDER OUTPUT */
 
 .generated__order-page__main__container {
-  display: none;
   width:75%;
   height: 70%;
 }

@@ -1,7 +1,8 @@
 export default class Calendar {
-
-  constructor(utility, templateFunc, renderCalender) {
-    this.utility = utility;
+  constructor(templateFunc, renderCalender, utils) {
+    this.domUtil = utils.domUtil;
+    this.dateUtil = utils.dateUtil;
+    this.stringUtil = utils.stringUtil;
     this.templateFunc = templateFunc;
     this.renderCalender = renderCalender;
     this.showView = this._showView.bind(this);
@@ -12,37 +13,41 @@ export default class Calendar {
     this.today = new Date();
     this.year = this.today.getFullYear();
     this.month = this.today.getMonth();
-    this.originMonth = this.today.getMonth()
+    this.originMonth = this.today.getMonth();
     this.originYear = this.today.getFullYear();
-
   }
 
-
   _showView(parent) {
-    this.renderCalender(this.templateFunc(this.utility, this.upArrowClick, this.downArrowClick, this.clickDate), parent);
-    this.fillCalendar()
+    this.renderCalender(
+      this.templateFunc(
+        this.dateUtil,
+        this.stringUtil,
+        this.upArrowClick,
+        this.downArrowClick,
+        this.clickDate
+      ),
+      parent
+    );
+    this.fillCalendar();
   }
 
   _clickDate(e) {
-    if (
-      e.target.parentNode.tagName === "TR" &&
-      e.target.getAttribute("date")
-    ) {
-      let selectedDate = e.target.getAttribute("date");
-      let dateInputField = document.getElementById('date-input');
+    if (e.target.parentNode.tagName === "TR" && e.target.dataset.date) {
+      let selectedDate = e.target.dataset.date
+      let dateInputField = document.getElementById("date-input");
       dateInputField.value = selectedDate;
-      let calendarContainer = document.getElementById('calendar-container');
-      let backDrop = document.getElementById('calendar-backdrop');
-      this.utility.toggleVisibility(calendarContainer, { off: true })
-      this.utility.toggleVisibility(backDrop, { off: true })
+      let calendarContainer = document.getElementById("calendar-container");
+      let backDrop = document.getElementById("calendar-backdrop");
+      this.domUtil.toggleVisibility(calendarContainer, { off: true });
+      this.domUtil.toggleVisibility(backDrop, { off: true });
     }
   }
 
-
   //Function to fill the dates in the calendar
   _fillCalendar() {
-
-    let calenderHeaderTextElement = document.getElementById("calendar-header-text");
+    let calenderHeaderTextElement = document.getElementById(
+      "calendar-header-text"
+    );
     let calendarTrCollection = document.querySelectorAll(`#day-table tr`);
     let todayDate = this.today;
     let year = this.year;
@@ -50,16 +55,16 @@ export default class Calendar {
     let day = todayDate.getDate();
 
     let selectedMonth = [...this.calendarMonth(year, month)];
-    let prevMonth = this.getRightDate(year, month, 'back');
+    let prevMonth = this.getRightDate(year, month, "back");
     prevMonth = [...this.calendarMonth(prevMonth.year, prevMonth.month - 1)];
 
-    let nextMonth = this.getRightDate(year, month, 'next');
+    let nextMonth = this.getRightDate(year, month, "next");
     nextMonth = [...this.calendarMonth(nextMonth.year, nextMonth.month - 1)];
     let isCurrent = false;
 
     //Get the index for the last monday of the previous month
     let prevMonthIndex = prevMonth.reduce((acc, curr, i) => {
-      if (curr[1] === "Monday") {
+      if (curr[1] === "monday") {
         acc.pop();
         acc.push(i);
       }
@@ -67,7 +72,9 @@ export default class Calendar {
     }, [])[0];
     let currentMonthIndex = 0;
     let nextMonthIndex = 0;
-    calenderHeaderTextElement.innerText = `${year} ${this.utility.getMonth(month)}`;
+    calenderHeaderTextElement.innerText = `${year} ${this.dateUtil.getMonth(
+      month
+    )}`;
 
     let activeRows = Array.from(calendarTrCollection).slice(1);
 
@@ -84,14 +91,13 @@ export default class Calendar {
           colCollection[col].style.color = "rgba(100,100,100,0.5)";
 
           let dateValues = this.getRightDate(year, month, "back");
-          colCollection[col].setAttribute(
-            "date",
-            `${colCollection[col].innerText}/${dateValues.month}/${dateValues.year} - ${this.utility.getWeekDay(col)}`
-          );
+          colCollection[col].dataset.date = `${colCollection[col].innerText}/${dateValues.month}/${
+              dateValues.year
+            } - ${this.stringUtil.toPascalCase(this.dateUtil.getWeekdays(col + 1))}`
           prevMonthIndex++;
         }
         //if the two weekdays match confirm in boolean
-        if (this.utility.getWeekDay(col) === selectedMonth[0][1]) {
+        if (this.dateUtil.getWeekdays(col + 1) === selectedMonth[0][1]) {
           isCurrent = true;
         }
         //begin printing current month
@@ -105,10 +111,9 @@ export default class Calendar {
             nextMonthIndex++;
 
             let dateValues = this.getRightDate(year, month, "next");
-            colCollection[col].setAttribute(
-              "date",
-              `${colCollection[col].innerText}/${dateValues.month}/${dateValues.year} - ${this.utility.getWeekDay(col)}`
-            );
+            colCollection[col].dataset.date = `${colCollection[col].innerText}/${
+              dateValues.month
+            }/${dateValues.year} - ${this.stringUtil.toPascalCase(this.dateUtil.getWeekdays(col + 1))}`;
             continue;
           }
           // else print current month
@@ -125,47 +130,44 @@ export default class Calendar {
           colCollection[col].style.backgroundColor = "rgba(243,243,243,1)";
           colCollection[col].style.color = "rgba(0,0,0,0.8)";
           currentMonthIndex++;
-          colCollection[col].setAttribute(
-            "date",
-            `${colCollection[col].innerText}/${month + 1}/${year} - ${this.utility.getWeekDay(col)}`
-          );
+          colCollection[col].dataset.date = `${colCollection[col].innerText}/${
+            month + 1
+          }/${year} - ${this.stringUtil.toPascalCase(this.dateUtil.getWeekdays(col + 1))}`;
         }
       }
     }
     //Update Value in Calendar
     this.year = year;
     this.month = month;
-
   }
-
 
   calendarMonth(year, month) {
     const monthDayCount = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
+    let weekdays = this.dateUtil.getWeekdays([]);
 
     function monthDataMap(year, month) {
-
       let monthMap = new Map();
       let months = getDaysByMonth(year);
       let weekDay = getFirstWeekDayYear(year);
       for (let m = 0; m < months.length; m++) {
         for (let d = 1; d <= months[m]; d++) {
           if (month === m) {
-            monthMap.set(d, weekDay)
+            monthMap.set(d, weekDay);
           }
 
-          weekDay = ((daysOfWeek.indexOf(weekDay) + 1)) > 6 ? daysOfWeek[0] : daysOfWeek[daysOfWeek.indexOf(weekDay) + 1]
+          weekDay =
+            weekdays.indexOf(weekDay) + 1 > 6
+              ? weekdays[0]
+              : weekdays[weekdays.indexOf(weekDay) + 1];
         }
       }
 
-      return monthMap
+      return monthMap;
     }
-
 
     //Check if a year is a leap year
     function getDaysByMonth(year) {
-      let monthDaySpan = [...monthDayCount]
+      let monthDaySpan = [...monthDayCount];
       if (year % 4 !== 0) {
         return monthDaySpan;
       } else {
@@ -185,39 +187,47 @@ export default class Calendar {
     // Get the weekday for the first day of the selected year
     function getFirstWeekDayYear(year) {
       //1950 Jan 01 - Sunday
-      let firstWeekDayOfYear = daysOfWeek[6];
+      let firstWeekDayOfYear = weekdays[6];
       let i = 1950;
       let step = year > i ? 1 : -1;
       if (year === 1950) {
-        return firstWeekDayOfYear
+        return firstWeekDayOfYear;
       } else {
         for (i; step === 1 ? i < year : i > year; i += step) {
           let totalDaysInYear = getDaysByMonth(i).reduce((a, b) => a + b, 0);
           let dayDeviation = totalDaysInYear - 364;
           if (step === 1) {
-            if (daysOfWeek.indexOf(firstWeekDayOfYear) + dayDeviation > 6) {
-              firstWeekDayOfYear = daysOfWeek[daysOfWeek.indexOf(firstWeekDayOfYear) + dayDeviation - 7];
+            if (weekdays.indexOf(firstWeekDayOfYear) + dayDeviation > 6) {
+              firstWeekDayOfYear =
+                weekdays[
+                  weekdays.indexOf(firstWeekDayOfYear) + dayDeviation - 7
+                ];
             } else {
-              firstWeekDayOfYear = daysOfWeek[daysOfWeek.indexOf(firstWeekDayOfYear) + dayDeviation];
+              firstWeekDayOfYear =
+                weekdays[
+                  weekdays.indexOf(firstWeekDayOfYear) + dayDeviation
+                ];
             }
           } else {
-            if (daysOfWeek.indexOf(firstWeekDayOfYear) - dayDeviation < 0) {
-              firstWeekDayOfYear = daysOfWeek[daysOfWeek.indexOf(firstWeekDayOfYear) - dayDeviation + 7];
+            if (weekdays.indexOf(firstWeekDayOfYear) - dayDeviation < 0) {
+              firstWeekDayOfYear =
+                weekdays[
+                  weekdays.indexOf(firstWeekDayOfYear) - dayDeviation + 7
+                ];
             } else {
-              firstWeekDayOfYear = daysOfWeek[daysOfWeek.indexOf(firstWeekDayOfYear) - dayDeviation];
+              firstWeekDayOfYear =
+                weekdays[
+                  weekdays.indexOf(firstWeekDayOfYear) - dayDeviation
+                ];
             }
           }
-
         }
       }
       return firstWeekDayOfYear;
     }
 
-
-    return monthDataMap(year, month)
+    return monthDataMap(year, month);
   }
-
-
 
   // Get mm/yy for previous or next month in the calendar
   getRightDate(year, month, direction) {
@@ -263,7 +273,4 @@ export default class Calendar {
     }
     this.fillCalendar();
   }
-
-
 }
-

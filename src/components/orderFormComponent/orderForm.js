@@ -1,14 +1,19 @@
 export default class OrderFormComponent {
   constructor(
-    utility,
-    renderHandler,
     templateFunction,
+    renderHandler,
     router,
     calendarComponent,
     harvester,
-    processor
+    processor,
+    storeSettings,
+    utils
   ) {
-    this.utility = utility;
+    this.storeSettings = storeSettings;
+    this.dateUtil = utils.dateUtil;
+    this.formUtil = utils.formUtil;
+    this.domUtil = utils.domUtil;
+    this.stringUtil = utils.stringUtil;
     this.renderHandler = renderHandler;
     this.templateFunction = templateFunction;
     this.router = router;
@@ -40,26 +45,31 @@ export default class OrderFormComponent {
     e.preventDefault();
     let calendarContainer = document.getElementById("calendar-container");
     let backDrop = document.getElementById("calendar-backdrop");
-    this.utility.toggleVisibility(calendarContainer);
-    this.utility.toggleVisibility(backDrop);
+    this.domUtil.toggleVisibility(calendarContainer);
+    this.domUtil.toggleVisibility(backDrop);
     this.calendarComponent.showView(calendarContainer);
   }
 
   _dateInputFieldStartingDate() {
     let currentDate = new Date();
-    let nextAvailableDeliveryDate = this.utility.findDeliveryDate(currentDate, { asDate: true });
+    const weekdays = this.dateUtil.getWeekdays([]);
+    let nextAvailableDeliveryDate = this.dateUtil.findDeliveryDate(
+      currentDate,
+      { asDate: true }
+    );
 
-    return `${nextAvailableDeliveryDate.getDate()}/${nextAvailableDeliveryDate.getMonth() + 1
-      }/${nextAvailableDeliveryDate.getFullYear()} - ${this.utility.getWeekDay(
-        nextAvailableDeliveryDate.getDay() - 1
-      )}`;
+    return `${nextAvailableDeliveryDate.getDate()}/${
+      nextAvailableDeliveryDate.getMonth() + 1
+    }/${nextAvailableDeliveryDate.getFullYear()} - ${this.stringUtil.toPascalCase(weekdays[
+      nextAvailableDeliveryDate.getDay() - 1]
+    )}`;
   }
 
   _closeCalendar() {
     let calendarContainer = document.getElementById("calendar-container");
     let backDrop = document.getElementById("calendar-backdrop");
-    this.utility.toggleVisibility(backDrop, { off: true });
-    this.utility.toggleVisibility(calendarContainer, { off: true });
+    this.domUtil.toggleVisibility(backDrop, { off: true });
+    this.domUtil.toggleVisibility(calendarContainer, { off: true });
   }
 
   _submitHandler(e) {
@@ -67,19 +77,18 @@ export default class OrderFormComponent {
     let form = e.target;
     let radioElementYes = document.getElementById("previous-invoiced-yes");
     let radioElementNo = document.getElementById("previous-invoiced-no");
-    let formData = this.utility.getFormData(form);
+    let formData = this.formUtil.getFormData(form);
     formData.radioYes = radioElementYes.checked;
     formData.radioNo = radioElementNo.checked;
     // this.processor.nextOrder(formData)
 
     if (this.formValidator(formData)) {
-      let [date, weekday] = formData.date.split('-');
-      formData.date = this.utility.dateConverter(date)
+      let [date, weekday] = formData.date.split("-");
+      formData.date = this.dateUtil.op(date).format();
       formData.weekday = weekday;
       formData.products = this.deliveryHarvestProducts;
-      this.processor.previousSales = Number(formData['previous-sales']);
-      this.processor.salesForecast = Number(formData['sales-forecast']);
-      this.processor.products = this.processor.nextOrder(formData);
+      this.processor.nextOrder(formData);
+      this.router.navigate('/order-details');
     }
   }
 
@@ -87,7 +96,9 @@ export default class OrderFormComponent {
     let rmfDataDumpElement = document.getElementById("rmf-data-dump");
     rmfDataDumpElement.addEventListener("input", (e) => {
       if (rmfDataDumpElement.value.length >= 1) {
-        this.deliveryHarvestProducts = this.harvester.reportHarvest([rmfDataDumpElement.value]);
+        this.deliveryHarvestProducts = this.harvester.reportHarvest([
+          rmfDataDumpElement.value,
+        ]);
         //If valid products have been discovered on entry
         if (this.deliveryHarvestProducts) {
           rmfDataDumpElement.value = "Data Received!";
@@ -126,6 +137,7 @@ export default class OrderFormComponent {
   }
 
   formValidator(formData) {
+    const weekdays = this.dateUtil.getWeekdays([]);
     let warningMessageElement = document.getElementById("warning-message");
     warningMessageElement.replaceChildren(document.createDocumentFragment());
     let pass = true;
@@ -149,10 +161,11 @@ export default class OrderFormComponent {
       let orderInvoiceDate = formData.date.split(" - ")[0];
       //Check if parsed date is valid
       let dateCheckPattern = /[0-9]{1,2}(\D+)[0-9]{1,2}\1[0-9]{4}/g;
-      if ((orderInvoiceDate.match(dateCheckPattern) !== null)) {
-        orderInvoiceDate = this.utility.dateConverter(orderInvoiceDate);
-        if (!this.utility.storeSettings.orderDays.includes(orderInvoiceDate.getDay())) {
-          this.print('Select an available delivery date!')
+      if (dateCheckPattern.test(orderInvoiceDate)) {
+        orderInvoiceDate = this.dateUtil.op(orderInvoiceDate).format();
+        let invoiceWeekday = weekdays[orderInvoiceDate.getDay() - 1];
+        if (!this.storeSettings.orderDays.includes(invoiceWeekday)) {
+          this.print("Select an available delivery date!");
         }
 
         if (this.isOrderPlacedForDate(orderInvoiceDate)) {
@@ -189,9 +202,17 @@ export default class OrderFormComponent {
   isOrderPlacedForDate(orderInvoiceDate) {
     if (this.deliveryHarvestProducts) {
       for (let product in this.deliveryHarvestProducts) {
-        let productLastOrderedOn = new Date(this.deliveryHarvestProducts[product].previousOrderDate);
-        let lastOrderedArrival = this.utility.findDeliveryDate(productLastOrderedOn, { asDate: true });
-        if (this.utility.dateConverter(lastOrderedArrival, { deconstruct: true }) === this.utility.dateConverter(orderInvoiceDate, { deconstruct: true })) {
+        let productLastOrderedOn = new Date(
+          this.deliveryHarvestProducts[product].previousOrderDate
+        );
+        let lastOrderedArrival = this.dateUtil.findDeliveryDate(
+          productLastOrderedOn,
+          { asDate: true }
+        );
+        if (
+          this.dateUtil.op(lastOrderedArrival).format() ===
+          this.dateUtil.op(orderInvoiceDate).format()
+        ) {
           return true;
         }
       }

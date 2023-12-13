@@ -1,13 +1,13 @@
 export const storeSettings = {
-    orderDays : [1, 3, 5],
-    weekendSalesPercent: 51,
-    openTimes : {
-        monday: '11:00 - 22:00',
-        tuesday: '11:00 - 22:00',
-        wednesday: '11:00 - 22:00',
-        thursday: '11:00 - 23:00',
-        friday: '11:00 - 23:00',
-        saturday: '11:00 - 23:00',
-        sunday: '11:00 - 22:00'
-    }
-}
+  orderDays: ['monday', 'wednesday', 'friday'],
+  weekendSalesPercent: 51,
+  openTimes: {
+    monday: { startTime: "11:00", endTime: "22:00"},
+    tuesday: { startTime: "11:00", endTime: "22:00"},
+    wednesday: { startTime: "11:00", endTime: "22:00"},
+    thursday: { startTime: "11:00", endTime: "23:00"},
+    friday: { startTime: "11:00", endTime: "23:00"},
+    saturday: { startTime: "11:00", endTime: "23:00"},
+    sunday: { startTime: "11:00", endTime: "22:00"},
+  },
+};

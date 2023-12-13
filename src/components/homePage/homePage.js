@@ -1,6 +1,5 @@
 export default class HomeComponent {
-    constructor (utility, renderHandler, templateFunction, router) {
-        this.utility = utility;
+    constructor (templateFunction, renderHandler, router, utils) {
         this.renderHandler = renderHandler;
         this.templateFunction = templateFunction;
         this.router = router;

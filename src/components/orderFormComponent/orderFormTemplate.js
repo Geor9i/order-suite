@@ -1,7 +1,11 @@
 import { html } from "../../../node_modules/lit-html/lit-html.js";
 
-
-export const orderFormTemplate = (submitHandler, openCalendar, dateInputFieldStartingDate, closeCalendar) => html`
+export const orderFormTemplate = (
+  submitHandler,
+  openCalendar,
+  dateInputFieldStartingDate,
+  closeCalendar
+) => html`
  <section class="order-page__section">
             <div class="order__form__main__container">
                 <div class="order__form__container" id="order__form__container">
@@ -36,12 +40,9 @@ export const orderFormTemplate = (submitHandler, openCalendar, dateInputFieldSta
                             <input type="text" id="sales-forecast" name="sales-forecast" required="true">
 
                             <button id="create-button" type="submit">Create</button>
-
-                            <div id="warning-message"></div>
-
                         </form>
-                    
                 </div>
+                <div id="warning-message"></div>
             </div>
             </div>
         </section>
