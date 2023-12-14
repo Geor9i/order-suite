@@ -103,19 +103,17 @@ export default class OrderPage {
           let inputElement = tableElement[row].cells[3].firstElementChild;
           let rowIncomingDate  = tableElement[row].children[14].children[0];
           if (products.hasOwnProperty(productElement)) {
-            let currentValue = products[productElement].value;
-            if (currentValue > 0) {
-              inputElement.value = currentValue;
+            let {value, color} = products[productElement];
+            console.log({productElement, value, color})
+            if (value > 0) {
+              inputElement.value = value;
               inputElement.style.backgroundColor = "#d8ffa6";
-              delete products[productElement];
             }
-          }else {
-            inputElement.value = "0";
+            productEl.style.backgroundColor = color;
+            productEl.style.borderRadius = "13px";
+            delete products[productElement];
           }
-          productEl.style = {
-            backgroundColor: products[productElement].color,
-            borderRadius: "13px"
-          }
+          
       }`;
 
     navigator.clipboard
