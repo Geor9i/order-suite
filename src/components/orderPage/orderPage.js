@@ -81,7 +81,7 @@ export default class OrderPage {
       const graphSize = usageGraph[productId].size;
       const color = this.domUtil.getColorForMapSize(graphSize);
       const product = this.processor.currentOrderProducts[productId];
-      productList += `${product.product}:${product.order}|${color}\n`;
+      productList += `${product.product}:${product.order}|${graphSize}|${color}\n`;
     }
 
     let rmfRelayScript = `let productData = \`${productList}\`;
@@ -92,9 +92,9 @@ export default class OrderPage {
       
       for (let entry of productData) {
           let [product, params] = entry.split(":");
-          let [value, color] = params.split("|");
+          let [value, days, color] = params.split("|");
           value = Number(value);
-          products[product] = {value, color};
+          products[product] = {value, color, days};
       }
       
       for (let row = 1; row < tableElement.length; row++) {
@@ -103,14 +103,16 @@ export default class OrderPage {
           let inputElement = tableElement[row].cells[3].firstElementChild;
           let rowIncomingDate  = tableElement[row].children[14].children[0];
           if (products.hasOwnProperty(productElement)) {
-            let {value, color} = products[productElement];
-            console.log({productElement, value, color})
+            let {value, color, days} = products[productElement];
             if (value > 0) {
               inputElement.value = value;
               inputElement.style.backgroundColor = "#d8ffa6";
             }
+            productEl.textContent = productEl.textContent + "==> days remaining: " + days
             productEl.style.backgroundColor = color;
+            productEl.style.fontWeight = "bold";
             productEl.style.borderRadius = "13px";
+            productEl.style.border = "3px solid black";
             delete products[productElement];
           }
           
