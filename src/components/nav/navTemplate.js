@@ -6,10 +6,13 @@ export const navTemplate = (dropDown) => html`
             <div class="main__title" @click=${dropDown} >NEXT ORDER</div>
         </section>
         <div id="dropdown__menu" class="dropdown__menu">
-            <div class="dropdown__menu-content-container">
-                <a @click=${dropDown} href="/account" class="menu__selector menu__selector__account">
-                    <p>Farnborough</p>
+            <div class="dropdown__menu-account-container">
+            <a @click=${dropDown} href="/account" class="menu__selector menu__selector__account">
+                    <p>Farnborough KFC</p>
+                    <p>Account</p>
                 </a>
+            </div>
+            <div class="dropdown__menu-content-container">
                 <a @click=${dropDown} href="/order-form" class="menu__selector menu__selector_left">
                     <p>Place Order</p>
                 </a>
