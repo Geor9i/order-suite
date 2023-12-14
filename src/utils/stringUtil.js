@@ -61,7 +61,7 @@ export default class StringUtil {
 
   }
 
-  optimizeName(name) {
+  removeSpecialChars(name) {
     //Remove special chars
     const specialChars = {
       '!': '', '"': '', '#': '', '$': '', '%': ' ', '&': ' ', "'": '', '(': ' ',
@@ -82,6 +82,7 @@ export default class StringUtil {
     }
     //Remove excess space
     const pattern = /\s{2,}/g;
+    let match;
     while ((match = pattern.exec(newString)) !== null) {
       newString = newString.replace(pattern, ' ');
     }

@@ -7,8 +7,8 @@ export default class ObjectUtil {
 
   getLastMapEntry(map) {
     let lastMapEntry;
-      for (lastMapEntry of map.entries()) {
-        lastMapEntry = lastMapEntry;
+      for (let entry of map.entries()) {
+        lastMapEntry = entry;
       }
       return lastMapEntry
   }

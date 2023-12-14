@@ -1,125 +1,87 @@
 import { html } from "../../../node_modules/lit-html/lit-html.js";
 
-let tableData = (headerData, products) => html`
+let tableData = (headerData, products, valueButtonClick, deleteHandler) => html`
   <div class="order__table__page-output-order-header">
-    ${html` <table class="data-table-header">
-      <tr class="product-table-header-row">
-        <th class="data-table-header__product-th">Product</th>
-        <th class="data-table-header__order-th">Order</th>
-        <th class="data-table-header__weekly-usage-th">Weekly Usage</th>
-        <th class="data-table-header__price-th">Price</th>
-        <th class="data-table-header__in-stock-th">In Stock</th>
-        <th class="data-table-header__stock-on-1-th">
-          ${headerData.invoiceDay}
-        </th>
-        <th class="data-table-header__stock-on-2-th">
-          ${headerData.nextInvoiceDay}
-        </th>
-        <th class="data-table-header__keep-th">Keep</th>
-      </tr>
-    </table>`}
+    ${html` <div class="data-table-header">
+      <div class="data-table-th"><p>Product</p></div>
+      <div class="data-table-th"><p>Order</p></div>
+      <div class="data-table-th">
+        <p>Weekly</p>
+        <p>Usage</p>
+      </div>
+      <div class="data-table-th"><p>Price</p></div>
+      <div class="data-table-th">
+        <p>Current</p>
+        <p>Stock</p>
+      </div>
+      <div class="data-table-th">
+        <p>Stock on</p>
+        <p>${headerData.invoiceDay.weekday}</p>
+        <p>${headerData.invoiceDay.date}</p>
+      </div>
+      <div class="data-table-th">
+        <p>Stock on</p>
+        <p>${headerData.nextInvoiceDay.weekday}</p>
+        <p>${headerData.nextInvoiceDay.date}</p>
+      </div>
+      <div class="data-table-th"></div>
+    </div>`}
   </div>
   <div class="order__table__page-output-order">
-    <table class="data-table">
-      <tbody class="product-table-tbody">
-        ${Object.keys(products).map((product) => {
-          let current = products[product];
-          if (current.order) {
-            return html` <tr class="product-table-tr" id="${current.id}">
-              <td class="product-name-td">${product}</td>
-              <td class="order-quantity-td">
-                <h3 class="order-quantity-value">${current.order}</h3>
-                <div class="value-button__container">
-                  <button class="value-button">-</button>
-                  <button class="value-button">+</button>
-                </div>
-              </td>
-              <td class="product-usage-td">${current.weeklyUsage}</td>
-              <td class="product-price-td">${current.price}</td>
-              <td class="product-onhand-td">${current.onHand}</td>
-              <td class="order-day-onhand-td">${current.stockOnOrderDay}</td>
-              <td class="post-delivery-quantity-td">
-                ${current.nextOrderDayOnHand}
-              </td>
-              <td class="keep-checkbox-td">
-                <input class="order__checkbox" type="checkbox" checked="true" />
-              </td>
-            </tr>`;
-          }
-        })}
-      </tbody>
-    </table>
-  </div>
-  <div class="order__table__page-side-selector__screen">
-    <table id="side-table__search">
-      ${Object.keys(products).map((product) => {
-        let current = products[product];
-        if (!current.order) {
-          return html`
-            <tr class="side-table-row hidden">
-              <td class="side-product-td">CHICKEN ORIGINAL</td>
-              <td class="side-value-td">
-                <h3 class="side-input-value-td">0</h3>
-                <div class="side-menu__value-button__container">
-                  <button class="side-menu-value-button">+</button>
-                  <button class="side-menu-value-button">-</button>
-                </div>
-              </td>
-            </tr>
-          `;
+    <div class="data-table">
+      ${Object.keys(products).map((productId) => {
+        let current = products[productId];
+        if (current.order) {
+          return html` <div class="product-table-tr" id="${current.id}">
+            <div class="td">${current.product}</div>
+            <div class="td order-value-td">
+              <button data-id="${productId}" @click=${valueButtonClick} id="main-minus" class="value-button">-</button>
+              <p>${current.order}</p>
+              <button data-id="${productId}" @click=${valueButtonClick} id="main-plus" class="value-button">+</button>
+            </div>
+            <div class="td">${current.weeklyUsage}</div>
+            <div class="td">${current.price}</div>
+            <div class="td">${current.onHand}</div>
+            <div class="td">${current.stockOnOrderDay}</div>
+            <div class="td">${current.nextOrderDayOnHand}</div>
+            <div class="td">
+              <button data-id="${productId}" @click=${deleteHandler} class="product-delete-btn">Delete</button>
+            </div>
+          </div>`;
         }
       })}
-    </table>
+    </div>
   </div>
 `;
 
-let dataTable = (products) => html` <table class="data-table">
-  <tbody class="product-table-tbody"></tbody>
-</table>`;
+let sideTable = (products, valueButtonClick) => html`
+  <div class="order__table__page-side-selector__screen">
+    <div id="side-table__search">
+      ${Object.keys(products).map((productId) => {
+        let current = products[productId];
+        const show = current.order === 0 && current.sideDisplay === true;
+        return html`
+          <div id="${productId}" class="side-table-tr ${!show? "hidden" : ""}">
+            <p class="td">${current.product}</p>
+              <button data-id="${productId}" @click=${valueButtonClick} id="side-plus" class="side-value-button">+</button>
+          </div>
+        `;
+      })}
+    </div>
+  </div>
+`;
 
-let sideTable = (products) => html` <table id="side-table__search">
-  ${products}
-  <tr class="side-table-row hidden">
-    <td class="side-product-td">CHICKEN ORIGINAL</td>
-    <td class="side-value-td">
-      <h3 class="side-input-value-td">0</h3>
-      <div class="side-menu__value-button__container">
-        <button class="side-menu-value-button">+</button>
-        <button class="side-menu-value-button">-</button>
-      </div>
-    </td>
-  </tr>
-</table>`;
-
-export const orderPageTemplate = (headerData, products) =>
+export const orderPageTemplate = (headerData, products, searchHandler, valueButtonClick, deleteHandler, resetHandler, copyRMFScript) =>
   html`<div class="generated__order-page__main__container">
     <h1 class="generated__order-page__main__title"></h1>
     <div class="output__option-bar">
-      <button
-        id="output__option-bar__print__button"
-        class="output__option-bar__button"
-      >
-        Print Order
-      </button>
-      <button
-        id="output__option-bar__update__button"
-        class="output__option-bar__button"
-      >
-        Update
-      </button>
-      <button
-        id="output__option-bar__copy__button"
-        class="output__option-bar__button"
-      >
-        Copy Script
-      </button>
-      <input type="text" id="output__option-bar__search-field" />
-      <button
-        id="output__option-bar__add__button"
-        class="output__option-bar__button"
-      >
-        Add
-      </button>
+      <button class="option-bar__button">Print Order</button>
+      <button @click=${resetHandler} class="option-bar__button">Reset</button>
+      <button @click=${copyRMFScript} class="option-bar__button">Copy RMF Script</button>
+      <input @click=${e => e.target.select()} @input=${searchHandler} .value="" placeholder="Search..." type="text" />
     </div>
-    <div class="order__table__page__container">${tableData(headerData, products)}</div>
+    <div class="order__table__page__container">
+      ${tableData(headerData, products, valueButtonClick, deleteHandler)}
+      ${sideTable(products, valueButtonClick)}
+    </div>
   </div>`;

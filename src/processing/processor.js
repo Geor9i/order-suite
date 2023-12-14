@@ -4,6 +4,7 @@ export default class Processor {
     this.dateUtil = utils.dateUtil;
     this.timeUtil = utils.timeUtil;
     this.objUtil = utils.objUtil;
+    this.stringUtil = utils.stringUtil;
     this.products = {};
     this.currentOrderProducts = {};
     this.productEvolution = {};
@@ -30,7 +31,8 @@ export default class Processor {
    * @returns Forecasted order requirements as an Object!
    */
   nextOrder(formData) {
-    this.products = formData.products;
+    this.products = { ...formData.products };
+    const products = { ...formData.products };
     this.orderInvoiceDate = formData.date;
     this.nextOrderInvoiceDate = this.dateUtil.findDeliveryDate(formData.date, {
       asDate: true,
@@ -43,7 +45,7 @@ export default class Processor {
     this.previousSales = Number(formData["previous-sales"]);
     this.salesForecast = Number(formData["sales-forecast"]);
 
-    for (let product in this.products) {
+    for (let product in products) {
       let nextOrderDate = this.dateUtil.findDeliveryDate(
         this.orderInvoiceDate,
         {
@@ -57,21 +59,20 @@ export default class Processor {
       });
 
       // date object from stored date string!
-      let productLastOrderedOn = new Date(
-        this.products[product].previousOrderDate
+      let productLastOrderedOn = new Date(products[product].previousOrderDate);
+      const productArrivalDate = this.dateUtil.findDeliveryDate(
+        productLastOrderedOn,
+        { asDate: true }
       );
       //Pre-define variables to store product object params
       let currProd = {
-        weeklyUsage: this.products[product].previousWeeksUsage,
-        onHand: this.products[product].onHand,
-        currentDemand: this.products[product].previousWeeksUsage,
-        lastOrderQuantity: this.products[product].previousOrderQuantity,
-        price: this.products[product].price,
-        safeQuantity: this.products[product].safeQuantity || 0,
-        productArrivalDate: this.dateUtil.findDeliveryDate(
-          productLastOrderedOn,
-          { asDate: true }
-        ),
+        weeklyUsage: products[product].previousWeeksUsage,
+        onHand: products[product].onHand,
+        currentDemand: products[product].previousWeeksUsage,
+        lastOrderQuantity: products[product].previousOrderQuantity,
+        price: products[product].price,
+        safeQuantity: products[product].safeQuantity || 0,
+        productArrivalDate: this.dateUtil.op(productArrivalDate).format(),
       };
 
       //Map onHand and daily usage figures
@@ -79,8 +80,6 @@ export default class Processor {
         productUsageMap,
         currProd
       );
-
-      this.productEvolution[product] = new Map(populatedUsageMap);
 
       let productRemain =
         this.objUtil.getLastMapEntry(populatedUsageMap)[1].onHand;
@@ -105,17 +104,17 @@ export default class Processor {
       }
       let order = Math.max(0, Math.ceil(orderNow));
       let count = order > 0 ? this.productCounter++ : null;
-
-      if (!this.currentOrderProducts.hasOwnProperty(product)) {
-        this.currentOrderProducts[product] = {
+      const productId = this.generateId(product);
+      if (!this.currentOrderProducts.hasOwnProperty(productId)) {
+        this.currentOrderProducts[productId] = {
           ...currProd,
+          product,
+          forecastOrder: order,
           order,
           count,
           stockOnOrderDay: Number(orderDayOnHand.toFixed(2)),
           nextOrderDayOnHand: Number(productRemain.toFixed(2)),
-          id: null,
-          isInDataTable: false,
-          readyToAdd: false,
+          sideDisplay: true,
         };
       }
     }
@@ -151,7 +150,7 @@ export default class Processor {
         currentUsage -= currentUsage * this.workHoursPercentage;
       }
       //  Upon reaching order reception date check if previous orders are still on the system and adjust order quantity
-      if (this.dateUtil.op(p.productArrivalDate).format() === currentDate) {
+      if (p.productArrivalDate === currentDate) {
         if (
           !this.previousIsInvoiced ||
           (this.receivedToday !== true && this.receivedToday !== null)
@@ -180,5 +179,68 @@ export default class Processor {
       p.onHand -= currentUsage;
     }
     return productMap;
+  }
+
+  forecastUsage() {
+    const products = { ...this.products };
+    for (let product in products) {
+      if (products[product].previousWeeksUsage <= 0) {
+        continue;
+      }
+      const productArrivalDate = this.dateUtil.findDeliveryDate(
+        new Date(products[product].previousOrderDate),
+        { asDate: true }
+      );
+      let currProd = {
+        product,
+        weeklyUsage: products[product].previousWeeksUsage,
+        onHand: products[product].onHand,
+        currentDemand: products[product].previousWeeksUsage,
+        lastOrderQuantity: products[product].previousOrderQuantity,
+        price: products[product].price,
+        safeQuantity: products[product].safeQuantity || 0,
+        productArrivalDate: this.dateUtil.op(productArrivalDate).format(),
+      };
+      let usageMap = new Map();
+      let dayCount = 0;
+      let startDate = this.placementDate;
+      let onHand = 0;
+      do {
+        dayCount++;
+        let emptyMap = this.getEmptyUsageMap(startDate, dayCount);
+        usageMap = this.productUsageDaily(emptyMap, currProd);
+        onHand = this.objUtil.getLastMapEntry(usageMap)[1].onHand;
+      } while (onHand > 0 && dayCount < 50);
+      const id = this.generateId(product);
+      this.productEvolution[id] = usageMap;
+    }
+
+    return { ...this.productEvolution };
+  }
+
+  getEmptyUsageMap(startDate, dayCount = 0) {
+    const weekGuide = this.dateUtil.getWeekdays([]);
+    let usageMap = new Map();
+    let dateStamp = new Date(startDate);
+    let dateStampFormat;
+    let properties = {};
+    for (let i = 0; i < dayCount; i++) {
+      const day = dateStamp.getDay();
+      dateStampFormat = `${
+        weekGuide[(day === 0 ? 7 : day) - 1]
+      } <=> ${this.dateUtil.op(dateStamp).format()}`;
+      usageMap.set(dateStampFormat, properties);
+      dateStamp = new Date(dateStamp.setDate(dateStamp.getDate() + 1));
+    }
+    return usageMap;
+  }
+
+  generateId(productName) {
+    return this.stringUtil
+      .removeSpecialChars(productName)
+      .split("")
+      .filter((el) => el !== " ")
+      .map((el) => el.toLowerCase())
+      .join("");
   }
 }
