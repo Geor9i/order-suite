@@ -201,16 +201,16 @@ export default class Processor {
         safeQuantity: products[product].safeQuantity || 0,
         productArrivalDate: this.dateUtil.op(productArrivalDate).format(),
       };
-      let usageMap = new Map();
-      let dayCount = 0;
       let startDate = this.placementDate;
-      let onHand = 0;
-      do {
+      let dayCount = 0;
+      let usageMap = new Map();
+      let onHand = 1;
+      while (onHand > 0 && dayCount < 50) {
         dayCount++;
         let emptyMap = this.getEmptyUsageMap(startDate, dayCount);
         usageMap = this.productUsageDaily(emptyMap, currProd);
         onHand = this.objUtil.getLastMapEntry(usageMap)[1].onHand;
-      } while (onHand > 0 && dayCount < 50);
+      }
       const id = this.generateId(product);
       this.productEvolution[id] = usageMap;
     }
@@ -226,9 +226,8 @@ export default class Processor {
     let properties = {};
     for (let i = 0; i < dayCount; i++) {
       const day = dateStamp.getDay();
-      dateStampFormat = `${
-        weekGuide[(day === 0 ? 7 : day) - 1]
-      } <=> ${this.dateUtil.op(dateStamp).format()}`;
+      dateStampFormat = `${weekGuide[(day === 0 ? 7 : day) - 1]
+        } <=> ${this.dateUtil.op(dateStamp).format()}`;
       usageMap.set(dateStampFormat, properties);
       dateStamp = new Date(dateStamp.setDate(dateStamp.getDate() + 1));
     }

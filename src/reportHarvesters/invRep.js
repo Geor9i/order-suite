@@ -1,4 +1,4 @@
-function inventoryHarvest (report) {
+export default function inventoryHarvest (report) {
 
     // report = report.split('').join('-');
     // console.log(report);

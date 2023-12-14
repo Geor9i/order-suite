@@ -23,6 +23,8 @@ import FormUtil from "./utils/formUtil.js";
 import DomUtil from "./utils/domUtil.js";
 import ObjectUtil from "./utils/objectUtil.js";
 
+import { report } from '../inventoryReport.js'
+
 const main = document.querySelector("main");
 const nav = document.querySelector("header");
 
@@ -46,10 +48,13 @@ const utils = {
 };
 
 //Product Processor
-const processor = new Processor(storeSettings, { ...utils });
+const processor = new Processor(storeSettings, utils);
 
 //Harvester
-const harvester = new Harvester();
+const harvester = new Harvester(utils);
+
+const process = harvester.inventoryHarvest(report)
+console.log(process);
 
 //Components
 const calendarComponent = new Calendar(calendarTemplate, renderCalender, utils);

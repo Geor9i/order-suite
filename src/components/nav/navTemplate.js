@@ -5,16 +5,20 @@ export const navTemplate = (dropDown) => html`
 <section id="top__section">
             <div class="main__title" @click=${dropDown} >NEXT ORDER</div>
         </section>
-        <div class="dropdown__menu">
-            <div class="menu__container">
-                <a @click=${dropDown} href="/order-form" class="menu__selector menu__make__order">
-                    <h1>Place Order</h1>
+        <div id="dropdown__menu" class="dropdown__menu">
+            <div class="dropdown__menu-content-container">
+                <a @click=${dropDown} href="/account" class="menu__selector menu__selector__account">
+                    <p>Farnborough</p>
                 </a>
-                <a @click=${dropDown} class="menu__selector menu__adjust__products">
-                    <h1>Store Template</h1>
+                <a @click=${dropDown} href="/order-form" class="menu__selector menu__selector_left">
+                    <p>Place Order</p>
                 </a>
-                <div @click=${dropDown} class="menu__pulldown"></div>
+                <a @click=${dropDown} href="/restaurant" class="menu__selector menu__selector_right">
+                    <p>My</p>
+                    <p>Restaurant</p>
+                </a>
             </div>
+            <div @click=${dropDown} class="menu__pulldown"></div>
         </div>
         <div class="menu-backdrop" @click=${dropDown}></div>
 `;

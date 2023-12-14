@@ -26,7 +26,6 @@ export default class OrderPage {
       this.copyRMFScript
     );
     this.renderHandler(template);
-    console.log(this.processor.currentOrderProducts);
   }
 
   _valueButtonClick(e) {
@@ -60,19 +59,11 @@ export default class OrderPage {
       }
     }
     this.showView();
-    // const table = Array.from(document.querySelectorAll('.side-table-tr'));
-    // for (let tr of table) {
-    //   const id = tr.id
-    //   if (id.includes(value) || value === '') {
-    //     tr.className = 'side-table-tr';
-    //   } else {
-    //     tr.className = 'side-table-tr hidden';
-    //   }
-    // }
   }
 
   _copyRMFScript() {
     let usageGraph = this.processor.forecastUsage();
+    console.log(usageGraph);
     let productList = "";
     for (let productId in this.processor.currentOrderProducts) {
       if (!usageGraph.hasOwnProperty(productId)) {

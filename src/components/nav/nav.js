@@ -15,18 +15,10 @@ export default class NavComponent {
   }
 
   _navDropdown() {
-    const dropdownMenuElementStates = {
-      normal: document.querySelector(".dropdown__menu"),
-      dropped: document.querySelector(".dropdown__menu__active"),
-    };
+    const element = document.getElementById('dropdown__menu');
     let backDrop = document.querySelector(".menu-backdrop");
     this.domUtil.toggleVisibility(backDrop);
-    let dropDownElement = this.domUtil.findActiveClass(
-      dropdownMenuElementStates
-    );
-    this.domUtil.toggleClass(dropDownElement, [
-      "dropdown__menu",
-      "dropdown__menu__active",
-    ]);
+    const menuClasses = ['dropdown__menu', 'dropdown__menu dropdown__menu__active']
+    this.domUtil.toggleClass(element, menuClasses)
   }
 }
