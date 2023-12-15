@@ -1,19 +1,37 @@
 import { html } from "../../../node_modules/lit-html/lit-html.js";
 
-export const storeSetupTemplate = (slideOpen, showDeliveryDetails, dateUtil) => {
-  const weekdays = dateUtil.getWeekdays([]);
-
+export const storeSetupTemplate = (
+  slideOpen,
+  showDeliveryDetails,
+  toggleDay,
+  weekdays
+) => {
   return html`
     <div class="inventory__main-container">
       <div class="store__open-times-container">
         <h1 class="store__open-times__form-header">Farnborough Express</h1>
-        <div @click=${slideOpen} data-id="store__details__container" class="store__details__bar">Store Details</div>
+        <div
+          @click=${slideOpen}
+          data-id="store__details__container"
+          class="store__details__bar"
+        >
+          Store Details
+        </div>
         <div class="store__details__container" id="store__details__container">
           <div class="weekday__main__container">
-            ${weekdays.map((weekday) => weekdayTemplate(weekday, showDeliveryDetails))}
+            ${weekdays.map((weekday) =>
+              weekdayTemplate(weekday, showDeliveryDetails, toggleDay, weekdays)
+            )}
           </div>
         </div>
-        <div id="analysis-bar" class="store__details__bar">Analysis</div>
+        <div
+          @click=${slideOpen}
+          data-id="analysis-container"
+          class="store__details__bar"
+        >
+          Analysis
+        </div>
+        ${dataAnalysis(slideOpen)}
         <div class="store__details-confirm-button__container">
           <button class="store__details-confirm-button">Confirm</button>
         </div>
@@ -26,11 +44,16 @@ export const storeSetupTemplate = (slideOpen, showDeliveryDetails, dateUtil) => 
   `;
 };
 
-const weekdayTemplate = (weekday, showDeliveryDetails) => html`
+const weekdayTemplate = (
+  weekday,
+  showDeliveryDetails,
+  toggleDay,
+  weekdays
+) => html`
    
    <div class="weekday__container" id="weekday__container-${weekday}">
-        <div class="weekday-button__active" id="weekday-button__active-${weekday}">${weekday}</div>
-            <div class="store-details__main-container__active">
+        <div @click=${toggleDay} class="weekday-button" data-id=${weekday}>${weekday}</div>
+            <div class="store-details__main-container" id="store-details__main-container-${weekday}">
                     <div class="time-selector__main-container">
                         <div class="time-selector__inner-container">
                             <label class="time-selector-label" for="${weekday}-open-selector">open</label>
@@ -57,9 +80,14 @@ const weekdayTemplate = (weekday, showDeliveryDetails) => html`
                                 <select id="arrival-time-${weekday}" class="delivery-arrival-selector">${generateHours()}</select>
                             </div>
                         <div class="order-cutoff-details__container">
-                            <label for="cutoff-weekday-${weekday}" class="delivery-day-arrival-time-text">Order placement deadline</label>
+                        <label for="cutoff-weekday-${weekday}" class="delivery-day-arrival-time-text">Order placement deadline</label>
+                            <select id="cutoff-weekday-${weekday}" class="delivery-arrival-cutoff-weekday">
+                            ${weekdays.map(
+                              (day) =>
+                                html`<option value=${day}>${day}</option>`
+                            )}
+                          </select>
                             <select id="cutoff-weekday-${weekday}" class="delivery-arrival-cutoff-weekday">${generateHours()}</select>
-                            <select id="cutoff-time-${weekday}" class="delivery-arrival-cutoff-time">${generateHours()}</select>
                         </div>
                 </div>
             </div>
@@ -70,10 +98,43 @@ const generateHours = () => {
   const hours = [];
   for (let i = 0; i < 24; i++) {
     const formattedHour = i < 10 ? `0${i}` : `${i}`;
-    hours.push(html`<option value="${formattedHour}:00">${formattedHour}:00</option>`);
-    hours.push(html`<option value="${formattedHour}:15">${formattedHour}:15</option>`);
-    hours.push(html`<option value="${formattedHour}:30">${formattedHour}:30</option>`);
-    hours.push(html`<option value="${formattedHour}:45">${formattedHour}:45</option>`);
+    hours.push(
+      html`<option value="${formattedHour}:00">${formattedHour}:00</option>`
+    );
+    hours.push(
+      html`<option value="${formattedHour}:15">${formattedHour}:15</option>`
+    );
+    hours.push(
+      html`<option value="${formattedHour}:30">${formattedHour}:30</option>`
+    );
+    hours.push(
+      html`<option value="${formattedHour}:45">${formattedHour}:45</option>`
+    );
   }
   return hours;
 };
+
+const dataAnalysis = (slideOpen) => html`
+<div id="analysis-container" class="store__details__container">
+    <div @click=${slideOpen} data-id="sales-summary-dropdown" class="analysis__inner-bar">Sales Summary
+    </div>
+    <div id="sales-summary-dropdown" class="analysis__inner-dropdown">
+        <div class="analysis__inner-content">
+        <label for="sales-summary-input" id="sales-summary-input">Paste a 30 day+ sales summary report</label>
+        <input class="analysis__inner-content-input" id="sales-summary-input" name="sales-summary-input" type="text">
+        </input>
+        <button class="analysis__inner-content-button">Process</button>
+        </div>
+    </div>
+    <div @click=${slideOpen} data-id="hourly-sales-dropdown" class="analysis__inner-bar">Hourly Sales
+    </div>
+    <div id="hourly-sales-dropdown" class="analysis__inner-dropdown">
+        <div class="analysis__inner-content">
+        <label for="hourly-sales-input">Paste a 30 day+ hourly sales report</label>
+        <input id="hourly-sales-input" class="analysis__inner-content-input type="text">
+        </input>
+        <button class="analysis__inner-content-button">Process</button>
+        </div>
+    </div>
+</div>
+`;

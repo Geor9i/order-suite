@@ -188,7 +188,7 @@ cursor: pointer;
     text-align: center;
 }
 
-.weekday-button__active {
+.weekday-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -197,25 +197,17 @@ cursor: pointer;
     text-align: center;
     width: 90%;
     height: 3rem;
+    border-radius: 13px;
     border: 1px solid black;
     color: black;
     background-color: rgb(230, 230, 230);
     cursor: pointer;
 }
 .weekday-button__inactive {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
     text-decoration: line-through;
     text-decoration-color: rgb(0, 0, 0);
     text-decoration-thickness: 3px;
-    margin: 10px 0px;
-    width: 90%;
-    height: 3rem;
-    border: 1px solid black;
     background-color: rgb(80, 80, 80);
-    cursor: pointer;
 }
 
 
@@ -226,12 +218,9 @@ cursor: pointer;
     background-color: rgb(99, 99, 99);
 }
 
-.store-details__main-container__active {
+.store-details__main-container {
     display: block;
     width: 100%;
-}
-.store-details__main-container__inactive {
-    display: none;
 }
 
 .time-selector__main-container {

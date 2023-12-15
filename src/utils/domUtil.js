@@ -1,5 +1,23 @@
 export default class DomUtil {
   //CSS
+
+  getContentHeight(element) {
+    let content = Array.from(element.children);
+    return content.reduce((acc, curr) => acc + curr.clientHeight, 0);
+  }
+
+  getElementHierarchy(elementsArr) {
+    return elementsArr.sort((a, b) => {
+      if (a.contains(b)) {
+        return -1; // a comes before b
+      } else if (b.contains(a)) {
+        return 1; // b comes before a
+      } else {
+        return 0; // maintain the current order
+      }
+    });
+  }
+
   findActiveClass(obj) {
     let result = Object.keys(obj).find((el) => obj[el] !== null);
     return obj[result];
