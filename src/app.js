@@ -24,6 +24,8 @@ import DomUtil from "./utils/domUtil.js";
 import ObjectUtil from "./utils/objectUtil.js";
 
 import { report } from '../inventoryReport.js'
+import StoreTemplateScreen from "./components/storeTemplate/storeSetupScreen.js";
+import { storeSetupTemplate } from "./components/storeTemplate/StoreSetupTemplate.js";
 
 const main = document.querySelector("main");
 const nav = document.querySelector("header");
@@ -82,10 +84,17 @@ const orderPageComponent = new OrderPage(
   processor,
   utils
 );
+const storeTemplateScreen = new StoreTemplateScreen(
+  storeSetupTemplate,
+  renderBody,
+  router,
+  utils
+);
 
 page(navComponent.showView);
 page("/", homeComponent.showView);
 page("/order-form", orderFormComponent.showView);
 page("/order-details", orderPageComponent.showView);
+page("/restaurant", storeTemplateScreen.showView);
 
 page.start();

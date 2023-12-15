@@ -110,10 +110,7 @@ margin: 1rem;
     cursor: pointer;
 }
 
-.store__open-times__form__inactive {
-    display: none;
-}
-.store__open-times__form__active {
+.store__open-times-container {
     display: flex;
     color: rgb(224, 224, 224);
     flex-direction: column;
@@ -156,6 +153,11 @@ cursor: pointer;
     width: 100%;
     height: 0rem;
     overflow: hidden;
+    transition: height 0.3s ease;
+}
+
+.slider-active {
+    height: 352px;
     transition: height 0.3s ease;
 }
 
@@ -316,10 +318,7 @@ cursor: pointer;
     margin-right: 10px;
 }
 
-    .delivery-day-info__container__inactive {
-        display: none;
-    }
-    .delivery-day-info__container__active {
+    .delivery-day-info__container {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -456,3 +455,6 @@ cursor: pointer;
     border: 1px solid black;
 }
 
+.inactive {
+    display: none;
+}
