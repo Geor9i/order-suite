@@ -14,8 +14,10 @@ export default class StoreTemplateScreen {
   }
 
   _showView() {
-  const weekdays = this.dateUtil.getWeekdays([]).map(weekday => this.stringUtil.toPascalCase(weekday));
-    
+    const weekdays = this.dateUtil
+      .getWeekdays([])
+      .map((weekday) => this.stringUtil.toPascalCase(weekday));
+
     this.render(
       this.templateFunction(
         this.slideOpen,
@@ -30,32 +32,60 @@ export default class StoreTemplateScreen {
     const element = e.currentTarget;
     const id = element.dataset.id;
     const container = document.getElementById(id);
-    const isRecorded = this.sliderContainers.find(element => element.id === id);
+    const isRecorded = this.sliderContainers.some(
+      (element) => element.id === id
+    );
     if (!isRecorded) {
-      this.sliderContainers.push(container)
+      this.sliderContainers.push(container);
     }
-    const containerHeight = container.getBoundingClientRect().height;
-    if (containerHeight <= 0) {
-      const contentHeight = this.domUtil.getContentHeight(container);
-      container.style.height = contentHeight + 'px';
-    } else {
-      container.style.height = 0 + 'px';
+
+    let containerHierarchies = this.domUtil.getElementHierarchy(
+      this.sliderContainers
+    );
+    const selectedHierarchy = containerHierarchies.find((arr) =>
+      arr.find((element) => element.id === id)
+    );
+    const hierarchyHeightArr = selectedHierarchy.map(
+      (el) => el.getBoundingClientRect().height
+    );
+    const startContainerIndex = selectedHierarchy.findIndex(
+      (element) => element.id === id
+    );
+    const selectedContainer = selectedHierarchy[startContainerIndex];
+    let containerHeight = hierarchyHeightArr[startContainerIndex];
+    let toggleOpen = containerHeight <= 0 ? true : false;
+    let cumulativeHeight = this.domUtil.getContentHeight(selectedContainer);
+    selectedContainer.style.height = (toggleOpen ? cumulativeHeight : 0) + "px";
+    for (let i = startContainerIndex - 1; i >= 0; i--) {
+      if (selectedHierarchy[i].contains(selectedContainer)) {
+        const currentParentContainer = selectedHierarchy[i];
+        let currentParentContainerContentHeight = hierarchyHeightArr[i];
+        cumulativeHeight = toggleOpen
+          ? cumulativeHeight + currentParentContainerContentHeight
+          : cumulativeHeight;
+        currentParentContainer.style.height =
+          (toggleOpen
+            ? cumulativeHeight
+            : currentParentContainerContentHeight - cumulativeHeight) + "px";
+      }
     }
-    console.log(this.domUtil.getElementHierarchy(this.sliderContainers));
   }
 
   _showDeliveryDetails(e) {
-    const weekday = e.currentTarget.dataset.id
-    const detailsContainer = document.getElementById(`delivery-day-info__container-${weekday}`);
+    const weekday = e.currentTarget.dataset.id;
+    const detailsContainer = document.getElementById(
+      `delivery-day-info__container-${weekday}`
+    );
     this.domUtil.addRemoveClass(detailsContainer, `inactive`);
   }
 
   _toggleDay(e) {
     const element = e.currentTarget;
     const weekday = element.dataset.id;
-    const container = document.getElementById(`store-details__main-container-${weekday}`);
-    this.domUtil.addRemoveClass(element, 'weekday-button__inactive');
-    this.domUtil.addRemoveClass(container, 'inactive');
-
+    const container = document.getElementById(
+      `store-details__main-container-${weekday}`
+    );
+    this.domUtil.addRemoveClass(element, "weekday-button__inactive");
+    this.domUtil.addRemoveClass(container, "inactive");
   }
 }

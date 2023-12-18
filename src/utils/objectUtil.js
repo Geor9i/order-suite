@@ -385,6 +385,25 @@ export default class ObjectUtil {
     return result;
   }
 
+  sort(arr, callback) {
+    arr = [...arr];
+  
+    const sortedArr = [];
+  
+    while (arr.length > 0) {
+      let sortIndex = 0; 
+      for (let i = 0; i < arr.length; i++) {
+          if (callback(arr[sortIndex], arr[i]) > 0) {
+              sortIndex = i;
+          }
+      }
+      sortedArr.push(arr[sortIndex]);
+      arr.splice(sortIndex, 1);
+    }
+    return sortedArr;
+  }
+  
+
   search(list, keyword, { filter = [], returnBool = false } = {}) {
     let discovered = Object.keys(list).filter((listItem) => {
       for (let item in list[listItem]) {

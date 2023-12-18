@@ -1,4 +1,8 @@
+import ObjectUtil from "./objectUtil.js";
 export default class DomUtil {
+  constructor() {
+    this.objUtil = new ObjectUtil();
+  }
   //CSS
 
   getContentHeight(element) {
@@ -7,15 +11,30 @@ export default class DomUtil {
   }
 
   getElementHierarchy(elementsArr) {
-    return elementsArr.sort((a, b) => {
+    elementsArr = [...elementsArr];
+    let hierarchy = this.objUtil.sort(elementsArr, (a, b) => findParent(b, a));
+    let resultArr = [];
+    function findParent(a, b) {
       if (a.contains(b)) {
-        return -1; // a comes before b
+        return 1;
       } else if (b.contains(a)) {
-        return 1; // b comes before a
-      } else {
-        return 0; // maintain the current order
+        return -1;
+      } else return 0;
+    }
+    let parentIndex = 0;
+    for (let i = 0; i < hierarchy.length; i++) {
+      if (
+        !hierarchy[parentIndex].contains(hierarchy[i]) &&
+        hierarchy[parentIndex] !== hierarchy[i]
+      ) {
+        resultArr.push(hierarchy.slice(parentIndex, i));
+        parentIndex = i;
       }
-    });
+      if (i === hierarchy.length - 1) {
+        resultArr.push(hierarchy.slice(parentIndex));
+      }
+    }
+    return resultArr;
   }
 
   findActiveClass(obj) {
