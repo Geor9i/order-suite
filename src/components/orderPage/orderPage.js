@@ -128,23 +128,20 @@ export default class OrderPage {
   }
 
   getHeaderData() {
+    const months = this.dateUtil.getMonths([]);
     const weekdays = this.dateUtil.getWeekdays([]);
     return {
       invoiceDay: {
         weekday: this.stringUtil.toPascalCase(
           weekdays[this.processor.orderInvoiceDate.getDay() - 1]
         ),
-        date: `${this.processor.orderInvoiceDate.getDate()} - ${this.dateUtil.getMonth(
-          this.processor.orderInvoiceDate.getMonth()
-        )}`,
+        date: `${this.processor.orderInvoiceDate.getDate()} - ${months[this.processor.orderInvoiceDate.getMonth()]}`,
       },
       nextInvoiceDay: {
         weekday: this.stringUtil.toPascalCase(
           weekdays[this.processor.nextOrderInvoiceDate.getDay() - 1]
         ),
-        date: `${this.processor.nextOrderInvoiceDate.getDate()} - ${this.dateUtil.getMonth(
-          this.processor.nextOrderInvoiceDate.getMonth()
-        )}`,
+        date: `${this.processor.nextOrderInvoiceDate.getDate()} - ${months[this.processor.nextOrderInvoiceDate.getMonth()]}`,
       },
     };
   }

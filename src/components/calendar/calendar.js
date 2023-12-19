@@ -45,6 +45,7 @@ export default class Calendar {
 
   //Function to fill the dates in the calendar
   _fillCalendar() {
+    const months = this.dateUtil.getMonths([]);
     let calenderHeaderTextElement = document.getElementById(
       "calendar-header-text"
     );
@@ -72,9 +73,7 @@ export default class Calendar {
     }, [])[0];
     let currentMonthIndex = 0;
     let nextMonthIndex = 0;
-    calenderHeaderTextElement.innerText = `${year} ${this.dateUtil.getMonth(
-      month
-    )}`;
+    calenderHeaderTextElement.innerText = `${year} ${months[month]}`;
 
     let activeRows = Array.from(calendarTrCollection).slice(1);
 

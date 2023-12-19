@@ -55,7 +55,7 @@ const processor = new Processor(storeSettings, utils);
 //Harvester
 const harvester = new Harvester(utils);
 
-const process = harvester.inventoryHarvest(report)
+const process = harvester.hourlySalesExtractor(report)
 console.log(process);
 
 //Components

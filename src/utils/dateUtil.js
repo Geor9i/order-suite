@@ -40,22 +40,44 @@ export default class DateUtil {
     }
   }
 
-  getMonth(index, { full = false } = {}) {
-    let months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    return full ? months[index] : months[index].slice(0, 3);
+  getMonths(data, options = {}) {
+    let syntaxVariations = {
+      january: ["january", "jan", 1],
+      february: ["february", "feb", 2],
+      march: ["march", "mar", 3],
+      april: ["april", "apr", 4],
+      may: ["may", 5],
+      june: ["june", "jun", 6],
+      july: ["july", "jul", 7],
+      august: ["august", "aug", 8],
+      september: ["september", "sep", "sept", 9],
+      october: ["october", "oct", 10],
+      november: ["november", "nov", 11],
+      december: ["december", "dec", 12],
+    };
+    if (Array.isArray(data)) {
+      if (options.sort) {
+        return data
+          .map((month) => this.getMonths(month))
+          .filter((month, index, arr) => arr.indexOf(month) === index)
+          .filter((month) => (remove.includes(month) ? false : true));
+      }
+      if (options.short) {
+        return Object.keys(syntaxVariations).map(month => month.slice(0, 3));
+      } else {
+        return Object.keys(syntaxVariations)
+      }
+    } else if (typeof data === "object" && Object.keys(data).length === 0) {
+      return this.objUtil.reduceToObj(this.getMonths([]), {});
+    }
+
+    let string = String(data).toLowerCase();
+
+    for (let month in syntaxVariations) {
+      if (syntaxVariations[month].includes(string)) {
+        return month;
+      }
+    }
   }
 
   dateDifference(date1, date2) {
@@ -87,7 +109,8 @@ export default class DateUtil {
     }
   ) {
     const weekGuide = this.getWeekdays([]);
-    dateFrom = typeof dateFrom === 'object' ? dateFrom : this.op(dateFrom).format();
+    dateFrom =
+      typeof dateFrom === "object" ? dateFrom : this.op(dateFrom).format();
     let orderDays = storeSettings.orderDays.map(
       (day) => weekGuide.indexOf(day) + 1
     );

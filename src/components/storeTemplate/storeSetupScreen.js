@@ -32,7 +32,7 @@ export default class StoreTemplateScreen {
     const element = e.currentTarget;
     const id = element.dataset.id;
     const container = document.getElementById(id);
-    const isRecorded = this.sliderContainers.some(
+    const isRecorded = this.sliderContainers.find(
       (element) => element.id === id
     );
     if (!isRecorded) {
