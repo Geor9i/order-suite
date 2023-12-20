@@ -34886,6 +34886,66 @@ function getModularInstance(service) {
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/components/404/notFoundPage.module.css":
+/*!******************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/components/404/notFoundPage.module.css ***!
+  \******************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, `.z3C9ClyW9ehRqSOopzOd {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.G_geZ_GQXOJHwWzyKA4r {
+    width:100%;
+    height: 10rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+}
+.G_geZ_GQXOJHwWzyKA4r h1:nth-child(odd)  {
+    margin: 2rem;
+    color: red;
+}
+
+.z3C9ClyW9ehRqSOopzOd p {
+    font-size: 2rem;
+}
+.z3C9ClyW9ehRqSOopzOd a:hover {
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: blue;
+}`, "",{"version":3,"sources":["webpack://./src/components/404/notFoundPage.module.css"],"names":[],"mappings":"AAAA;IACI,aAAa;IACb,mBAAmB;IACnB,uBAAuB;IACvB,sBAAsB;IACtB,WAAW;IACX,YAAY;AAChB;;AAEA;IACI,UAAU;IACV,aAAa;IACb,aAAa;IACb,mBAAmB;IACnB,uBAAuB;IACvB,eAAe;AACnB;AACA;IACI,YAAY;IACZ,UAAU;AACd;;AAEA;IACI,eAAe;AACnB;AACA;IACI,eAAe;IACf,iBAAiB;IACjB,eAAe;IACf,WAAW;AACf","sourcesContent":[".container {\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    flex-direction: column;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.not-found_container {\r\n    width:100%;\r\n    height: 10rem;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    font-size: 5rem;\r\n}\r\n.not-found_container h1:nth-child(odd)  {\r\n    margin: 2rem;\r\n    color: red;\r\n}\r\n\r\n.container p {\r\n    font-size: 2rem;\r\n}\r\n.container a:hover {\r\n    font-size: 2rem;\r\n    font-weight: bold;\r\n    cursor: pointer;\r\n    color: blue;\r\n}"],"sourceRoot":""}]);
+// Exports
+___CSS_LOADER_EXPORT___.locals = {
+	"container": `z3C9ClyW9ehRqSOopzOd`,
+	"not-found_container": `G_geZ_GQXOJHwWzyKA4r`
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./src/components/homePage/homePage.module.css":
 /*!*******************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./src/components/homePage/homePage.module.css ***!
@@ -34928,9 +34988,9 @@ ___CSS_LOADER_EXPORT___.locals = {
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js!./src/components/loginPage/loginPage.module.css":
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/components/loginPAge/loginPage.module.css":
 /*!*********************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./src/components/loginPage/loginPage.module.css ***!
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/components/loginPAge/loginPage.module.css ***!
   \*********************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
@@ -34947,7 +35007,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, `.DxErKbyDUepHkGxvvcMg {
+___CSS_LOADER_EXPORT___.push([module.id, `.vE59e6vIQE2RLnrwLh04 {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -34959,7 +35019,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.DxErKbyDUepHkGxvvcMg {
     border-radius: 33px;
 }
 
-.winerdIVOlmPhMvetfC9 {
+.mKB6PfYVO5U4KvSPz_WA {
     width: 100%;
     height: 100%;
     display: flex;
@@ -34968,7 +35028,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.DxErKbyDUepHkGxvvcMg {
     flex-direction: column;
 }
 
-.hnDQKZbWiJkv6888Foud {
+.qI7KHB5hsSo0a0w673n_ {
     display: flex;
     align-items: start;
     justify-content: center;
@@ -34978,27 +35038,27 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.DxErKbyDUepHkGxvvcMg {
     margin: 1rem;
 }
 
-.hnDQKZbWiJkv6888Foud input {
+.qI7KHB5hsSo0a0w673n_ input {
     text-align: left;
     width: 100%;
     height: 100%;
 }
 
-.kcWXdvtmmrIra7bfNoxT {
+.IKSn7GNBD2qRmH3q9T1y {
     width: 50%;
     height: 2rem;
     cursor: pointer;
 }
-.XYRhIdrGxx8CDrHkP8HQ {
+.p0vmrvZVaQZEcRSq7HxZ {
     margin: 0;
-}`, "",{"version":3,"sources":["webpack://./src/components/loginPage/loginPage.module.css"],"names":[],"mappings":"AAAA;IACI,aAAa;IACb,mBAAmB;IACnB,2BAA2B;IAC3B,sBAAsB;IACtB,UAAU;IACV,WAAW;IACX,oCAAoC;IACpC,uBAAuB;IACvB,mBAAmB;AACvB;;AAEA;IACI,WAAW;IACX,YAAY;IACZ,aAAa;IACb,mBAAmB;IACnB,uBAAuB;IACvB,sBAAsB;AAC1B;;AAEA;IACI,aAAa;IACb,kBAAkB;IAClB,uBAAuB;IACvB,sBAAsB;IACtB,UAAU;IACV,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,gBAAgB;IAChB,WAAW;IACX,YAAY;AAChB;;AAEA;IACI,UAAU;IACV,YAAY;IACZ,eAAe;AACnB;AACA;IACI,SAAS;AACb","sourcesContent":[".login-container {\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: flex-start;\r\n    flex-direction: column;\r\n    width: 25%;\r\n    height: 30%;\r\n    background-color: rgb(236, 236, 236);\r\n    border: 2px solid black;\r\n    border-radius: 33px;\r\n}\r\n\r\n.login-form {\r\n    width: 100%;\r\n    height: 100%;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    flex-direction: column;\r\n}\r\n\r\n.input-container {\r\n    display: flex;\r\n    align-items: start;\r\n    justify-content: center;\r\n    flex-direction: column;\r\n    width: 50%;\r\n    height: 3rem;\r\n    margin: 1rem;\r\n}\r\n\r\n.input-container input {\r\n    text-align: left;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.submit-btn {\r\n    width: 50%;\r\n    height: 2rem;\r\n    cursor: pointer;\r\n}\r\n.label {\r\n    margin: 0;\r\n}"],"sourceRoot":""}]);
+}`, "",{"version":3,"sources":["webpack://./src/components/loginPAge/loginPage.module.css"],"names":[],"mappings":"AAAA;IACI,aAAa;IACb,mBAAmB;IACnB,2BAA2B;IAC3B,sBAAsB;IACtB,UAAU;IACV,WAAW;IACX,oCAAoC;IACpC,uBAAuB;IACvB,mBAAmB;AACvB;;AAEA;IACI,WAAW;IACX,YAAY;IACZ,aAAa;IACb,mBAAmB;IACnB,uBAAuB;IACvB,sBAAsB;AAC1B;;AAEA;IACI,aAAa;IACb,kBAAkB;IAClB,uBAAuB;IACvB,sBAAsB;IACtB,UAAU;IACV,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,gBAAgB;IAChB,WAAW;IACX,YAAY;AAChB;;AAEA;IACI,UAAU;IACV,YAAY;IACZ,eAAe;AACnB;AACA;IACI,SAAS;AACb","sourcesContent":[".login-container {\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: flex-start;\r\n    flex-direction: column;\r\n    width: 25%;\r\n    height: 30%;\r\n    background-color: rgb(236, 236, 236);\r\n    border: 2px solid black;\r\n    border-radius: 33px;\r\n}\r\n\r\n.login-form {\r\n    width: 100%;\r\n    height: 100%;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    flex-direction: column;\r\n}\r\n\r\n.input-container {\r\n    display: flex;\r\n    align-items: start;\r\n    justify-content: center;\r\n    flex-direction: column;\r\n    width: 50%;\r\n    height: 3rem;\r\n    margin: 1rem;\r\n}\r\n\r\n.input-container input {\r\n    text-align: left;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.submit-btn {\r\n    width: 50%;\r\n    height: 2rem;\r\n    cursor: pointer;\r\n}\r\n.label {\r\n    margin: 0;\r\n}"],"sourceRoot":""}]);
 // Exports
 ___CSS_LOADER_EXPORT___.locals = {
-	"login-container": `DxErKbyDUepHkGxvvcMg`,
-	"login-form": `winerdIVOlmPhMvetfC9`,
-	"input-container": `hnDQKZbWiJkv6888Foud`,
-	"submit-btn": `kcWXdvtmmrIra7bfNoxT`,
-	"label": `XYRhIdrGxx8CDrHkP8HQ`
+	"login-container": `vE59e6vIQE2RLnrwLh04`,
+	"login-form": `mKB6PfYVO5U4KvSPz_WA`,
+	"input-container": `qI7KHB5hsSo0a0w673n_`,
+	"submit-btn": `IKSn7GNBD2qRmH3q9T1y`,
+	"label": `p0vmrvZVaQZEcRSq7HxZ`
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -35463,6 +35523,60 @@ module.exports = function (item) {
 
 /***/ }),
 
+/***/ "./src/components/404/notFoundPage.module.css":
+/*!****************************************************!*\
+  !*** ./src/components/404/notFoundPage.module.css ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_notFoundPage_module_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js!./notFoundPage.module.css */ "./node_modules/css-loader/dist/cjs.js!./src/components/404/notFoundPage.module.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_notFoundPage_module_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_notFoundPage_module_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_notFoundPage_module_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_notFoundPage_module_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
 /***/ "./src/components/homePage/homePage.module.css":
 /*!*****************************************************!*\
   !*** ./src/components/homePage/homePage.module.css ***!
@@ -35517,9 +35631,9 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ "./src/components/loginPage/loginPage.module.css":
+/***/ "./src/components/loginPAge/loginPage.module.css":
 /*!*******************************************************!*\
-  !*** ./src/components/loginPage/loginPage.module.css ***!
+  !*** ./src/components/loginPAge/loginPage.module.css ***!
   \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -35539,7 +35653,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_loginPage_module_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js!./loginPage.module.css */ "./node_modules/css-loader/dist/cjs.js!./src/components/loginPage/loginPage.module.css");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_loginPage_module_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js!./loginPage.module.css */ "./node_modules/css-loader/dist/cjs.js!./src/components/loginPAge/loginPage.module.css");
 
       
       
@@ -35946,6 +36060,57 @@ module.exports = styleTagTransform;
 
 /***/ }),
 
+/***/ "./src/components/404/NotFoundPage.js":
+/*!********************************************!*\
+  !*** ./src/components/404/NotFoundPage.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ NotFoundPage)
+/* harmony export */ });
+/* harmony import */ var _notFoundPageTemplate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./notFoundPageTemplate.js */ "./src/components/404/notFoundPageTemplate.js");
+
+
+class NotFoundPage {
+  constructor({ render }) {
+    this.render = render;
+    this.showView = this._showView.bind(this);
+  }
+
+  _showView() {
+    this.render((0,_notFoundPageTemplate_js__WEBPACK_IMPORTED_MODULE_0__.notFoundPageTemplate)());
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/components/404/notFoundPageTemplate.js":
+/*!****************************************************!*\
+  !*** ./src/components/404/notFoundPageTemplate.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   notFoundPageTemplate: () => (/* binding */ notFoundPageTemplate)
+/* harmony export */ });
+/* harmony import */ var lit_html__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit-html */ "./node_modules/lit-html/development/lit-html.js");
+/* harmony import */ var _notFoundPage_module_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./notFoundPage.module.css */ "./src/components/404/notFoundPage.module.css");
+
+
+const notFoundPageTemplate = () => (0,lit_html__WEBPACK_IMPORTED_MODULE_0__.html)`
+<div class=${_notFoundPage_module_css__WEBPACK_IMPORTED_MODULE_1__["default"]['container']}>
+<div class=${_notFoundPage_module_css__WEBPACK_IMPORTED_MODULE_1__["default"]['not-found_container']}>
+    <h1>404</h1> Page Not Found</h1>
+</div>
+<p>Back to <a href="/">home</a></p>
+</div>`
+
+/***/ }),
+
 /***/ "./src/components/calendar/calendar.js":
 /*!*********************************************!*\
   !*** ./src/components/calendar/calendar.js ***!
@@ -35956,12 +36121,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Calendar)
 /* harmony export */ });
+/* harmony import */ var _calendarTemplate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./calendarTemplate.js */ "./src/components/calendar/calendarTemplate.js");
+
+
 class Calendar {
-  constructor(templateFunc, renderCalender, utils) {
+  constructor(renderCalender, utils) {
     this.domUtil = utils.domUtil;
     this.dateUtil = utils.dateUtil;
     this.stringUtil = utils.stringUtil;
-    this.templateFunc = templateFunc;
     this.renderCalender = renderCalender;
     this.showView = this._showView.bind(this);
     this.fillCalendar = this._fillCalendar.bind(this);
@@ -35977,7 +36144,7 @@ class Calendar {
 
   _showView(parent) {
     this.renderCalender(
-      this.templateFunc(
+      (0,_calendarTemplate_js__WEBPACK_IMPORTED_MODULE_0__.calendarTemplate)(
         this.dateUtil,
         this.stringUtil,
         this.upArrowClick,
@@ -36299,21 +36466,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ HomeComponent)
 /* harmony export */ });
+/* harmony import */ var _homePageTemplate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./homePageTemplate.js */ "./src/components/homePage/homePageTemplate.js");
+
+
 class HomeComponent {
-    constructor (templateFunction, renderHandler, router, utils) {
-        this.renderHandler = renderHandler;
-        this.templateFunction = templateFunction;
-        this.router = router;
-        this.showView = this._showView.bind(this);
-    }
+  constructor({ renderBody, router, utils }) {
+    this.renderHandler = renderBody;
+    this.router = router;
+    this.showView = this._showView.bind(this);
+  }
 
-    _showView(ctx) {
-        let template = this.templateFunction();
-        this.renderHandler(template);
-    }
-
-  
+  _showView(ctx) {
+    this.renderHandler((0,_homePageTemplate_js__WEBPACK_IMPORTED_MODULE_0__.homePageTemplate)());
+  }
 }
+
 
 /***/ }),
 
@@ -36351,10 +36518,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ LoginPage)
 /* harmony export */ });
+/* harmony import */ var _loginPageTemplate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./loginPageTemplate.js */ "./src/components/loginPAge/loginPageTemplate.js");
+
+
 class LoginPage {
-  constructor(loginPageTemplate, render, router, fireService, utils) {
-    this.loginPageTemplate = loginPageTemplate;
-    this.render = render;
+  constructor({ renderBody, router, fireService, utils }) {
+    this.render = renderBody;
     this.router = router;
     this.fireService = fireService;
     this.formUtil = utils.formUtil;
@@ -36363,22 +36532,22 @@ class LoginPage {
   }
 
   _showView(ctx) {
-    if (ctx.user) {
-      this.router.navigate("/");
+    if (this.fireService.user) {
+      this.router.redirect("/");
       return;
     }
 
-    this.render(this.loginPageTemplate(this.submitHandler));
+    this.render((0,_loginPageTemplate_js__WEBPACK_IMPORTED_MODULE_0__.loginPageTemplate)(this.submitHandler));
   }
 
-  _submitHandler(e) {
+  async _submitHandler(e) {
     e.preventDefault();
     const formData = this.formUtil.getFormData(e.currentTarget);
     if (this.formUtil.formValidator(formData, 6)) {
       const { email, password } = formData;
       try {
-        this.fireService.login(email, password);
-        this.router.navigate("/");
+        await this.fireService.login(email, password);
+        this.router.redirect("/");
       } catch (err) {
         console.log(err);
       }
@@ -36389,9 +36558,9 @@ class LoginPage {
 
 /***/ }),
 
-/***/ "./src/components/loginPage/loginPageTemplate.js":
+/***/ "./src/components/loginPAge/loginPageTemplate.js":
 /*!*******************************************************!*\
-  !*** ./src/components/loginPage/loginPageTemplate.js ***!
+  !*** ./src/components/loginPAge/loginPageTemplate.js ***!
   \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -36400,7 +36569,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   loginPageTemplate: () => (/* binding */ loginPageTemplate)
 /* harmony export */ });
 /* harmony import */ var lit_html__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit-html */ "./node_modules/lit-html/development/lit-html.js");
-/* harmony import */ var _loginPage_module_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./loginPage.module.css */ "./src/components/loginPage/loginPage.module.css");
+/* harmony import */ var _loginPage_module_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./loginPage.module.css */ "./src/components/loginPAge/loginPage.module.css");
 
 
 
@@ -36458,22 +36627,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ NavComponent)
 /* harmony export */ });
-/* harmony import */ var _nav_module_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./nav.module.css */ "./src/components/nav/nav.module.css");
+/* harmony import */ var _guestNavTemplate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./guestNavTemplate.js */ "./src/components/nav/guestNavTemplate.js");
+/* harmony import */ var _userNavTemplate_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./userNavTemplate.js */ "./src/components/nav/userNavTemplate.js");
+/* harmony import */ var _nav_module_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./nav.module.css */ "./src/components/nav/nav.module.css");
+
+
+
 
 
 class NavComponent {
-  constructor(
-    guestNavTemplate,
-    userNavTemplate,
-    renderHandler,
-    router,
-    fireService,
-    utils
-  ) {
+  constructor(renderHandler, router, fireService, utils) {
     this.domUtil = utils.domUtil;
     this.renderHandler = renderHandler;
-    this.userNavTemplate = userNavTemplate;
-    this.guestNavTemplate = guestNavTemplate;
     this.fireService = fireService;
     this.router = router;
     this.showView = this._showView.bind(this);
@@ -36485,12 +36650,9 @@ class NavComponent {
     this.fireService.auth.onAuthStateChanged((user) => {
       let template;
       if (user) {
-        template = this.userNavTemplate(
-          this.navDropdown,
-          this.logoutHandler
-          );
+        template = (0,_userNavTemplate_js__WEBPACK_IMPORTED_MODULE_1__.userNavTemplate)(this.navDropdown, this.logoutHandler);
       } else {
-        template = this.guestNavTemplate();
+        template = (0,_guestNavTemplate_js__WEBPACK_IMPORTED_MODULE_0__.guestNavTemplate)();
       }
       this.renderHandler(template);
       next();
@@ -36499,18 +36661,18 @@ class NavComponent {
 
   _navDropdown() {
     const element = document.getElementById("dropdown__menu");
-    let backDrop = document.querySelector(`.${_nav_module_css__WEBPACK_IMPORTED_MODULE_0__["default"]['menu-backdrop']}`);
+    let backDrop = document.querySelector(`.${_nav_module_css__WEBPACK_IMPORTED_MODULE_2__["default"]["menu-backdrop"]}`);
     this.domUtil.toggleVisibility(backDrop);
     const menuClasses = [
-      _nav_module_css__WEBPACK_IMPORTED_MODULE_0__["default"]["dropdown__menu"],
-      `${_nav_module_css__WEBPACK_IMPORTED_MODULE_0__["default"]["dropdown__menu"]} ${_nav_module_css__WEBPACK_IMPORTED_MODULE_0__["default"]["dropdown__menu__active"]}`,
+      _nav_module_css__WEBPACK_IMPORTED_MODULE_2__["default"]["dropdown__menu"],
+      `${_nav_module_css__WEBPACK_IMPORTED_MODULE_2__["default"]["dropdown__menu"]} ${_nav_module_css__WEBPACK_IMPORTED_MODULE_2__["default"]["dropdown__menu__active"]}`,
     ];
     this.domUtil.toggleClass(element, menuClasses);
   }
 
-  _logoutHandler() {
-    this.fireService.logout();
-    this.router.navigate('/');
+  async _logoutHandler() {
+    await this.fireService.logout();
+    this.router.redirect("/");
   }
 }
 
@@ -36572,25 +36734,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ OrderFormComponent)
 /* harmony export */ });
+/* harmony import */ var _orderFormTemplate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./orderFormTemplate.js */ "./src/components/orderFormComponent/orderFormTemplate.js");
+
+
 class OrderFormComponent {
-  constructor(
-    templateFunction,
-    renderHandler,
+  constructor({
+    renderBody,
     router,
     calendarComponent,
     harvester,
     processor,
     storeSettings,
-    utils
-  ) {
+    fireService,
+    utils,
+  }) {
     this.storeSettings = storeSettings;
     this.dateUtil = utils.dateUtil;
     this.formUtil = utils.formUtil;
     this.domUtil = utils.domUtil;
     this.stringUtil = utils.stringUtil;
-    this.renderHandler = renderHandler;
-    this.templateFunction = templateFunction;
+    this.renderHandler = renderBody;
     this.router = router;
+    this.fireService = fireService;
     this.calendarComponent = calendarComponent;
     this.harvester = harvester;
     this.processor = processor;
@@ -36604,12 +36769,12 @@ class OrderFormComponent {
   }
 
   _showView(ctx) {
-    if (!ctx.user) {
-      this.router.navigate("/404");
+    if (!this.fireService.user) {
+      this.router.redirect("/");
       return;
     }
 
-    let template = this.templateFunction(
+    let template = (0,_orderFormTemplate_js__WEBPACK_IMPORTED_MODULE_0__.orderFormTemplate)(
       this.submitHandler,
       this.openCalendar,
       this.dateInputFieldStartingDate,
@@ -36639,8 +36804,8 @@ class OrderFormComponent {
 
     return `${nextAvailableDeliveryDate.getDate()}/${
       nextAvailableDeliveryDate.getMonth() + 1
-    }/${nextAvailableDeliveryDate.getFullYear()} - ${this.stringUtil.toPascalCase(weekdays[
-      nextAvailableDeliveryDate.getDay() - 1]
+    }/${nextAvailableDeliveryDate.getFullYear()} - ${this.stringUtil.toPascalCase(
+      weekdays[nextAvailableDeliveryDate.getDay() - 1]
     )}`;
   }
 
@@ -36667,7 +36832,7 @@ class OrderFormComponent {
       formData.weekday = weekday;
       formData.products = this.deliveryHarvestProducts;
       this.processor.nextOrder(formData);
-      this.router.navigate('/order-details');
+      this.router.navigate("/order-details");
     }
   }
 
@@ -36877,14 +37042,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ OrderPage)
 /* harmony export */ });
+/* harmony import */ var _orderPageTemplate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./orderPageTemplate.js */ "./src/components/orderPage/orderPageTemplate.js");
+
+
 class OrderPage {
-  constructor(templateFunction, renderHandler, router, processor, utils) {
+  constructor({ renderBody, router, processor, fireService, utils }) {
     this.stringUtil = utils.stringUtil;
     this.dateUtil = utils.dateUtil;
     this.domUtil = utils.domUtil;
-    this.renderHandler = renderHandler;
-    this.templateFunction = templateFunction;
+    this.renderHandler = renderBody;
     this.router = router;
+    this.fireService = fireService;
     this.processor = processor;
     this.valueButtonClick = this._valueButtonClick.bind(this);
     this.searchHandler = this._searchHandler.bind(this);
@@ -36895,12 +37063,12 @@ class OrderPage {
   }
 
   _showView(ctx) {
-    if (!ctx.user) {
-      this.router.navigate("/404");
+    if (!this.fireService.user) {
+      this.router.redirect("/");
       return;
     }
 
-    let template = this.templateFunction(
+    let template = (0,_orderPageTemplate_js__WEBPACK_IMPORTED_MODULE_0__.orderPageTemplate)(
       this.getHeaderData(),
       this.processor.currentOrderProducts,
       this.searchHandler,
@@ -37019,13 +37187,17 @@ class OrderPage {
         weekday: this.stringUtil.toPascalCase(
           weekdays[this.processor.orderInvoiceDate.getDay() - 1]
         ),
-        date: `${this.processor.orderInvoiceDate.getDate()} - ${months[this.processor.orderInvoiceDate.getMonth()]}`,
+        date: `${this.processor.orderInvoiceDate.getDate()} - ${
+          months[this.processor.orderInvoiceDate.getMonth()]
+        }`,
       },
       nextInvoiceDay: {
         weekday: this.stringUtil.toPascalCase(
           weekdays[this.processor.nextOrderInvoiceDate.getDay() - 1]
         ),
-        date: `${this.processor.nextOrderInvoiceDate.getDate()} - ${months[this.processor.nextOrderInvoiceDate.getMonth()]}`,
+        date: `${this.processor.nextOrderInvoiceDate.getDate()} - ${
+          months[this.processor.nextOrderInvoiceDate.getMonth()]
+        }`,
       },
     };
   }
@@ -37146,10 +37318,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ RegisterPage)
 /* harmony export */ });
+/* harmony import */ var _registerPageTemplate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./registerPageTemplate.js */ "./src/components/registerPage/registerPageTemplate.js");
+
+
 class RegisterPage {
-  constructor(registerPageTemplate, render, router, fireService, utils) {
-    this.registerPageTemplate = registerPageTemplate;
-    this.render = render;
+  constructor({ renderBody, router, fireService, utils }) {
+    this.render = renderBody;
     this.router = router;
     this.fireService = fireService;
     this.formUtil = utils.formUtil;
@@ -37158,23 +37332,23 @@ class RegisterPage {
   }
 
   _showView(ctx) {
-    if (ctx.user) {
-      this.router.navigate("/");
+    if (this.fireService.user) {
+      this.router.redirect("/");
       return;
     }
-    
-    this.render(this.registerPageTemplate(this.submitHandler));
+
+    this.render((0,_registerPageTemplate_js__WEBPACK_IMPORTED_MODULE_0__.registerPageTemplate)(this.submitHandler));
   }
 
-  _submitHandler(e) {
+  async _submitHandler(e) {
     e.preventDefault();
     const formData = this.formUtil.getFormData(e.currentTarget);
     if (this.formUtil.formValidator(formData, 6, "repeatPassword")) {
       const { email, password } = formData;
       try {
-          this.fireService.register(email, password);
-          this.router.navigate('/')
-      } catch(err) {
+        await this.fireService.register(email, password);
+        this.router.redirect("/");
+      } catch (err) {
         console.log(err);
       }
     }
@@ -37392,11 +37566,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ StoreTemplateScreen)
 /* harmony export */ });
+/* harmony import */ var _StoreSetupTemplate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./StoreSetupTemplate.js */ "./src/components/storeTemplate/StoreSetupTemplate.js");
+
+
 class StoreTemplateScreen {
-  constructor(templateFunction, render, router, utils) {
-    this.templateFunction = templateFunction;
-    this.render = render;
+  constructor({ renderBody, router, fireService, utils }) {
+    this.render = renderBody;
     this.router = router;
+    this.fireService = fireService;
     this.stringUtil = utils.stringUtil;
     this.dateUtil = utils.dateUtil;
     this.domUtil = utils.domUtil;
@@ -37408,8 +37585,8 @@ class StoreTemplateScreen {
   }
 
   _showView(ctx) {
-    if (!ctx.user) {
-      this.router.navigate("/404");
+    if (!this.fireService.user) {
+      this.router.redirect("/");
       return;
     }
 
@@ -37418,7 +37595,7 @@ class StoreTemplateScreen {
       .map((weekday) => this.stringUtil.toPascalCase(weekday));
 
     this.render(
-      this.templateFunction(
+      (0,_StoreSetupTemplate_js__WEBPACK_IMPORTED_MODULE_0__.storeSetupTemplate)(
         this.slideOpen,
         this.showDeliveryDetails,
         this.toggleDay,
@@ -37431,7 +37608,7 @@ class StoreTemplateScreen {
     const element = e.currentTarget;
     const id = element.dataset.id;
     const container = document.getElementById(id);
-    const isRecorded = this.sliderContainers.find(
+    const isRecorded = this.sliderContainers.some(
       (element) => element.id === id
     );
     if (!isRecorded) {
@@ -37489,6 +37666,38 @@ class StoreTemplateScreen {
   }
 }
 
+
+/***/ }),
+
+/***/ "./src/lib/componentManager.js":
+/*!*************************************!*\
+  !*** ./src/lib/componentManager.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ ComponentManager)
+/* harmony export */ });
+class ComponentManager {
+    constructor() {
+        this.currentComponent = null;
+    }
+
+    mount(component, baseLoader, ...otherLoaders) {
+        if (this.currentComponent) {
+            this.unmount()
+        }
+        const loadersObj = otherLoaders.reduce((acc, curr) => acc = {...acc, ...curr}, {})
+        const loader = {...baseLoader, ...loadersObj}
+        this.currentComponent = new component(loader)
+        return this.currentComponent.showView()
+    }
+
+    unmount() {
+        this.currentComponent = null;
+    }
+}
 
 /***/ }),
 
@@ -38176,6 +38385,10 @@ __webpack_require__.r(__webpack_exports__);
       this.db = (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_0__.getFirestore)(app);
       this.auth = (0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.getAuth)(this.app);
       this.confirmUser = this._confirmUser.bind(this);
+    }
+
+    get user() {
+      return this.auth.currentUser;
     }
 
     _confirmUser(ctx, next) {
@@ -45603,34 +45816,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_orderPage_orderPage_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/orderPage/orderPage.js */ "./src/components/orderPage/orderPage.js");
 /* harmony import */ var _components_orderFormComponent_orderForm_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/orderFormComponent/orderForm.js */ "./src/components/orderFormComponent/orderForm.js");
 /* harmony import */ var _components_homePage_homePage_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/homePage/homePage.js */ "./src/components/homePage/homePage.js");
-/* harmony import */ var _components_homePage_homePageTemplate_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./components/homePage/homePageTemplate.js */ "./src/components/homePage/homePageTemplate.js");
-/* harmony import */ var _components_orderFormComponent_orderFormTemplate_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./components/orderFormComponent/orderFormTemplate.js */ "./src/components/orderFormComponent/orderFormTemplate.js");
-/* harmony import */ var _components_calendar_calendarTemplate_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./components/calendar/calendarTemplate.js */ "./src/components/calendar/calendarTemplate.js");
-/* harmony import */ var _storeSettings_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./storeSettings.js */ "./src/storeSettings.js");
-/* harmony import */ var _components_orderPage_orderPageTemplate_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./components/orderPage/orderPageTemplate.js */ "./src/components/orderPage/orderPageTemplate.js");
-/* harmony import */ var _components_nav_userNavTemplate_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./components/nav/userNavTemplate.js */ "./src/components/nav/userNavTemplate.js");
-/* harmony import */ var _utils_dateUtil_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./utils/dateUtil.js */ "./src/utils/dateUtil.js");
-/* harmony import */ var _utils_timeUtil_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./utils/timeUtil.js */ "./src/utils/timeUtil.js");
-/* harmony import */ var _utils_stringUtil_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./utils/stringUtil.js */ "./src/utils/stringUtil.js");
-/* harmony import */ var _utils_formUtil_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./utils/formUtil.js */ "./src/utils/formUtil.js");
-/* harmony import */ var _utils_domUtil_js__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./utils/domUtil.js */ "./src/utils/domUtil.js");
-/* harmony import */ var _utils_objectUtil_js__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./utils/objectUtil.js */ "./src/utils/objectUtil.js");
-/* harmony import */ var _components_storeTemplate_storeSetupScreen_js__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./components/storeTemplate/storeSetupScreen.js */ "./src/components/storeTemplate/storeSetupScreen.js");
-/* harmony import */ var _components_storeTemplate_StoreSetupTemplate_js__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./components/storeTemplate/StoreSetupTemplate.js */ "./src/components/storeTemplate/StoreSetupTemplate.js");
-/* harmony import */ var _components_nav_guestNavTemplate_js__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./components/nav/guestNavTemplate.js */ "./src/components/nav/guestNavTemplate.js");
-/* harmony import */ var _components_loginPage_loginPageTemplate_js__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./components/loginPage/loginPageTemplate.js */ "./src/components/loginPage/loginPageTemplate.js");
-/* harmony import */ var _components_loginPAge_loginPage_js__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./components/loginPAge/loginPage.js */ "./src/components/loginPAge/loginPage.js");
-/* harmony import */ var _components_registerPage_registerPage_js__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./components/registerPage/registerPage.js */ "./src/components/registerPage/registerPage.js");
-/* harmony import */ var _components_registerPage_registerPageTemplate_js__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./components/registerPage/registerPageTemplate.js */ "./src/components/registerPage/registerPageTemplate.js");
-
-
-
-
-
-
-
-
-
+/* harmony import */ var _components_404_NotFoundPage_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./components/404/NotFoundPage.js */ "./src/components/404/NotFoundPage.js");
+/* harmony import */ var _components_storeTemplate_storeSetupScreen_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./components/storeTemplate/storeSetupScreen.js */ "./src/components/storeTemplate/storeSetupScreen.js");
+/* harmony import */ var _components_loginPAge_loginPage_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./components/loginPAge/loginPage.js */ "./src/components/loginPAge/loginPage.js");
+/* harmony import */ var _components_registerPage_registerPage_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./components/registerPage/registerPage.js */ "./src/components/registerPage/registerPage.js");
+/* harmony import */ var _utils_dateUtil_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./utils/dateUtil.js */ "./src/utils/dateUtil.js");
+/* harmony import */ var _utils_timeUtil_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./utils/timeUtil.js */ "./src/utils/timeUtil.js");
+/* harmony import */ var _utils_stringUtil_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./utils/stringUtil.js */ "./src/utils/stringUtil.js");
+/* harmony import */ var _utils_formUtil_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./utils/formUtil.js */ "./src/utils/formUtil.js");
+/* harmony import */ var _utils_domUtil_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./utils/domUtil.js */ "./src/utils/domUtil.js");
+/* harmony import */ var _utils_objectUtil_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./utils/objectUtil.js */ "./src/utils/objectUtil.js");
+/* harmony import */ var _storeSettings_js__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./storeSettings.js */ "./src/storeSettings.js");
+/* harmony import */ var _lib_componentManager_js__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./lib/componentManager.js */ "./src/lib/componentManager.js");
 
 
 
@@ -45674,65 +45871,42 @@ const renderCalender = (template, parent) => (0,_node_modules_lit_html_lit_html_
 
 //Utils
 const utils = {
-  dateUtil: new _utils_dateUtil_js__WEBPACK_IMPORTED_MODULE_18__["default"](),
-  timeUtil: new _utils_timeUtil_js__WEBPACK_IMPORTED_MODULE_19__["default"](_storeSettings_js__WEBPACK_IMPORTED_MODULE_15__.storeSettings),
-  stringUtil: new _utils_stringUtil_js__WEBPACK_IMPORTED_MODULE_20__["default"](),
-  formUtil: new _utils_formUtil_js__WEBPACK_IMPORTED_MODULE_21__["default"](),
-  domUtil: new _utils_domUtil_js__WEBPACK_IMPORTED_MODULE_22__["default"](),
-  objUtil: new _utils_objectUtil_js__WEBPACK_IMPORTED_MODULE_23__["default"]()
+  dateUtil: new _utils_dateUtil_js__WEBPACK_IMPORTED_MODULE_16__["default"](),
+  timeUtil: new _utils_timeUtil_js__WEBPACK_IMPORTED_MODULE_17__["default"](_storeSettings_js__WEBPACK_IMPORTED_MODULE_22__.storeSettings),
+  stringUtil: new _utils_stringUtil_js__WEBPACK_IMPORTED_MODULE_18__["default"](),
+  formUtil: new _utils_formUtil_js__WEBPACK_IMPORTED_MODULE_19__["default"](),
+  domUtil: new _utils_domUtil_js__WEBPACK_IMPORTED_MODULE_20__["default"](),
+  objUtil: new _utils_objectUtil_js__WEBPACK_IMPORTED_MODULE_21__["default"](),
 };
 
 //Product Processor
-const processor = new _processing_processor_js__WEBPACK_IMPORTED_MODULE_5__["default"](_storeSettings_js__WEBPACK_IMPORTED_MODULE_15__.storeSettings, utils);
-
-//Harvester
+const processor = new _processing_processor_js__WEBPACK_IMPORTED_MODULE_5__["default"](_storeSettings_js__WEBPACK_IMPORTED_MODULE_22__.storeSettings, utils);
 const harvester = new _reportHarvesters_harvester_js__WEBPACK_IMPORTED_MODULE_7__["default"](utils);
+const CM = new _lib_componentManager_js__WEBPACK_IMPORTED_MODULE_23__["default"]();
 
 //Components
+const navComponent = new _components_nav_nav_js__WEBPACK_IMPORTED_MODULE_8__["default"](renderNav, router, fireService, utils);
+const calendarComponent = new _components_calendar_calendar_js__WEBPACK_IMPORTED_MODULE_6__["default"](renderCalender, utils);
 
-const calendarComponent = new _components_calendar_calendar_js__WEBPACK_IMPORTED_MODULE_6__["default"](_components_calendar_calendarTemplate_js__WEBPACK_IMPORTED_MODULE_14__.calendarTemplate, renderCalender, utils);
-const navComponent = new _components_nav_nav_js__WEBPACK_IMPORTED_MODULE_8__["default"](_components_nav_guestNavTemplate_js__WEBPACK_IMPORTED_MODULE_26__.guestNavTemplate ,_components_nav_userNavTemplate_js__WEBPACK_IMPORTED_MODULE_17__.userNavTemplate, renderNav, router, fireService, utils);
-const homeComponent = new _components_homePage_homePage_js__WEBPACK_IMPORTED_MODULE_11__["default"](
-  _components_homePage_homePageTemplate_js__WEBPACK_IMPORTED_MODULE_12__.homePageTemplate,
-  renderBody,
-  router,
-  utils
-);
-
-const loginPageComponent = new _components_loginPAge_loginPage_js__WEBPACK_IMPORTED_MODULE_28__["default"](_components_loginPage_loginPageTemplate_js__WEBPACK_IMPORTED_MODULE_27__.loginPageTemplate, renderBody, router, fireService, utils);
-const registerPageComponent = new _components_registerPage_registerPage_js__WEBPACK_IMPORTED_MODULE_29__["default"](_components_registerPage_registerPageTemplate_js__WEBPACK_IMPORTED_MODULE_30__.registerPageTemplate, renderBody, router, fireService, utils);
-
-const orderFormComponent = new _components_orderFormComponent_orderForm_js__WEBPACK_IMPORTED_MODULE_10__["default"](
-  _components_orderFormComponent_orderFormTemplate_js__WEBPACK_IMPORTED_MODULE_13__.orderFormTemplate,
-  renderBody,
-  router,
+//Loaders
+const baseLoader = { renderBody, router, fireService, utils };
+const funcLoader = {
   calendarComponent,
   harvester,
   processor,
-  _storeSettings_js__WEBPACK_IMPORTED_MODULE_15__.storeSettings,
-  utils
-);
-const orderPageComponent = new _components_orderPage_orderPage_js__WEBPACK_IMPORTED_MODULE_9__["default"](
-  _components_orderPage_orderPageTemplate_js__WEBPACK_IMPORTED_MODULE_16__.orderPageTemplate,
-  renderBody,
-  router,
-  processor,
-  utils
-);
-const storeTemplateScreen = new _components_storeTemplate_storeSetupScreen_js__WEBPACK_IMPORTED_MODULE_24__["default"](
-  _components_storeTemplate_StoreSetupTemplate_js__WEBPACK_IMPORTED_MODULE_25__.storeSetupTemplate,
-  renderBody,
-  router,
-  utils
-);
+  storeSettings: _storeSettings_js__WEBPACK_IMPORTED_MODULE_22__.storeSettings,
+};
 
+(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])(fireService.confirmUser);
 (0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])(navComponent.showView);
-(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/", homeComponent.showView);
-(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/login", loginPageComponent.showView);
-(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/register", registerPageComponent.showView);
-(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/order-form", orderFormComponent.showView);
-(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/order-details", orderPageComponent.showView);
-(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/restaurant", storeTemplateScreen.showView);
+(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/index.html", "/");
+(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/", () => CM.mount(_components_homePage_homePage_js__WEBPACK_IMPORTED_MODULE_11__["default"], baseLoader));
+(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/login", () => CM.mount(_components_loginPAge_loginPage_js__WEBPACK_IMPORTED_MODULE_14__["default"], baseLoader));
+(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/register", () => CM.mount(_components_registerPage_registerPage_js__WEBPACK_IMPORTED_MODULE_15__["default"], baseLoader));
+(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/order-form", () => CM.mount(_components_orderFormComponent_orderForm_js__WEBPACK_IMPORTED_MODULE_10__["default"], baseLoader, funcLoader));
+(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/order-details", () => CM.mount(_components_orderPage_orderPage_js__WEBPACK_IMPORTED_MODULE_9__["default"], baseLoader, funcLoader));
+(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/restaurant", () => CM.mount(_components_storeTemplate_storeSetupScreen_js__WEBPACK_IMPORTED_MODULE_13__["default"], baseLoader));
+(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/404", () => CM.mount(_components_404_NotFoundPage_js__WEBPACK_IMPORTED_MODULE_12__["default"], [renderBody]));
 
 _node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"].start();
 

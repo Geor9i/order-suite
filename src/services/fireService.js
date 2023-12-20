@@ -29,6 +29,10 @@ import {
       this.confirmUser = this._confirmUser.bind(this);
     }
 
+    get user() {
+      return this.auth.currentUser;
+    }
+
     _confirmUser(ctx, next) {
       ctx.user = this.auth.currentUser || null;
       next()

@@ -1,7 +1,7 @@
 import { render } from "../node_modules/lit-html/lit-html.js";
 import page from "../node_modules/page/page.mjs";
 import { firebaseConfig } from "../config/firebaseConfig.js";
-import { initializeApp } from 'firebase/app'
+import { initializeApp } from "firebase/app";
 import FireService from "./services/fireService.js";
 
 import Processor from "./processing/processor.js";
@@ -11,13 +11,10 @@ import NavComponent from "./components/nav/nav.js";
 import OrderPage from "./components/orderPage/orderPage.js";
 import OrderFormComponent from "./components/orderFormComponent/orderForm.js";
 import HomeComponent from "./components/homePage/homePage.js";
-
-import { homePageTemplate } from "./components/homePage/homePageTemplate.js";
-import { orderFormTemplate } from "./components/orderFormComponent/orderFormTemplate.js";
-import { calendarTemplate } from "./components/calendar/calendarTemplate.js";
-import { storeSettings } from "./storeSettings.js";
-import { orderPageTemplate } from "./components/orderPage/orderPageTemplate.js";
-import { userNavTemplate } from "./components/nav/userNavTemplate.js";
+import NotFoundPage from "./components/404/NotFoundPage.js";
+import StoreTemplateScreen from "./components/storeTemplate/storeSetupScreen.js";
+import LoginPage from "./components/loginPAge/loginPage.js";
+import RegisterPage from "./components/registerPage/registerPage.js";
 
 import DateUtil from "./utils/dateUtil.js";
 import TimeUtil from "./utils/timeUtil.js";
@@ -25,14 +22,8 @@ import StringUtil from "./utils/stringUtil.js";
 import FormUtil from "./utils/formUtil.js";
 import DomUtil from "./utils/domUtil.js";
 import ObjectUtil from "./utils/objectUtil.js";
-
-import StoreTemplateScreen from "./components/storeTemplate/storeSetupScreen.js";
-import { storeSetupTemplate } from "./components/storeTemplate/StoreSetupTemplate.js";
-import { guestNavTemplate } from "./components/nav/guestNavTemplate.js";
-import { loginPageTemplate } from "./components/loginPage/loginPageTemplate.js";
-import LoginPage from "./components/loginPAge/loginPage.js";
-import RegisterPage from "./components/registerPage/registerPage.js";
-import { registerPageTemplate } from "./components/registerPage/registerPageTemplate.js";
+import { storeSettings } from "./storeSettings.js";
+import ComponentManager from "./lib/componentManager.js";
 
 const app = initializeApp(firebaseConfig);
 const fireService = new FireService(app);
@@ -55,59 +46,36 @@ const utils = {
   stringUtil: new StringUtil(),
   formUtil: new FormUtil(),
   domUtil: new DomUtil(),
-  objUtil: new ObjectUtil()
+  objUtil: new ObjectUtil(),
 };
 
 //Product Processor
 const processor = new Processor(storeSettings, utils);
-
-//Harvester
 const harvester = new Harvester(utils);
+const CM = new ComponentManager();
 
 //Components
+const navComponent = new NavComponent(renderNav, router, fireService, utils);
+const calendarComponent = new Calendar(renderCalender, utils);
 
-const calendarComponent = new Calendar(calendarTemplate, renderCalender, utils);
-const navComponent = new NavComponent(guestNavTemplate ,userNavTemplate, renderNav, router, fireService, utils);
-const homeComponent = new HomeComponent(
-  homePageTemplate,
-  renderBody,
-  router,
-  utils
-);
-
-const loginPageComponent = new LoginPage(loginPageTemplate, renderBody, router, fireService, utils);
-const registerPageComponent = new RegisterPage(registerPageTemplate, renderBody, router, fireService, utils);
-
-const orderFormComponent = new OrderFormComponent(
-  orderFormTemplate,
-  renderBody,
-  router,
+//Loaders
+const baseLoader = { renderBody, router, fireService, utils };
+const funcLoader = {
   calendarComponent,
   harvester,
   processor,
   storeSettings,
-  utils
-);
-const orderPageComponent = new OrderPage(
-  orderPageTemplate,
-  renderBody,
-  router,
-  processor,
-  utils
-);
-const storeTemplateScreen = new StoreTemplateScreen(
-  storeSetupTemplate,
-  renderBody,
-  router,
-  utils
-);
+};
 
+page(fireService.confirmUser);
 page(navComponent.showView);
-page("/", homeComponent.showView);
-page("/login", loginPageComponent.showView);
-page("/register", registerPageComponent.showView);
-page("/order-form", orderFormComponent.showView);
-page("/order-details", orderPageComponent.showView);
-page("/restaurant", storeTemplateScreen.showView);
+page("/index.html", "/");
+page("/", () => CM.mount(HomeComponent, baseLoader));
+page("/login", () => CM.mount(LoginPage, baseLoader));
+page("/register", () => CM.mount(RegisterPage, baseLoader));
+page("/order-form", () => CM.mount(OrderFormComponent, baseLoader, funcLoader));
+page("/order-details", () => CM.mount(OrderPage, baseLoader, funcLoader));
+page("/restaurant", () => CM.mount(StoreTemplateScreen, baseLoader));
+page("/404", () => CM.mount(NotFoundPage, [renderBody]));
 
 page.start();

@@ -1,18 +1,12 @@
-import styles from './nav.module.css'
+import { guestNavTemplate } from "./guestNavTemplate.js";
+import { userNavTemplate } from "./userNavTemplate.js";
+
+import styles from "./nav.module.css";
 
 export default class NavComponent {
-  constructor(
-    guestNavTemplate,
-    userNavTemplate,
-    renderHandler,
-    router,
-    fireService,
-    utils
-  ) {
+  constructor(renderHandler, router, fireService, utils) {
     this.domUtil = utils.domUtil;
     this.renderHandler = renderHandler;
-    this.userNavTemplate = userNavTemplate;
-    this.guestNavTemplate = guestNavTemplate;
     this.fireService = fireService;
     this.router = router;
     this.showView = this._showView.bind(this);
@@ -24,12 +18,9 @@ export default class NavComponent {
     this.fireService.auth.onAuthStateChanged((user) => {
       let template;
       if (user) {
-        template = this.userNavTemplate(
-          this.navDropdown,
-          this.logoutHandler
-          );
+        template = userNavTemplate(this.navDropdown, this.logoutHandler);
       } else {
-        template = this.guestNavTemplate();
+        template = guestNavTemplate();
       }
       this.renderHandler(template);
       next();
@@ -38,7 +29,7 @@ export default class NavComponent {
 
   _navDropdown() {
     const element = document.getElementById("dropdown__menu");
-    let backDrop = document.querySelector(`.${styles['menu-backdrop']}`);
+    let backDrop = document.querySelector(`.${styles["menu-backdrop"]}`);
     this.domUtil.toggleVisibility(backDrop);
     const menuClasses = [
       styles["dropdown__menu"],
@@ -47,8 +38,8 @@ export default class NavComponent {
     this.domUtil.toggleClass(element, menuClasses);
   }
 
-  _logoutHandler() {
-    this.fireService.logout();
-    this.router.navigate('/');
+  async _logoutHandler() {
+    await this.fireService.logout();
+    this.router.redirect("/");
   }
 }

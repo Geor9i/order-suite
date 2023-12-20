@@ -1,9 +1,10 @@
+import { calendarTemplate } from "./calendarTemplate.js";
+
 export default class Calendar {
-  constructor(templateFunc, renderCalender, utils) {
+  constructor(renderCalender, utils) {
     this.domUtil = utils.domUtil;
     this.dateUtil = utils.dateUtil;
     this.stringUtil = utils.stringUtil;
-    this.templateFunc = templateFunc;
     this.renderCalender = renderCalender;
     this.showView = this._showView.bind(this);
     this.fillCalendar = this._fillCalendar.bind(this);
@@ -19,7 +20,7 @@ export default class Calendar {
 
   _showView(parent) {
     this.renderCalender(
-      this.templateFunc(
+      calendarTemplate(
         this.dateUtil,
         this.stringUtil,
         this.upArrowClick,

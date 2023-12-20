@@ -1,7 +1,8 @@
+import { registerPageTemplate } from "./registerPageTemplate.js";
+
 export default class RegisterPage {
-  constructor(registerPageTemplate, render, router, fireService, utils) {
-    this.registerPageTemplate = registerPageTemplate;
-    this.render = render;
+  constructor({ renderBody, router, fireService, utils }) {
+    this.render = renderBody;
     this.router = router;
     this.fireService = fireService;
     this.formUtil = utils.formUtil;
@@ -10,23 +11,23 @@ export default class RegisterPage {
   }
 
   _showView(ctx) {
-    if (ctx.user) {
-      this.router.navigate("/");
+    if (this.fireService.user) {
+      this.router.redirect("/");
       return;
     }
-    
-    this.render(this.registerPageTemplate(this.submitHandler));
+
+    this.render(registerPageTemplate(this.submitHandler));
   }
 
-  _submitHandler(e) {
+  async _submitHandler(e) {
     e.preventDefault();
     const formData = this.formUtil.getFormData(e.currentTarget);
     if (this.formUtil.formValidator(formData, 6, "repeatPassword")) {
       const { email, password } = formData;
       try {
-          this.fireService.register(email, password);
-          this.router.navigate('/')
-      } catch(err) {
+        await this.fireService.register(email, password);
+        this.router.redirect("/");
+      } catch (err) {
         console.log(err);
       }
     }

@@ -1,8 +1,10 @@
+import { storeSetupTemplate } from "./StoreSetupTemplate.js";
+
 export default class StoreTemplateScreen {
-  constructor(templateFunction, render, router, utils) {
-    this.templateFunction = templateFunction;
-    this.render = render;
+  constructor({ renderBody, router, fireService, utils }) {
+    this.render = renderBody;
     this.router = router;
+    this.fireService = fireService;
     this.stringUtil = utils.stringUtil;
     this.dateUtil = utils.dateUtil;
     this.domUtil = utils.domUtil;
@@ -14,8 +16,8 @@ export default class StoreTemplateScreen {
   }
 
   _showView(ctx) {
-    if (!ctx.user) {
-      this.router.navigate("/404");
+    if (!this.fireService.user) {
+      this.router.redirect("/");
       return;
     }
 
@@ -24,7 +26,7 @@ export default class StoreTemplateScreen {
       .map((weekday) => this.stringUtil.toPascalCase(weekday));
 
     this.render(
-      this.templateFunction(
+      storeSetupTemplate(
         this.slideOpen,
         this.showDeliveryDetails,
         this.toggleDay,
@@ -37,7 +39,7 @@ export default class StoreTemplateScreen {
     const element = e.currentTarget;
     const id = element.dataset.id;
     const container = document.getElementById(id);
-    const isRecorded = this.sliderContainers.find(
+    const isRecorded = this.sliderContainers.some(
       (element) => element.id === id
     );
     if (!isRecorded) {

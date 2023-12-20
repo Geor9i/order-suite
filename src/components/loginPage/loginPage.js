@@ -1,7 +1,8 @@
+import { loginPageTemplate } from "./loginPageTemplate.js";
+
 export default class LoginPage {
-  constructor(loginPageTemplate, render, router, fireService, utils) {
-    this.loginPageTemplate = loginPageTemplate;
-    this.render = render;
+  constructor({ renderBody, router, fireService, utils }) {
+    this.render = renderBody;
     this.router = router;
     this.fireService = fireService;
     this.formUtil = utils.formUtil;
@@ -10,22 +11,22 @@ export default class LoginPage {
   }
 
   _showView(ctx) {
-    if (ctx.user) {
-      this.router.navigate("/");
+    if (this.fireService.user) {
+      this.router.redirect("/");
       return;
     }
 
-    this.render(this.loginPageTemplate(this.submitHandler));
+    this.render(loginPageTemplate(this.submitHandler));
   }
 
-  _submitHandler(e) {
+  async _submitHandler(e) {
     e.preventDefault();
     const formData = this.formUtil.getFormData(e.currentTarget);
     if (this.formUtil.formValidator(formData, 6)) {
       const { email, password } = formData;
       try {
-        this.fireService.login(email, password);
-        this.router.navigate("/");
+        await this.fireService.login(email, password);
+        this.router.redirect("/");
       } catch (err) {
         console.log(err);
       }

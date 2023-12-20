@@ -1,11 +1,13 @@
+import { orderPageTemplate } from "./orderPageTemplate.js";
+
 export default class OrderPage {
-  constructor(templateFunction, renderHandler, router, processor, utils) {
+  constructor({ renderBody, router, processor, fireService, utils }) {
     this.stringUtil = utils.stringUtil;
     this.dateUtil = utils.dateUtil;
     this.domUtil = utils.domUtil;
-    this.renderHandler = renderHandler;
-    this.templateFunction = templateFunction;
+    this.renderHandler = renderBody;
     this.router = router;
+    this.fireService = fireService;
     this.processor = processor;
     this.valueButtonClick = this._valueButtonClick.bind(this);
     this.searchHandler = this._searchHandler.bind(this);
@@ -16,12 +18,12 @@ export default class OrderPage {
   }
 
   _showView(ctx) {
-    if (!ctx.user) {
-      this.router.navigate("/404");
+    if (!this.fireService.user) {
+      this.router.redirect("/");
       return;
     }
 
-    let template = this.templateFunction(
+    let template = orderPageTemplate(
       this.getHeaderData(),
       this.processor.currentOrderProducts,
       this.searchHandler,
@@ -140,13 +142,17 @@ export default class OrderPage {
         weekday: this.stringUtil.toPascalCase(
           weekdays[this.processor.orderInvoiceDate.getDay() - 1]
         ),
-        date: `${this.processor.orderInvoiceDate.getDate()} - ${months[this.processor.orderInvoiceDate.getMonth()]}`,
+        date: `${this.processor.orderInvoiceDate.getDate()} - ${
+          months[this.processor.orderInvoiceDate.getMonth()]
+        }`,
       },
       nextInvoiceDay: {
         weekday: this.stringUtil.toPascalCase(
           weekdays[this.processor.nextOrderInvoiceDate.getDay() - 1]
         ),
-        date: `${this.processor.nextOrderInvoiceDate.getDate()} - ${months[this.processor.nextOrderInvoiceDate.getMonth()]}`,
+        date: `${this.processor.nextOrderInvoiceDate.getDate()} - ${
+          months[this.processor.nextOrderInvoiceDate.getMonth()]
+        }`,
       },
     };
   }

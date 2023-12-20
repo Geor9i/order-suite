@@ -1,22 +1,24 @@
+import { orderFormTemplate } from "./orderFormTemplate.js";
+
 export default class OrderFormComponent {
-  constructor(
-    templateFunction,
-    renderHandler,
+  constructor({
+    renderBody,
     router,
     calendarComponent,
     harvester,
     processor,
     storeSettings,
-    utils
-  ) {
+    fireService,
+    utils,
+  }) {
     this.storeSettings = storeSettings;
     this.dateUtil = utils.dateUtil;
     this.formUtil = utils.formUtil;
     this.domUtil = utils.domUtil;
     this.stringUtil = utils.stringUtil;
-    this.renderHandler = renderHandler;
-    this.templateFunction = templateFunction;
+    this.renderHandler = renderBody;
     this.router = router;
+    this.fireService = fireService;
     this.calendarComponent = calendarComponent;
     this.harvester = harvester;
     this.processor = processor;
@@ -30,12 +32,12 @@ export default class OrderFormComponent {
   }
 
   _showView(ctx) {
-    if (!ctx.user) {
-      this.router.navigate("/404");
+    if (!this.fireService.user) {
+      this.router.redirect("/");
       return;
     }
 
-    let template = this.templateFunction(
+    let template = orderFormTemplate(
       this.submitHandler,
       this.openCalendar,
       this.dateInputFieldStartingDate,
@@ -65,8 +67,8 @@ export default class OrderFormComponent {
 
     return `${nextAvailableDeliveryDate.getDate()}/${
       nextAvailableDeliveryDate.getMonth() + 1
-    }/${nextAvailableDeliveryDate.getFullYear()} - ${this.stringUtil.toPascalCase(weekdays[
-      nextAvailableDeliveryDate.getDay() - 1]
+    }/${nextAvailableDeliveryDate.getFullYear()} - ${this.stringUtil.toPascalCase(
+      weekdays[nextAvailableDeliveryDate.getDay() - 1]
     )}`;
   }
 
@@ -93,7 +95,7 @@ export default class OrderFormComponent {
       formData.weekday = weekday;
       formData.products = this.deliveryHarvestProducts;
       this.processor.nextOrder(formData);
-      this.router.navigate('/order-details');
+      this.router.navigate("/order-details");
     }
   }
 
