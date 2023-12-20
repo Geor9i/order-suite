@@ -1,0 +1,13 @@
+.homepage-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: rgb(219, 219, 219);
+  width: 100vw;
+  height: 100vh;
+}
+
+.homepage-container p {
+  font-size: 2rem;
+}

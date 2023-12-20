@@ -4,6 +4,7 @@ export default class Harvester {
   constructor(utils) {
     this.dateUtil = utils.dateUtil;
     this.stringUtil = utils.stringUtil;
+    this.objUtil = utils.objUtil;
   }
   reportHarvest(report) {
     let productPattern =
@@ -216,24 +217,21 @@ export default class Harvester {
 
   salesSummaryExtractor(report) {
     let salesSummaryExtractDataPattern =
-      /\b(?<=[A-Z][a-z]{2},\s)(?<date_day>\d{2})-(?<date_month>[A-Z][a-z]{2})-(?<date_year>\d{4})\s(?<grossSales>[\d\.,]+)\s(?<tax>[\d.,]+)\s(?<netSales>[\d.,]+)\s(?<transactions>[\d.,]+)\b/g;
+      /\b(?<=[A-Z][a-z]{2},\s)(?<day>\d{2})-(?<month>[A-Z][a-z]{2})-(?<year>\d{4})\s(?<grossSales>[\d\.,]+)\s(?<tax>[\d.,]+)\s(?<netSales>[\d.,]+)\s(?<transactions>[\d.,]+)\b/g;
 
     const salesSummaryRecord = {};
     const months = this.dateUtil
       .getMonths([], { short: true })
       .map((month) => this.stringUtil.toPascalCase(month));
+    if (!salesSummaryExtractDataPattern.test(report)) return null;
+
     let salesDateMatch;
     while (
       (salesDateMatch = salesSummaryExtractDataPattern.exec(report)) !== null
     ) {
-      let day = salesDateMatch.groups.date_day;
-      let month = months.indexOf(salesDateMatch.groups.date_month) + 1;
-      let lz = month < 10 ? "0" : "";
+      const { day, month, year } = salesDateMatch.groups;
+      let currDate = `${year}/${months.indexOf(month)}/${day}`;
 
-      let year = salesDateMatch.groups.date_year;
-      let currDate = `${year}/${lz}${month}/${day}`;
-
-      //Create a sales date object if the store does not have it
       if (!salesSummaryRecord.hasOwnProperty(currDate)) {
         salesSummaryRecord[currDate] = {
           salesTotal: this.stringUtil.stringToNumber(
@@ -252,20 +250,16 @@ export default class Harvester {
     let hourlySalesExtractDatePattern =
       /\b(?<=Data as of: )(?<date_day_from>\d{1,2})\/(?<date_month_from>\d{2})\/(?<date_year_from>\d{4}) - (?<date_day_to>\d{1,2})\/(?<date_month_to>\d{2})\/(?<date_year_to>\d{4})\b/;
 
-    let hourlySalesTotalsData =
-      /(?<=Total\s)(?<transactions>[\d,]*[\d+])\s(?<item_count>[\d,]*[\d]+)\s(?<total_sales>[\d,]*\d*.?\d+)\s(?<total_sales2>[\d,]*[\d.]*\d+)\s(?<ticket_average>[\d,]*[\d.]*\d+)\s(?<sale_item>[\d,]*[\d.]*\d+)/;
-
     let hourlySalesExtractDataPattern =
       /\b(?<time_hour>\d{2}):\d{2}\s-\s(?:\d{2}:\d{2} )(?<customer_count>[\d,.]+)\s(?<item_count>[\d,.]+)\s(?<hourly_sales>[\d,.]+)\s(?<percent_total_sales>[\d,.]+)%\s(?<hourly_sales_cumulative>[\d,.]+)\s(?<hourly_ticket_average>[\d,.]+)\s(?<average_price_sales_item>[\d,.]+)\b/g;
 
     class SalesRecord {
-      constructor() {
-        this.salesTotal = 0;
-        this.transactionsTotal = 0;
-        this.ticketAverageTotal = 0;
-        this.hour = [];
+      constructor(startDate, endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.hours = [];
         for (let h = 0; h < 24; h++) {
-          this.hour[h] = {
+          this.hours[h] = {
             hourlySales: 0,
             hourlySalesCumulative: 0,
             hourlyTicketAverage: 0,
@@ -275,42 +269,16 @@ export default class Harvester {
       }
     }
 
-    const hourlySalesRecord = {};
-
-    let dateCheck;
-    let dayFrom;
-    let dayTo;
-    let monthFrom;
-    let monthTo;
-    let yearFrom;
-    let yearTo;
-    let dateFrom;
-    let dateTo;
-    if ((dateCheck = report.match(hourlySalesExtractDatePattern)) !== null) {
-      dayFrom =
-        (Number(dateCheck.groups.date_day_from) < 10 ? "0" : "") +
-        dateCheck.groups.date_day_from;
-      dayTo =
-        (Number(dateCheck.groups.date_day_to) < 10 ? "0" : "") +
-        dateCheck.groups.date_day_to;
-      monthFrom = dateCheck.groups.date_month_from;
-      monthTo = dateCheck.groups.date_month_to;
-      yearFrom = dateCheck.groups.date_year_from;
-      yearTo = dateCheck.groups.date_year_to;
-      dateFrom = `${yearFrom}/${monthFrom}/${dayFrom}`;
-      dateTo = `${yearTo}/${monthTo}/${dayTo}`;
-    }
-
-    //If The report covers one date
-    if (!hourlySalesRecord.hasOwnProperty(dateTo)) {
-      hourlySalesRecord[dateTo] = new SalesRecord();
-    }
+    let dateCheck = report.match(hourlySalesExtractDatePattern);
+    if (dateCheck === null) return null;
+    const reportStartDate = `${dateCheck.groups.date_year_from}/${dateCheck.groups.date_month_from}/${dateCheck.groups.date_day_from}`;
+    const reportEndDate = `${dateCheck.groups.date_year_to}/${dateCheck.groups.date_month_to}/${dateCheck.groups.date_day_to}`;
+    const hourlySalesRecord = new SalesRecord(reportStartDate, reportEndDate);
 
     let dataMatch;
-
     while ((dataMatch = hourlySalesExtractDataPattern.exec(report)) !== null) {
       let hour = Number(dataMatch.groups.time_hour);
-      hourlySalesRecord[dateTo].hour[hour] = {
+      hourlySalesRecord.hours[hour] = {
         transactions: this.stringUtil.stringToNumber(
           dataMatch.groups.customer_count
         ),
@@ -324,22 +292,24 @@ export default class Harvester {
       };
     }
 
-    let totalsMatch;
-
-    if ((totalsMatch = report.match(hourlySalesTotalsData)) !== null) {
-      hourlySalesRecord[dateTo] = {
-        ...hourlySalesRecord[dateTo],
-        salesTotal: this.stringUtil.stringToNumber(
-          totalsMatch.groups.total_sales
-        ),
-        ticketAverageTotal: this.stringUtil.stringToNumber(
-          totalsMatch.groups.ticket_average
-        ),
-        totalTransactions: this.stringUtil.stringToNumber(
-          totalsMatch.groups.transactions
-        ),
-      };
+    const totals = {
+      transactions: 0,
+      sales: 0,
+      ticketAverage: 0,
+      workHours: 0,
+    };
+    for (let hour of hourlySalesRecord.hours) {
+      if (!this.objUtil.isEmpty(hour)) {
+        totals.transactions += hour.transactions;
+        totals.sales += hour.hourlySales;
+        totals.ticketAverage += hour.ticketAverage;
+        totals.workHours = hour.ticketAverage
+          ? totals.workHours + 1
+          : totals.workHours;
+      }
     }
-    return hourlySalesRecord;
+    totals.ticketAverage /= totals.workHours;
+
+    return { ...hourlySalesRecord, totals };
   }
 }

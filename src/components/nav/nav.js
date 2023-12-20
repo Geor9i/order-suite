@@ -1,24 +1,54 @@
+import styles from './nav.module.css'
+
 export default class NavComponent {
-  constructor(templateFunction, renderHandler, router, utils) {
+  constructor(
+    guestNavTemplate,
+    userNavTemplate,
+    renderHandler,
+    router,
+    fireService,
+    utils
+  ) {
     this.domUtil = utils.domUtil;
     this.renderHandler = renderHandler;
-    this.templateFunction = templateFunction;
+    this.userNavTemplate = userNavTemplate;
+    this.guestNavTemplate = guestNavTemplate;
+    this.fireService = fireService;
     this.router = router;
     this.showView = this._showView.bind(this);
     this.navDropdown = this._navDropdown.bind(this);
+    this.logoutHandler = this._logoutHandler.bind(this);
   }
 
   _showView(ctx, next) {
-    let template = this.templateFunction(this.navDropdown);
-    this.renderHandler(template);
-    next();
+    this.fireService.auth.onAuthStateChanged((user) => {
+      let template;
+      if (user) {
+        template = this.userNavTemplate(
+          this.navDropdown,
+          this.logoutHandler
+          );
+      } else {
+        template = this.guestNavTemplate();
+      }
+      this.renderHandler(template);
+      next();
+    });
   }
 
   _navDropdown() {
-    const element = document.getElementById('dropdown__menu');
-    let backDrop = document.querySelector(".menu-backdrop");
+    const element = document.getElementById("dropdown__menu");
+    let backDrop = document.querySelector(`.${styles['menu-backdrop']}`);
     this.domUtil.toggleVisibility(backDrop);
-    const menuClasses = ['dropdown__menu', 'dropdown__menu dropdown__menu__active']
-    this.domUtil.toggleClass(element, menuClasses)
+    const menuClasses = [
+      styles["dropdown__menu"],
+      `${styles["dropdown__menu"]} ${styles["dropdown__menu__active"]}`,
+    ];
+    this.domUtil.toggleClass(element, menuClasses);
+  }
+
+  _logoutHandler() {
+    this.fireService.logout();
+    this.router.navigate('/');
   }
 }

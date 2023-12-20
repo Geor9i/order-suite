@@ -15,7 +15,12 @@ export default class OrderPage {
     this.showView = this._showView.bind(this);
   }
 
-  _showView() {
+  _showView(ctx) {
+    if (!ctx.user) {
+      this.router.navigate("/404");
+      return;
+    }
+
     let template = this.templateFunction(
       this.getHeaderData(),
       this.processor.currentOrderProducts,

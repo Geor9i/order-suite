@@ -10,6 +10,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     position: relative;
 }
 
@@ -119,7 +120,7 @@ margin: 1rem;
     height: auto;
     width: 70%;
     background-color: rgb(204, 204, 204);
-    border: 1px solid black;
+    border-radius: 26px;
 }
 
 .store__open-times__form-header {
@@ -135,13 +136,37 @@ margin: 1rem;
     background-color: rgb(197, 197, 197);
 }
 
+.store-info-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    height: 5rem;
+    color: black;
+    margin: 5px 0;
+}
+
+.store-info-container label {
+    font-size: 1.5rem;
+}
+
+.store-info-container input {
+    font-weight: bold;
+    font-size: 1.2rem;
+    width: 50%;
+    height: 2rem;
+}
+
 .store__details__bar {
 font-size: 1.8rem;
 color: rgb(231, 231, 231);
 border-bottom: 1px solid black;
+border-radius: 7px;
 text-align: center;
 width: 100%;
-background-color: rgb(131, 131, 131);
+/* background-color: rgb(131, 131, 131); */
+background-color: ;
 cursor: pointer;
 }
 
@@ -153,11 +178,6 @@ cursor: pointer;
     width: 100%;
     height: 0rem;
     overflow: hidden;
-    transition: height 0.3s ease;
-}
-
-.slider-active {
-    height: 352px;
     transition: height 0.3s ease;
 }
 
@@ -173,7 +193,8 @@ cursor: pointer;
   overflow-x: auto;
 }
 
-.weekday__main__container input, select {
+.weekday__main__container input, .weekday__main__container select {
+    width: 100%;
     color: white;
 }
 .weekday__container {
@@ -182,7 +203,7 @@ cursor: pointer;
     justify-content: flex-start;
     align-items: center;
     width: 100%;
-    height: 22rem;
+    height: 20rem;
     border: 1px solid black;
     background-color: rgb(73, 73, 73);
     text-align: center;
@@ -211,11 +232,11 @@ cursor: pointer;
 }
 
 
-.weekday-button__active:hover {
-    background-color: rgb(250, 250, 250);
+.weekday-button:hover {
+    background-color: rgb(179, 179, 179);
 }
 .weekday-button__inactive:hover {
-    background-color: rgb(99, 99, 99);
+    background-color: rgb(230, 230, 230);
 }
 
 .store-details__main-container {

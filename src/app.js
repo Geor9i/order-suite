@@ -1,5 +1,8 @@
 import { render } from "../node_modules/lit-html/lit-html.js";
 import page from "../node_modules/page/page.mjs";
+import { firebaseConfig } from "../config/firebaseConfig.js";
+import { initializeApp } from 'firebase/app'
+import FireService from "./services/fireService.js";
 
 import Processor from "./processing/processor.js";
 import Calendar from "./components/calendar/calendar.js";
@@ -14,7 +17,7 @@ import { orderFormTemplate } from "./components/orderFormComponent/orderFormTemp
 import { calendarTemplate } from "./components/calendar/calendarTemplate.js";
 import { storeSettings } from "./storeSettings.js";
 import { orderPageTemplate } from "./components/orderPage/orderPageTemplate.js";
-import { navTemplate } from "./components/nav/navTemplate.js";
+import { userNavTemplate } from "./components/nav/userNavTemplate.js";
 
 import DateUtil from "./utils/dateUtil.js";
 import TimeUtil from "./utils/timeUtil.js";
@@ -23,10 +26,16 @@ import FormUtil from "./utils/formUtil.js";
 import DomUtil from "./utils/domUtil.js";
 import ObjectUtil from "./utils/objectUtil.js";
 
-import { report } from '../inventoryReport.js'
 import StoreTemplateScreen from "./components/storeTemplate/storeSetupScreen.js";
 import { storeSetupTemplate } from "./components/storeTemplate/StoreSetupTemplate.js";
+import { guestNavTemplate } from "./components/nav/guestNavTemplate.js";
+import { loginPageTemplate } from "./components/loginPage/loginPageTemplate.js";
+import LoginPage from "./components/loginPAge/loginPage.js";
+import RegisterPage from "./components/registerPage/registerPage.js";
+import { registerPageTemplate } from "./components/registerPage/registerPageTemplate.js";
 
+const app = initializeApp(firebaseConfig);
+const fireService = new FireService(app);
 const main = document.querySelector("main");
 const nav = document.querySelector("header");
 
@@ -55,18 +64,20 @@ const processor = new Processor(storeSettings, utils);
 //Harvester
 const harvester = new Harvester(utils);
 
-const process = harvester.hourlySalesExtractor(report)
-console.log(process);
-
 //Components
+
 const calendarComponent = new Calendar(calendarTemplate, renderCalender, utils);
-const navComponent = new NavComponent(navTemplate, renderNav, router, utils);
+const navComponent = new NavComponent(guestNavTemplate ,userNavTemplate, renderNav, router, fireService, utils);
 const homeComponent = new HomeComponent(
   homePageTemplate,
   renderBody,
   router,
   utils
 );
+
+const loginPageComponent = new LoginPage(loginPageTemplate, renderBody, router, fireService, utils);
+const registerPageComponent = new RegisterPage(registerPageTemplate, renderBody, router, fireService, utils);
+
 const orderFormComponent = new OrderFormComponent(
   orderFormTemplate,
   renderBody,
@@ -93,6 +104,8 @@ const storeTemplateScreen = new StoreTemplateScreen(
 
 page(navComponent.showView);
 page("/", homeComponent.showView);
+page("/login", loginPageComponent.showView);
+page("/register", registerPageComponent.showView);
 page("/order-form", orderFormComponent.showView);
 page("/order-details", orderPageComponent.showView);
 page("/restaurant", storeTemplateScreen.showView);

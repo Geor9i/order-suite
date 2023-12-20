@@ -30,6 +30,11 @@ export default class OrderFormComponent {
   }
 
   _showView(ctx) {
+    if (!ctx.user) {
+      this.router.navigate("/404");
+      return;
+    }
+
     let template = this.templateFunction(
       this.submitHandler,
       this.openCalendar,

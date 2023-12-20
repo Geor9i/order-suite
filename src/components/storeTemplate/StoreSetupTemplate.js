@@ -8,14 +8,19 @@ export const storeSetupTemplate = (
 ) => {
   return html`
     <div class="inventory__main-container">
+
+      <h1>Store Template</h1>
       <div class="store__open-times-container">
-        <h1 class="store__open-times__form-header">Farnborough Express</h1>
+        <div class="store-info-container">
+          <label for="storeName">StoreName</label>
+          <input type="text" name="storeName" />
+        </div>
         <div
           @click=${slideOpen}
           data-id="store__details__container"
           class="store__details__bar"
         >
-          Store Details
+          Opening Times & Delivery
         </div>
         <div class="store__details__container" id="store__details__container">
           <div class="weekday__main__container">
@@ -64,12 +69,7 @@ const weekdayTemplate = (
                             <select id="close-selector-${weekday}" class="time-selector">${generateHours()}</select>
                             </div>
                         </div>
-                        <div class="sales-percentage-container">
-                            <label for="sales-percentage-input-${weekday}" class="sales-percentage-label" >Daily Sales</label>
-                            <input maxlength="5" class="sales-percentage-input" id="sales-percentage-input-${weekday}" placeholder="0"></input>
-                            <p class="sales-percentage-input-sign">%</p>
-                            
-                    </div>
+                       
                     <div class="delivery-day-input-container">
                         <label for="delivery-day-checkbox-${weekday}" class="delivery-day-label">Store Delivery</label>
                         <input id="delivery-day-checkbox-${weekday}" data-id=${weekday} class="delivery-day-checkbox" @change=${showDeliveryDetails} type="checkbox"></input>
@@ -113,6 +113,13 @@ const generateHours = () => {
   }
   return hours;
 };
+
+
+` <div class="sales-percentage-container">
+<label for="sales-percentage-input-" class="sales-percentage-label" >Daily Sales</label>
+<input maxlength="5" class="sales-percentage-input" id="sales-percentage-input-" placeholder="0"></input>
+<p class="sales-percentage-input-sign">%</p>
+</div>`
 
 const dataAnalysis = (slideOpen) => html`
 <div id="analysis-container" class="store__details__container">

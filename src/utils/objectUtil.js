@@ -402,6 +402,40 @@ export default class ObjectUtil {
     }
     return sortedArr;
   }
+
+  createElementArray(parent, ...elements) {
+    if (elements.length === 1 && typeof elements[0] === 'string') {
+      return Array.from(parent.querySelectorAll(elements));
+    } else {
+      let arr = [];
+      for (let element of elements) {
+        arr.push(element);
+      }
+      return arr;
+    }
+  }
+
+  elementArrayToObject(array, keyAttribute, omitELements) {
+    let obj = array.reduce((obj, element) => {
+      if (keyAttribute === 'text') {
+        let pattern = /\s/g;
+        let text = (element.textContent).replace(pattern, '-');
+        let key = text;
+        obj[key] = element;
+      } else {
+        obj[element.getAttribute(keyAttribute)] = element;
+      }
+      return obj;
+    }, {})
+    if (omitELements) {
+      for (let element of omitELements) {
+        if (obj[element]) {
+          delete obj[element];
+        }
+      }
+    }
+    return obj;
+  }
   
 
   search(list, keyword, { filter = [], returnBool = false } = {}) {

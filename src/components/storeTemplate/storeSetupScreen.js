@@ -13,7 +13,12 @@ export default class StoreTemplateScreen {
     this.sliderContainers = [];
   }
 
-  _showView() {
+  _showView(ctx) {
+    if (!ctx.user) {
+      this.router.navigate("/404");
+      return;
+    }
+
     const weekdays = this.dateUtil
       .getWeekdays([])
       .map((weekday) => this.stringUtil.toPascalCase(weekday));
