@@ -34988,9 +34988,9 @@ ___CSS_LOADER_EXPORT___.locals = {
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js!./src/components/loginPAge/loginPage.module.css":
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/components/loginPage/loginPage.module.css":
 /*!*********************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./src/components/loginPAge/loginPage.module.css ***!
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/components/loginPage/loginPage.module.css ***!
   \*********************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
@@ -35007,7 +35007,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, `.vE59e6vIQE2RLnrwLh04 {
+___CSS_LOADER_EXPORT___.push([module.id, `.DxErKbyDUepHkGxvvcMg {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -35019,7 +35019,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.vE59e6vIQE2RLnrwLh04 {
     border-radius: 33px;
 }
 
-.mKB6PfYVO5U4KvSPz_WA {
+.winerdIVOlmPhMvetfC9 {
     width: 100%;
     height: 100%;
     display: flex;
@@ -35028,7 +35028,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.vE59e6vIQE2RLnrwLh04 {
     flex-direction: column;
 }
 
-.qI7KHB5hsSo0a0w673n_ {
+.hnDQKZbWiJkv6888Foud {
     display: flex;
     align-items: start;
     justify-content: center;
@@ -35038,27 +35038,27 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.vE59e6vIQE2RLnrwLh04 {
     margin: 1rem;
 }
 
-.qI7KHB5hsSo0a0w673n_ input {
+.hnDQKZbWiJkv6888Foud input {
     text-align: left;
     width: 100%;
     height: 100%;
 }
 
-.IKSn7GNBD2qRmH3q9T1y {
+.kcWXdvtmmrIra7bfNoxT {
     width: 50%;
     height: 2rem;
     cursor: pointer;
 }
-.p0vmrvZVaQZEcRSq7HxZ {
+.XYRhIdrGxx8CDrHkP8HQ {
     margin: 0;
-}`, "",{"version":3,"sources":["webpack://./src/components/loginPAge/loginPage.module.css"],"names":[],"mappings":"AAAA;IACI,aAAa;IACb,mBAAmB;IACnB,2BAA2B;IAC3B,sBAAsB;IACtB,UAAU;IACV,WAAW;IACX,oCAAoC;IACpC,uBAAuB;IACvB,mBAAmB;AACvB;;AAEA;IACI,WAAW;IACX,YAAY;IACZ,aAAa;IACb,mBAAmB;IACnB,uBAAuB;IACvB,sBAAsB;AAC1B;;AAEA;IACI,aAAa;IACb,kBAAkB;IAClB,uBAAuB;IACvB,sBAAsB;IACtB,UAAU;IACV,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,gBAAgB;IAChB,WAAW;IACX,YAAY;AAChB;;AAEA;IACI,UAAU;IACV,YAAY;IACZ,eAAe;AACnB;AACA;IACI,SAAS;AACb","sourcesContent":[".login-container {\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: flex-start;\r\n    flex-direction: column;\r\n    width: 25%;\r\n    height: 30%;\r\n    background-color: rgb(236, 236, 236);\r\n    border: 2px solid black;\r\n    border-radius: 33px;\r\n}\r\n\r\n.login-form {\r\n    width: 100%;\r\n    height: 100%;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    flex-direction: column;\r\n}\r\n\r\n.input-container {\r\n    display: flex;\r\n    align-items: start;\r\n    justify-content: center;\r\n    flex-direction: column;\r\n    width: 50%;\r\n    height: 3rem;\r\n    margin: 1rem;\r\n}\r\n\r\n.input-container input {\r\n    text-align: left;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.submit-btn {\r\n    width: 50%;\r\n    height: 2rem;\r\n    cursor: pointer;\r\n}\r\n.label {\r\n    margin: 0;\r\n}"],"sourceRoot":""}]);
+}`, "",{"version":3,"sources":["webpack://./src/components/loginPage/loginPage.module.css"],"names":[],"mappings":"AAAA;IACI,aAAa;IACb,mBAAmB;IACnB,2BAA2B;IAC3B,sBAAsB;IACtB,UAAU;IACV,WAAW;IACX,oCAAoC;IACpC,uBAAuB;IACvB,mBAAmB;AACvB;;AAEA;IACI,WAAW;IACX,YAAY;IACZ,aAAa;IACb,mBAAmB;IACnB,uBAAuB;IACvB,sBAAsB;AAC1B;;AAEA;IACI,aAAa;IACb,kBAAkB;IAClB,uBAAuB;IACvB,sBAAsB;IACtB,UAAU;IACV,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,gBAAgB;IAChB,WAAW;IACX,YAAY;AAChB;;AAEA;IACI,UAAU;IACV,YAAY;IACZ,eAAe;AACnB;AACA;IACI,SAAS;AACb","sourcesContent":[".login-container {\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: flex-start;\r\n    flex-direction: column;\r\n    width: 25%;\r\n    height: 30%;\r\n    background-color: rgb(236, 236, 236);\r\n    border: 2px solid black;\r\n    border-radius: 33px;\r\n}\r\n\r\n.login-form {\r\n    width: 100%;\r\n    height: 100%;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    flex-direction: column;\r\n}\r\n\r\n.input-container {\r\n    display: flex;\r\n    align-items: start;\r\n    justify-content: center;\r\n    flex-direction: column;\r\n    width: 50%;\r\n    height: 3rem;\r\n    margin: 1rem;\r\n}\r\n\r\n.input-container input {\r\n    text-align: left;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.submit-btn {\r\n    width: 50%;\r\n    height: 2rem;\r\n    cursor: pointer;\r\n}\r\n.label {\r\n    margin: 0;\r\n}"],"sourceRoot":""}]);
 // Exports
 ___CSS_LOADER_EXPORT___.locals = {
-	"login-container": `vE59e6vIQE2RLnrwLh04`,
-	"login-form": `mKB6PfYVO5U4KvSPz_WA`,
-	"input-container": `qI7KHB5hsSo0a0w673n_`,
-	"submit-btn": `IKSn7GNBD2qRmH3q9T1y`,
-	"label": `p0vmrvZVaQZEcRSq7HxZ`
+	"login-container": `DxErKbyDUepHkGxvvcMg`,
+	"login-form": `winerdIVOlmPhMvetfC9`,
+	"input-container": `hnDQKZbWiJkv6888Foud`,
+	"submit-btn": `kcWXdvtmmrIra7bfNoxT`,
+	"label": `XYRhIdrGxx8CDrHkP8HQ`
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -35631,9 +35631,9 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ "./src/components/loginPAge/loginPage.module.css":
+/***/ "./src/components/loginPage/loginPage.module.css":
 /*!*******************************************************!*\
-  !*** ./src/components/loginPAge/loginPage.module.css ***!
+  !*** ./src/components/loginPage/loginPage.module.css ***!
   \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -35653,7 +35653,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_loginPage_module_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js!./loginPage.module.css */ "./node_modules/css-loader/dist/cjs.js!./src/components/loginPAge/loginPage.module.css");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_loginPage_module_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js!./loginPage.module.css */ "./node_modules/css-loader/dist/cjs.js!./src/components/loginPage/loginPage.module.css");
 
       
       
@@ -36508,9 +36508,9 @@ const homePageTemplate = () => (0,_node_modules_lit_html_lit_html_js__WEBPACK_IM
 
 /***/ }),
 
-/***/ "./src/components/loginPAge/loginPage.js":
+/***/ "./src/components/loginPage/loginPage.js":
 /*!***********************************************!*\
-  !*** ./src/components/loginPAge/loginPage.js ***!
+  !*** ./src/components/loginPage/loginPage.js ***!
   \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -36518,7 +36518,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ LoginPage)
 /* harmony export */ });
-/* harmony import */ var _loginPageTemplate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./loginPageTemplate.js */ "./src/components/loginPAge/loginPageTemplate.js");
+/* harmony import */ var _loginPageTemplate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./loginPageTemplate.js */ "./src/components/loginPage/loginPageTemplate.js");
 
 
 class LoginPage {
@@ -36558,9 +36558,9 @@ class LoginPage {
 
 /***/ }),
 
-/***/ "./src/components/loginPAge/loginPageTemplate.js":
+/***/ "./src/components/loginPage/loginPageTemplate.js":
 /*!*******************************************************!*\
-  !*** ./src/components/loginPAge/loginPageTemplate.js ***!
+  !*** ./src/components/loginPage/loginPageTemplate.js ***!
   \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -36569,7 +36569,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   loginPageTemplate: () => (/* binding */ loginPageTemplate)
 /* harmony export */ });
 /* harmony import */ var lit_html__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit-html */ "./node_modules/lit-html/development/lit-html.js");
-/* harmony import */ var _loginPage_module_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./loginPage.module.css */ "./src/components/loginPAge/loginPage.module.css");
+/* harmony import */ var _loginPage_module_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./loginPage.module.css */ "./src/components/loginPage/loginPage.module.css");
 
 
 
@@ -45818,7 +45818,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_homePage_homePage_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/homePage/homePage.js */ "./src/components/homePage/homePage.js");
 /* harmony import */ var _components_404_NotFoundPage_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./components/404/NotFoundPage.js */ "./src/components/404/NotFoundPage.js");
 /* harmony import */ var _components_storeTemplate_storeSetupScreen_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./components/storeTemplate/storeSetupScreen.js */ "./src/components/storeTemplate/storeSetupScreen.js");
-/* harmony import */ var _components_loginPAge_loginPage_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./components/loginPAge/loginPage.js */ "./src/components/loginPAge/loginPage.js");
+/* harmony import */ var _components_loginPage_loginPage_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./components/loginPage/loginPage.js */ "./src/components/loginPage/loginPage.js");
 /* harmony import */ var _components_registerPage_registerPage_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./components/registerPage/registerPage.js */ "./src/components/registerPage/registerPage.js");
 /* harmony import */ var _utils_dateUtil_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./utils/dateUtil.js */ "./src/utils/dateUtil.js");
 /* harmony import */ var _utils_timeUtil_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./utils/timeUtil.js */ "./src/utils/timeUtil.js");
@@ -45901,7 +45901,7 @@ const funcLoader = {
 (0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])(navComponent.showView);
 (0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/index.html", "/");
 (0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/", () => CM.mount(_components_homePage_homePage_js__WEBPACK_IMPORTED_MODULE_11__["default"], baseLoader));
-(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/login", () => CM.mount(_components_loginPAge_loginPage_js__WEBPACK_IMPORTED_MODULE_14__["default"], baseLoader));
+(0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/login", () => CM.mount(_components_loginPage_loginPage_js__WEBPACK_IMPORTED_MODULE_14__["default"], baseLoader));
 (0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/register", () => CM.mount(_components_registerPage_registerPage_js__WEBPACK_IMPORTED_MODULE_15__["default"], baseLoader));
 (0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/order-form", () => CM.mount(_components_orderFormComponent_orderForm_js__WEBPACK_IMPORTED_MODULE_10__["default"], baseLoader, funcLoader));
 (0,_node_modules_page_page_mjs__WEBPACK_IMPORTED_MODULE_1__["default"])("/order-details", () => CM.mount(_components_orderPage_orderPage_js__WEBPACK_IMPORTED_MODULE_9__["default"], baseLoader, funcLoader));

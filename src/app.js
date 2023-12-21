@@ -13,7 +13,7 @@ import OrderFormComponent from "./components/orderFormComponent/orderForm.js";
 import HomeComponent from "./components/homePage/homePage.js";
 import NotFoundPage from "./components/404/NotFoundPage.js";
 import StoreTemplateScreen from "./components/storeTemplate/storeSetupScreen.js";
-import LoginPage from "./components/loginPAge/loginPage.js";
+import LoginPage from "./components/loginPage/loginPage.js";
 import RegisterPage from "./components/registerPage/registerPage.js";
 
 import DateUtil from "./utils/dateUtil.js";
