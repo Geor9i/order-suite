@@ -1,0 +1,36 @@
+
+.restaurant-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 60%;
+}
+
+.restaurant-selector-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 30vw;
+    height: 80%;
+    border-radius: 13px;
+    background-color: rgb(139, 139, 139);
+    cursor: pointer;
+    border: 0.1px solid black;
+}
+
+.restaurant-selector-btn p {
+    font-weight: bold;
+    font-size: 2rem;
+    margin: 0;
+    transform: scaleX(1) scaleY(1.2);
+    letter-spacing: 5px;
+    text-align: center;
+}
+
+.restaurant-selector-btn:hover {
+    color: white;
+    border: 1px solid white;
+
+}

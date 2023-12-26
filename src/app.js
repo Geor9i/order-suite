@@ -24,6 +24,7 @@ import DomUtil from "./utils/domUtil.js";
 import ObjectUtil from "./utils/objectUtil.js";
 import { storeSettings } from "./storeSettings.js";
 import ComponentManager from "./lib/componentManager.js";
+import RestaurantMenu from "./components/restaurantMenu/restaurantMenu.js";
 
 const app = initializeApp(firebaseConfig);
 const fireService = new FireService(app);
@@ -75,7 +76,8 @@ page("/login", () => CM.mount(LoginPage, baseLoader));
 page("/register", () => CM.mount(RegisterPage, baseLoader));
 page("/order-form", () => CM.mount(OrderFormComponent, baseLoader, funcLoader));
 page("/order-details", () => CM.mount(OrderPage, baseLoader, funcLoader));
-page("/restaurant", () => CM.mount(StoreTemplateScreen, baseLoader));
+page("/restaurant", () => CM.mount(RestaurantMenu, baseLoader));
+page("/opening-times", () => CM.mount(StoreTemplateScreen, baseLoader));
 page("/404", () => CM.mount(NotFoundPage, [renderBody]));
 
 page.start();
