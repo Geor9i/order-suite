@@ -19,9 +19,9 @@ export default class RestaurantMenu {
     menuButtonhandler(e) {
             const id = e.currentTarget.id;
         const links = {
-            restaurantTemplate: 
-            products:
-            sales:
+            restaurantTemplate: 'restaurant-template',
+            products: 'product-manager',
+            sales: 'sales-analysis',
         }
     }
 

@@ -77,7 +77,7 @@ page("/register", () => CM.mount(RegisterPage, baseLoader));
 page("/order-form", () => CM.mount(OrderFormComponent, baseLoader, funcLoader));
 page("/order-details", () => CM.mount(OrderPage, baseLoader, funcLoader));
 page("/restaurant", () => CM.mount(RestaurantMenu, baseLoader));
-page("/opening-times", () => CM.mount(StoreTemplateScreen, baseLoader));
+page("/restaurant-template", () => CM.mount(StoreTemplateScreen, baseLoader));
 page("/404", () => CM.mount(NotFoundPage, [renderBody]));
 
 page.start();
