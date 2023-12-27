@@ -1,4 +1,5 @@
 import { html } from "../../../node_modules/lit-html/lit-html.js";
+import styles from './orderForm.module.css';
 
 export const orderFormTemplate = (
   submitHandler,
@@ -6,25 +7,25 @@ export const orderFormTemplate = (
   dateInputFieldStartingDate,
   closeCalendar
 ) => html`
- <section class="order-page__section">
-            <div class="order__form__main__container">
-                <div class="order__form__container" id="order__form__container">
-                        <div class="calendar-backdrop" id="calendar-backdrop" @click=${closeCalendar}></div>
-                        <form novalidate class="order__form__area" @submit="${submitHandler}">
+ <section class=${styles['order-page__section']}>
+            <div class=${styles['order__form__main__container']}>
+                <div class=${styles['order__form__container']} id="order__form__container">
+                        <div class=${styles['calendar-backdrop']} id="calendar-backdrop" @click=${closeCalendar}></div>
+                        <form novalidate class=${styles['order__form__area']} @submit="${submitHandler}">
                             <label for="RMF-data-dump">Paste RMF order page</label>
-                            <textarea name="RMF-data-dump" class="rmf-data-dump" placeholder="Paste RMF page here!"
+                            <textarea name="RMF-data-dump" class=${styles['rmf-data-dump']} placeholder="Paste RMF page here!"
                                 id="rmf-data-dump" cols="30" rows="10"></textarea>
-                            <label class="input__order__invoiced" for="previous-invoiced" >All food orders invoiced?</label>
+                            <label class=${styles['input__order__invoiced']} for="previous-invoiced" >All food orders invoiced?</label>
                             <div id="radio-container">
-                                <label class="radio-label" for="previous-invoiced" >Yes</label>
-                                <input class="radio-button" type="radio" id="previous-invoiced-yes"
+                                <label class=${styles['radio-label']} for="previous-invoiced" >Yes</label>
+                                <input class=${styles['radio-button']} type="radio" id="previous-invoiced-yes"
                                     name="previous-invoiced">
-                                <label class="radio-label" for="previous-invoiced">No</label>
-                                <input class="radio-button" type="radio" id="previous-invoiced-no" name="previous-invoiced">
+                                <label class=${styles['radio-label']} for="previous-invoiced">No</label>
+                                <input class=${styles['radio-button']} type="radio" id="previous-invoiced-no" name="previous-invoiced">
                             </div>
-                            <div class="received-today__container">
-                                <label class="received-today__label" for="received-today" >Received my order today?</label>
-                                <input class="check-box" type="checkbox" id="received-today" name="received-today">
+                            <div class=${styles['received-today__container']}>
+                                <label class=${styles['received-today__label']} for="received-today" >Received my order today?</label>
+                                <input class=${styles['check-box']} type="checkbox" id="received-today" name="received-today">
                             </div>
 
                             <label id="date-label" for="date-input" >Order Date</label>

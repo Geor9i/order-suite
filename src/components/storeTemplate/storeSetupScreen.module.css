@@ -1,0 +1,317 @@
+* {
+    margin: 0;
+}
+
+.template-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+}
+
+.store__open-times-container {
+    display: flex;
+    color: rgb(224, 224, 224);
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: auto;
+    width: 70%;
+    background-color: rgb(204, 204, 204);
+    border-radius: 26px;
+}
+
+.store__open-times__form-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 4rem;
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+    color: rgb(38, 57, 75);
+    background-color: rgb(197, 197, 197);
+}
+
+.restaurant-info-container {
+    height: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.restaurant-info-content-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.store-info-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    height: 5rem;
+    color: black;
+    margin: 5px 0;
+}
+
+.store-info-container label {
+    font-size: 1.5rem;
+}
+
+.store-info-container input {
+    font-weight: bold;
+    font-size: 1.2rem;
+    width: 50%;
+    height: 2rem;
+}
+
+.section__bar {
+    font-size: 1.8rem;
+    color: rgb(231, 231, 231);
+    border-bottom: 1px solid black;
+    border-radius: 7px;
+    text-align: center;
+    width: 100%;
+    background-color: rgb(131, 131, 131);
+    cursor: pointer;
+}
+
+.section__bar:hover {
+    background-color: rgb(150, 150, 150);
+}
+
+.expand__container {
+    width: 100%;
+    height: 0rem;
+    overflow: hidden;
+    transition: height 0.3s ease;
+}
+
+.weekday__main__container {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    grid-gap: 5px;
+    grid-template-columns: repeat(7, 1fr);
+    background-color: rgb(255, 255, 255);
+    overflow-x: auto;
+}
+
+.weekday__main__container input,
+.weekday__main__container select {
+    width: 100%;
+    color: white;
+}
+
+.weekday__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 20rem;
+    border: 1px solid black;
+    background-color: rgb(73, 73, 73);
+    text-align: center;
+}
+
+.weekday-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin: 10px 0px;
+    text-align: center;
+    width: 90%;
+    height: 3rem;
+    border-radius: 13px;
+    border: 1px solid black;
+    color: black;
+    background-color: rgb(230, 230, 230);
+    cursor: pointer;
+}
+
+.weekday-button__inactive {
+    text-decoration: line-through;
+    text-decoration-color: rgb(0, 0, 0);
+    text-decoration-thickness: 3px;
+    background-color: rgb(80, 80, 80);
+}
+
+
+.weekday-button:hover {
+    background-color: rgb(179, 179, 179);
+}
+
+.weekday-button__inactive:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+.store-details__main-container {
+    display: block;
+    width: 100%;
+}
+
+.time-selector__main-container {
+    display: flex;
+    width: 100%;
+}
+
+.time-selector__inner-container {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    width: 45%;
+}
+
+.time-selector__inner-container+.time-selector__inner-container {
+    margin-left: 15px;
+}
+
+.time-selector-label {
+    margin: 0;
+    margin-right: 12px;
+}
+
+.time-selector {
+    margin: 0;
+    width: 80%;
+    text-align: center;
+    background-color: rgb(80, 80, 80);
+    color: rgb(255, 255, 255);
+    display: inline-block;
+}
+
+.sales-percentage-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 30px;
+    width: 100%;
+}
+
+.sales-percentage-label {
+    margin: 0;
+    margin-right: 10px;
+    display: inline-block;
+    font-size: 1rem;
+}
+
+.sales-percentage-input {
+    display: inline-block;
+    background-color: rgba(218, 218, 218, 0.1);
+    font-size: 1rem;
+    font-weight: bold;
+    width: 30%;
+    text-align: right;
+    border: 0;
+}
+
+.sales-percentage-input::placeholder {
+    color: white;
+    opacity: 1;
+}
+
+.sales-percentage-input-sign {
+    display: inline-block;
+    margin: 0;
+    margin: 0 5px;
+}
+
+.delivery-day-input-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: right;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.delivery-day-label {
+    margin: 0;
+    font-size: 1rem;
+    display: inline-block;
+}
+
+.delivery-day-checkbox {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 10px;
+}
+
+.delivery-day-info__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.delivery-day-arrival-time-text {
+    display: inline-block;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.delivery-arrival-selector {
+    background-color: rgb(80, 80, 80);
+    text-align: center;
+    width: 50%;
+    margin: 0;
+}
+
+.delivery-arrival-cutoff-time {
+    text-align: center;
+    margin: 0;
+    width: 100%;
+    background-color: rgb(80, 80, 80);
+}
+
+.delivery-arrival-cutoff-weekday {
+    text-align: center;
+    margin-bottom: 5px;
+    margin: 0;
+    width: 100%;
+    background-color: rgb(80, 80, 80);
+}
+
+
+.order-cutoff-details__container,
+.delivery-day-eta__container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+
+    margin-bottom: 0.5rem;
+}
+
+.store__details-confirm-button__container {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 2rem;
+}
+
+.store__details-confirm-button {
+    width: 50%;
+    height: 100%;
+    cursor: pointer;
+}

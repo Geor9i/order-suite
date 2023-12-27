@@ -124,8 +124,6 @@ main {
   transition: box-shadow 0.3s ease;
 }
 
- {
-}
 
 .rmf-data-dump__disabled {
   cursor: not-allowed;
