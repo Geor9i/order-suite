@@ -1,4 +1,5 @@
 import { storeSetupTemplate } from "./StoreSetupTemplate.js";
+import styles from './storeSetupScreen.module.css';
 
 export default class StoreTemplateScreen {
   constructor({ renderBody, router, fireService, utils }) {
@@ -83,7 +84,7 @@ export default class StoreTemplateScreen {
     const detailsContainer = document.getElementById(
       `delivery-day-info__container-${weekday}`
     );
-    this.domUtil.addRemoveClass(detailsContainer, `inactive`);
+    this.domUtil.addRemoveClass(detailsContainer, styles['inactive']);
   }
 
   _toggleDay(e) {
@@ -92,7 +93,7 @@ export default class StoreTemplateScreen {
     const container = document.getElementById(
       `store-details__main-container-${weekday}`
     );
-    this.domUtil.addRemoveClass(element, "weekday-button__inactive");
-    this.domUtil.addRemoveClass(container, "inactive");
+    this.domUtil.addRemoveClass(element, styles["weekday-button__inactive"]);
+    this.domUtil.addRemoveClass(container, styles["inactive"]);
   }
 }

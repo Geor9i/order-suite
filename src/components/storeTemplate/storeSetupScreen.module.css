@@ -51,6 +51,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    padding: 1rem;
 }
 
 .store-info-container {
@@ -59,13 +60,14 @@
     justify-content: center;
     flex-direction: column;
     width: 100%;
-    height: 5rem;
+    height: auto;
     color: black;
     margin: 5px 0;
 }
 
 .store-info-container label {
     font-size: 1.5rem;
+    margin: 0;
 }
 
 .store-info-container input {
@@ -73,6 +75,12 @@
     font-size: 1.2rem;
     width: 50%;
     height: 2rem;
+}
+
+.type-select {
+    width: 20rem;
+    text-align: center;
+    font-size: 1.5rem;
 }
 
 .section__bar {
@@ -314,4 +322,8 @@
     width: 50%;
     height: 100%;
     cursor: pointer;
+}
+
+.inactive {
+    display: none;
 }

@@ -25,8 +25,12 @@ export const storeSetupTemplate = (
               <input type="text" name="storeName" />
             </div>
             <div class=${styles['store-info-container']}>
+              <label for="imageUrl">Image Url</label>
+              <input type="text" name="imageUrl" />
+            </div>
+            <div class=${styles['store-info-container']}>
               <label for="storeName">Restaurant Type</label>
-              <select>
+              <select class=${styles['type-select']}>
                 <option value="Express">Express</option> 
                 <option value="Conventional">Conventional</option> 
                 <option value="Drive Thru">Drive Thru</option> 
@@ -86,7 +90,7 @@ const weekdayTemplate = (
                         <label for="delivery-day-checkbox-${weekday}" class=${styles['delivery-day-label']}>Store Delivery</label>
                         <input id="delivery-day-checkbox-${weekday}" data-id=${weekday} class=${styles['delivery-day-checkbox']} @change=${showDeliveryDetails} type="checkbox"></input>
                     </div>
-                        <div id=${`delivery-day-info__container-${weekday}`} class=${styles['delivery-day-info__container inactive']}>
+                        <div id=${`delivery-day-info__container-${weekday}`} class=${`${styles['delivery-day-info__container']} ${styles['inactive']}`}>
                             <div class=${styles['delivery-day-eta__container']}>
                                 <label for="arrival-time-${weekday}" class=${styles['delivery-day-arrival-time-text']}>ETA</label>
                                 <select id="arrival-time-${weekday}" class=${styles['delivery-arrival-selector']}>${generateHours()}</select>
