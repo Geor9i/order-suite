@@ -1,5 +1,6 @@
 :root {
   --blacks: rgb(50, 50, 50);
+  --whites: rgb(230, 230, 230);
 }
 
 * {

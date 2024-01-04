@@ -265,6 +265,18 @@ export default class TimeUtil {
     };
   }
 
+  hourlyTimeWindow(startTime, endTime) {
+    let start = this.time().toMinutes(startTime);
+    start = this.time().toHours(start).h;
+    let end = this.time().toMinutes(endTime);
+    end = this.time().toHours(end).h;
+    const arr = [];
+    for (let h = start; h < end; h++) {
+      arr.push(h)
+    }
+    return arr;
+  }
+
   relativeTime(originTime) {
     if (!originTime) return null;
     let hourLength = 12;

@@ -1,0 +1,95 @@
+.page__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 80%;
+  height: 80%;
+}
+
+.section__bar {
+  font-size: 1.8rem;
+  color: var(--whites);
+  border-bottom: 1px solid black;
+  border-radius: 7px;
+  text-align: center;
+  width: 100%;
+  background-color: rgb(131, 131, 131);
+  cursor: pointer;
+}
+
+.section__bar:hover {
+  background-color: rgb(150, 150, 150);
+}
+
+.section__bar-inner {
+  font-size: 1.2rem;
+  background-color: rgb(85, 85, 85);
+}
+
+.expand__container {
+  width: 100%;
+  height: 0rem;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
+
+.expand-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.manual-entry-container {
+  width: 100%;
+  height: auto;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(7, 1fr);
+  align-items: center;
+  justify-items: center;
+}
+
+.sales-summary-weekday {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.sales-summary-weekday h2 {
+    width: 100%;
+    background-color: var(--blacks);
+    color: var(--whites);
+    text-align: center;
+}
+
+.manual-entry-weekday {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(172, 172, 172);
+}
+
+.hour-container {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.hour-container input {
+    width: 60%;
+}
+.hour-container label {
+    width: auto;
+    margin: 0;
+}

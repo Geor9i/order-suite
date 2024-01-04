@@ -6,7 +6,7 @@ export default class RestaurantMenu {
         this.router = router;
         this.fireService = fireService;
         this.showView = this._showView.bind(this);
-        this.menuButtonhandler = this._menuButtonhandler.bind(this);
+        this.menuButtonHandler = this._menuButtonHandler.bind(this);
     }
 
     _showView(ctx) {
@@ -14,15 +14,15 @@ export default class RestaurantMenu {
             this.router.redirect("/");
             return;
         }
-        this.render(restaurantMenuTemplate(this.menuButtonhandler));
+        this.render(restaurantMenuTemplate(this.menuButtonHandler));
     }
 
-    _menuButtonhandler(e) {
+    _menuButtonHandler(e) {
         const id = e.currentTarget.id;
         const links = {
             restaurantTemplate: '/restaurant-template',
             products: '/product-manager',
-            sales: '/sales-analysis',
+            sales: '/restaurant-sales',
         }
         this.router.navigate(links[id]);
     }
