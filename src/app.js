@@ -15,6 +15,9 @@ import NotFoundPage from "./components/404/NotFoundPage.js";
 import StoreTemplateScreen from "./components/storeTemplate/storeSetupScreen.js";
 import LoginPage from "./components/loginPage/loginPage.js";
 import RegisterPage from "./components/registerPage/registerPage.js";
+import RestaurantMenu from "./components/restaurantMenu/restaurantMenu.js";
+import SalesAnalysis from "./components/salesAnalysisPage/salesAnalysisPage.js";
+import ProductManager from "./components/productManager/productManager.js";
 
 import DateUtil from "./utils/dateUtil.js";
 import TimeUtil from "./utils/timeUtil.js";
@@ -24,8 +27,7 @@ import DomUtil from "./utils/domUtil.js";
 import ObjectUtil from "./utils/objectUtil.js";
 import { storeSettings } from "./storeSettings.js";
 import ComponentManager from "./lib/componentManager.js";
-import RestaurantMenu from "./components/restaurantMenu/restaurantMenu.js";
-import SalesAnalysis from "./components/salesAnalysisPage/salesAnalysisPage.js";
+
 
 const app = initializeApp(firebaseConfig);
 const fireService = new FireService(app);
@@ -80,6 +82,7 @@ page("/order-details", () => CM.mount(OrderPage, baseLoader, funcLoader));
 page("/restaurant", () => CM.mount(RestaurantMenu, baseLoader));
 page("/restaurant-template", () => CM.mount(StoreTemplateScreen, baseLoader));
 page("/restaurant-sales", () => CM.mount(SalesAnalysis, baseLoader));
+page("/product-manager", () => CM.mount(ProductManager, baseLoader));
 page("/404", () => CM.mount(NotFoundPage, [renderBody]));
 
 page.start();

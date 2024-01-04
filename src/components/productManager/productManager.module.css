@@ -1,0 +1,166 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+button {
+    cursor: pointer;
+}
+
+.page__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 80%;
+    height: 80%;
+  }
+  
+  .section__bar {
+    font-size: 1.8rem;
+    color: var(--whites);
+    border-bottom: 1px solid black;
+    border-radius: 7px;
+    text-align: center;
+    width: 100%;
+    background-color: rgb(131, 131, 131);
+    cursor: pointer;
+  }
+  
+  .section__bar:hover {
+    background-color: rgb(150, 150, 150);
+  }
+  
+  .section__bar-inner {
+    font-size: 1.2rem;
+    background-color: rgb(85, 85, 85);
+  }
+  
+  .expand__container {
+    width: 100%;
+    height: 0rem;
+    overflow: hidden;
+    transition: height 0.3s ease;
+  }
+  
+  .expand-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+.top-control-bar {
+    padding: 2px 2px;
+    height: auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border-bottom: 1px solid black;
+    background-color: rgb(163, 163, 163);
+}
+
+.add-btn {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.inventory-analysis-table-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.table-header {
+    width: 100%;
+    height: 1.5rem;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    grid-template-columns: 20% 15% 15% 1fr 15%;
+    background-color: rgb(248, 248, 248);
+}
+
+.table-body {
+    width: 100%;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.table-item {
+    width: 100%;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    grid-template-columns: 20% 15% 15% 1fr 15%;
+    border-bottom: 1px solid rgb(11, 166, 255);
+    border-top: 1px solid rgb(11, 166, 255);
+    background: linear-gradient(to top, rgb(96, 190, 253), rgb(204, 204, 204));
+}
+
+.table-header p,
+.table-item p
+ {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    border-right: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inventory-btn-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inventory-edit-btn {
+    width: 50%;
+    background-color: yellow;
+}
+
+.inventory-delete-btn {
+    width: 50%;
+    background-color: red;
+}
+
+.product-manager-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+    height: 50%;
+}
+
+.product-manager-container h2 {
+    text-align: center;
+    background-color: rgb(192, 192, 192);
+    width: 100%;
+}
+
+.product-list-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.product-grid {
+    
+}
+
