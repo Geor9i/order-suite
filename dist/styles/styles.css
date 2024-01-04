@@ -93,38 +93,6 @@ main {
     -0.2rem -0.1rem 0.05rem 0 rgb(255, 255, 255);
 }
 
-#rmf-data-dump {
-  resize: none;
-  text-align: center;
-  background-color: black;
-  border-radius: 13px;
-  color: white;
-  font-weight: bold;
-  font-size: 1rem;
-  width: 15rem;
-  height: 3rem;
-  border: none;
-  outline: none;
-  transition: box-shadow 0.3s ease;
-}
-
-#rmf-data-dump::placeholder {
-  color: transparent;
-  text-align: center;
-}
-
-#rmf-data-dump:hover::placeholder {
-  color: rgb(255, 255, 255);
-  opacity: 1;
-}
-
-.rmf-data-dump:hover {
-  cursor: pointer;
-  box-shadow: 0 0 0.4rem 0.5rem rgba(255, 255, 255, 0.158) inset,
-    0 0 1px 2px rgb(255, 255, 255) inset, 0 0 1px 2px rgb(255, 255, 255);
-  transition: box-shadow 0.3s ease;
-}
-
 
 .rmf-data-dump__disabled {
   cursor: not-allowed;

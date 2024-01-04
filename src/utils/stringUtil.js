@@ -90,4 +90,14 @@ export default class StringUtil {
     return newString.trim()
   }
 
+  
+  generateProductId(productName) {
+    return this.stringUtil
+      .removeSpecialChars(productName)
+      .split("")
+      .filter((el) => el !== " ")
+      .map((el) => el.toLowerCase())
+      .join("");
+  }
+
 }

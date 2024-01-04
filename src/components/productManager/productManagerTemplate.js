@@ -2,7 +2,7 @@ import { html } from 'lit-html';
 import styles from './productManager.module.css'
 
 
-export const productManagerTemplate = (slideOpen) => html`
+export const productManagerTemplate = (slideOpen, records, products, rules) => html`
 <div class=${styles['page__container']}>
     <div @click=${slideOpen} class=${styles['section__bar']}  data-id="inventory-records">Inventory Records</div>
     <div class=${styles['expand__container']} id="inventory-records">
@@ -19,26 +19,7 @@ export const productManagerTemplate = (slideOpen) => html`
                     <p>Actions</p>
                 </div>
                 <div class=${styles['table-body']}>
-                    <div class=${styles['table-item']}>
-                        <p>Packaging</p>
-                        <p>26/07/2023</p>
-                        <p>03/11/2023</p>
-                        <p>Ambient Packaging, Chilled, Frozen</p>
-                        <div class=${styles['inventory-btn-container']}>
-                            <button class=${styles['inventory-edit-btn']}>Edit</button>
-                            <button class=${styles['inventory-delete-btn']}>Delete</button>
-                        </div>
-                    </div>
-                    <div class=${styles['table-item']}>
-                        <p>Chilled</p>
-                        <p>01/09/2023</p>
-                        <p>31/12/2023</p>
-                        <p>Ambient Packaging, Chilled, Frozen</p>
-                        <div class=${styles['inventory-btn-container']}>
-                            <button class=${styles['inventory-edit-btn']}>Edit</button>
-                            <button class=${styles['inventory-delete-btn']}>Delete</button>
-                        </div>
-                    </div>
+                    ${records.map(record => recordItem({ ...record }))}
                 </div>
             </div>
         </div>
@@ -54,11 +35,57 @@ export const productManagerTemplate = (slideOpen) => html`
                 <p>Actions</p>
             </div>
             <div class=${styles['table-body']}>
-                
+                ${Object.keys(products).map(productId => productItem({ ...products[productId] }))}
+            </div>
+        </div>
+    </div>
+    <div @click=${slideOpen} class=${styles['section__bar']} data-id="product-rules">Product Rules</div>
+    <div class=${styles['expand__container']} id="product-rules">
+        <div class=${styles['expand-content']}>
+            <div class=${`${styles['table-header']} ${styles['product-rules-item']}`}>
+                <p>Name</p>
+                <p>Status</p>
+                <p>Actions</p>
+            </div>
+            <div class=${styles['table-body']}>
+                ${Object.keys(rules).map(ruleId => ruleItem({ ...rules[ruleId] }))}
             </div>
         </div>
     </div>
 </div>`;
 
 
+const recordItem = ({ name, dateFrom, dateTo, groups }) => html`
+<div class=${styles['table-item']}>
+<p>${name}</p>
+<p>${dateFrom}</p>
+<p>${dateTo}</p>
+<p>${groups}</p>
+<div class=${styles['inventory-btn-container']}>
+    <button class=${styles['inventory-edit-btn']}>Edit</button>
+    <button class=${styles['inventory-delete-btn']}>Delete</button>
+</div>
+</div>`;
+
+const productItem = ({ name, group, status, rules }) => html`
+<div class=${styles['table-item']}>
+<p>${name}</p>
+<p>${group}</p>
+<p>${status}</p>
+<p>${rules}</p>
+<div class=${styles['inventory-btn-container']}>
+    <button class=${styles['inventory-edit-btn']}>Edit</button>
+    <button class=${styles['inventory-delete-btn']}>Delete</button>
+</div>
+</div>`;
+
+const ruleItem = ({ name, status }) => html`
+<div class=${`${styles['table-item']} ${styles['product-rules-item']}`}>
+<p>${name}</p>
+<p>${status}</p>
+<div class=${styles['inventory-btn-container']}>
+    <button class=${styles['inventory-edit-btn']}>Edit</button>
+    <button class=${styles['inventory-delete-btn']}>Delete</button>
+</div>
+</div>`
 

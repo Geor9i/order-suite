@@ -1,0 +1,253 @@
+
+  
+  
+  .page__container {
+    width: 75%;
+    height: 70%;
+  }
+  
+  .main__title {
+    font-size: 1.2rem;
+    text-align: center;
+    background-color: rgb(71, 71, 71);
+    color: rgb(230, 230, 230);
+    margin: 0;
+    height: 1.5rem;
+    border-bottom: 0.1rem solid black;
+  }
+  
+  .option-bar {
+    display: grid;
+    width: 100%;
+    height: 2rem;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+    grid-template-columns: 25% 25% 25% 1fr;
+  }
+  
+  .option-bar__button {
+   
+    cursor: pointer;
+  }
+  
+  .output__option-bar input {
+    text-align: left;
+  }
+  
+  .option-bar__button:hover {
+    color: rgb(34, 34, 34);
+    background-color: rgb(237, 237, 237);
+  }
+  
+  .order__table__container {
+    display: grid;
+    grid-template-columns: 75% 25%;
+    grid-template-rows: 11% 1fr;
+    width: 100%;
+    height: 40rem;
+    background-color: rgb(203, 203, 203);
+    border-top: none;
+  }
+  
+  .order__table__header {
+    grid-template-rows: 1rem 1fr;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    background-color: rgb(78, 78, 78);
+  }
+  
+  .data-table-container {
+    grid-template-rows: 1rem 1fr;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    background-color: rgb(78, 78, 78);
+    overflow: auto;
+    scrollbar-width: none;
+  }
+  
+  
+  .side-item-screen {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    background-color: rgb(213, 213, 213);
+    overflow: auto;
+    scrollbar-width: none;
+  }
+  
+  .side-table-tr {
+    display: grid;
+    align-items: center;
+    justify-items: start;
+    grid-template-columns: 1fr 10%;
+    border-bottom: 1px solid black;
+  }
+  .side-table-tr p {
+    margin: 0;
+    font-size: 0.8rem;
+  }
+  
+  .side-table-tr .side-value-p {
+    color: rgb(0, 0, 0);
+    font-size: 1.2rem;
+  }
+  
+  .side-table-tr:hover {
+    background-color: rgb(239, 239, 239);
+    transition: 0.1s ease;
+  }
+  
+  
+  .side-value-button__container {
+    width: 100%;
+    height: 100%;
+    text-align: right;
+  }
+  
+  .side-value-button {
+    border-radius: 3px;
+    border: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    margin: 0;
+    padding: 0px 3px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #c5f7ff;
+    background-color: #9f9f9f;
+  }
+  
+  .side-value-button:hover {
+    background-color: rgb(145, 145, 145);
+  }
+  
+  .side-product-td {
+    font-size: fit-content;
+    border: 1px solid black;
+    margin: 1rem;
+    width: 60%;
+  }
+  
+  /* Data table header */
+  
+  .data-table-header {
+    display: grid;
+    grid-template-columns: 30% repeat(6, 1fr) 8%;
+    color: rgb(165, 165, 165);
+    background-color: rgb(71, 71, 71);
+    align-items: center;
+    justify-items: center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .data-table-th {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    border-bottom: 3px solid black;
+    background-color: rgb(47, 47, 47);
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .data-table-th p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  
+  /* Data table body */
+  
+  .data-table {
+    position: relative;
+    right: 0px;
+    border-collapse: collapse;
+    width: 100%;
+    height: 100%;
+    color: rgb(165, 165, 165);
+    background-color: rgb(71, 71, 71);
+    scrollbar-width: none;
+  }
+  .product-table-tr {
+    display: grid;
+    grid-template-columns: 30% repeat(6, 1fr) 8%;
+    height: 3rem;
+  
+  }
+  
+  .product-table-tr:hover {
+    background-color: rgb(58, 58, 58);
+    transition: 0.1s ease;
+  }
+  
+  .data-table .td {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    border-bottom: 1px solid rgb(0, 0, 0);
+    border-left: 1px solid black;
+  }
+  
+  .data-table .order-value-td {
+    display: grid;
+    grid-template-columns: 30% 1fr 30%;
+    align-content: center;
+    justify-items: center;
+  }
+  
+  .data-table td:hover {
+    color: rgb(228, 228, 228);
+  }
+  
+  .value-button {
+    background-color: rgb(87, 87, 87);
+    color: rgb(212, 245, 255);
+    height: 100%;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0);
+    border-radius: 3px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .value-button + .value-button {
+    border-left: 2px solid rgba(0, 0, 0, 0.3);
+  }
+  
+  .value-button:hover {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgb(205, 205, 205);
+    background-color: rgb(113, 113, 113);
+  }
+  
+  .data-table p {
+    color: white;
+    font-size: 1.5rem;
+    margin: 0%;
+  }
+  
+  #print-table {
+    border-collapse: collapse;
+    border: 1px solid black;
+  }
+  
+  #print-table td {
+    border: 1px solid black;
+    padding: 5px;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  

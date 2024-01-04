@@ -1,5 +1,5 @@
 import { orderFormTemplate } from "./orderFormTemplate.js";
-
+import styles from './orderForm.module.css'
 export default class OrderFormComponent {
   constructor({
     renderBody,
@@ -41,11 +41,11 @@ export default class OrderFormComponent {
       this.submitHandler,
       this.openCalendar,
       this.dateInputFieldStartingDate,
-      this.closeCalendar
+      this.closeCalendar,
+      this.receivedToday
     );
     this.renderHandler(template);
     this.rmfDumpHandler();
-    this.receivedTodayCheckbox();
   }
 
   _openCalendar(e) {
@@ -65,11 +65,10 @@ export default class OrderFormComponent {
       { asDate: true }
     );
 
-    return `${nextAvailableDeliveryDate.getDate()}/${
-      nextAvailableDeliveryDate.getMonth() + 1
-    }/${nextAvailableDeliveryDate.getFullYear()} - ${this.stringUtil.toPascalCase(
-      weekdays[nextAvailableDeliveryDate.getDay() - 1]
-    )}`;
+    return `${nextAvailableDeliveryDate.getDate()}/${nextAvailableDeliveryDate.getMonth() + 1
+      }/${nextAvailableDeliveryDate.getFullYear()} - ${this.stringUtil.toPascalCase(
+        weekdays[nextAvailableDeliveryDate.getDay() - 1]
+      )}`;
   }
 
   _closeCalendar() {
@@ -100,7 +99,7 @@ export default class OrderFormComponent {
   }
 
   rmfDumpHandler() {
-    let rmfDataDumpElement = document.getElementById("rmf-data-dump");
+    let rmfDataDumpElement = document.getElementById("RMF-data-dump");
     rmfDataDumpElement.addEventListener("input", (e) => {
       if (rmfDataDumpElement.value.length >= 1) {
         this.deliveryHarvestProducts = this.harvester.reportHarvest([
@@ -118,29 +117,15 @@ export default class OrderFormComponent {
     });
   }
 
-  receivedTodayCheckbox() {
-    let orderFormElement = document.querySelector(".order__form__area");
-    let receivedTodayContainerElement = document.querySelector(
-      ".received-today__container"
-    );
-
-    orderFormElement.addEventListener("click", (e) => {
-      if (e.target.id === "previous-invoiced-no") {
-        receivedTodayContainerElement.classList.remove(
-          "received-today__container"
-        );
-        receivedTodayContainerElement.classList.add(
-          "received-today__container__on"
-        );
-      } else if (e.target.id === "previous-invoiced-yes") {
-        receivedTodayContainerElement.classList.remove(
-          "received-today__container__on"
-        );
-        receivedTodayContainerElement.classList.add(
-          "received-today__container"
-        );
-      }
-    });
+  receivedToday(e) {
+    let receivedTodayContainerElement = document.getElementById("received-today");
+    const choice = e.currentTarget.id.replace('previous-invoiced-', '');
+    const on = styles['received-today__container__on'];
+    if (choice === 'no') {
+      receivedTodayContainerElement.classList.add(on)
+    } else {
+      receivedTodayContainerElement.classList.remove(on)
+    }
   }
 
   formValidator(formData) {

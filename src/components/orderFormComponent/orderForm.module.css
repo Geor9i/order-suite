@@ -54,7 +54,7 @@
       -0.2rem -0.1rem 0.05rem 0 rgb(255, 255, 255);
   }
   
-  #rmf-data-dump {
+  .rmf-data-dump {
     resize: none;
     text-align: center;
     background-color: black;
@@ -69,12 +69,12 @@
     transition: box-shadow 0.3s ease;
   }
   
-  #rmf-data-dump::placeholder {
+  .rmf-data-dump::placeholder {
     color: transparent;
     text-align: center;
   }
   
-  #rmf-data-dump:hover::placeholder {
+  .rmf-data-dump:hover::placeholder {
     color: rgb(255, 255, 255);
     opacity: 1;
   }
@@ -96,7 +96,7 @@
     margin: 1rem;
   }
   
-  #radio-container {
+  .radio-container {
     width: 15rem;
     text-align: center;
     /* border: 1px solid black; */
@@ -127,8 +127,6 @@
   
   .received-today__container__on {
     display: flex;
-    justify-content: space-evenly;
-    width: 70%;
   }
   
   .received-today__label {
@@ -169,6 +167,15 @@
     border-radius: 20%;
     cursor: pointer;
   }
+
+  .calendar-container {
+    display: none;
+    position: absolute;
+    margin: auto;
+    width: 100px;
+    height: 100px;
+    z-index: 1001;
+}
   
   #create-button {
     box-shadow: 1px 1px 0 1px rgb(94, 94, 94);

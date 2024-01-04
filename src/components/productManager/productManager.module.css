@@ -164,3 +164,7 @@ button {
     
 }
 
+.product-rules-item {
+    grid-template-columns: 40% 15% 1fr;
+}
+
