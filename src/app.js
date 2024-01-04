@@ -83,6 +83,6 @@ page("/restaurant", () => CM.mount(RestaurantMenu, baseLoader));
 page("/restaurant-template", () => CM.mount(StoreTemplateScreen, baseLoader));
 page("/restaurant-sales", () => CM.mount(SalesAnalysis, baseLoader));
 page("/product-manager", () => CM.mount(ProductManager, baseLoader));
-page("/404", () => CM.mount(NotFoundPage, [renderBody]));
+page("/404", () => CM.mount(NotFoundPage, baseLoader));
 
 page.start();

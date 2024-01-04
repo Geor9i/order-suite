@@ -265,16 +265,20 @@ export default class TimeUtil {
     };
   }
 
-  hourlyTimeWindow(startTime, endTime) {
+  hourlyTimeWindow(startTime, endTime, output = [], value = 0) {
     let start = this.time().toMinutes(startTime);
     start = this.time().toHours(start).h;
     let end = this.time().toMinutes(endTime);
     end = this.time().toHours(end).h;
-    const arr = [];
+    const result = Array.isArray(output)? [] : {};
     for (let h = start; h < end; h++) {
-      arr.push(h)
+      if (Array.isArray(result)) {
+        result.push(h)
+      } else {
+        result[h] = value;
+      }
     }
-    return arr;
+    return result;
   }
 
   relativeTime(originTime) {

@@ -1,46 +1,69 @@
 export default class StringUtil {
-    
-    toUpperCase (string) {
-        if(typeof string === 'string') {
-            return string.toUpperCase();
-        }
-        throw new Error ('Param is not a string!')
+  toUpperCase(string) {
+    if (typeof string === "string") {
+      return string.toUpperCase();
     }
+    throw new Error("Param is not a string!");
+  }
 
-    toLowerCase(string) {
-        if(typeof string === 'string') {
-            return string.toLowerCase();
-        }
-        throw new Error ('Param is not a string!')
+  toLowerCase(string) {
+    if (typeof string === "string") {
+      return string.toLowerCase();
     }
-    toPascalCase(string) {
-        if(typeof string === 'string') {
-            return string.slice(0, 1).toUpperCase() + string.toLowerCase().slice(1);
-        }
-        throw new Error ('Param is not a string!')
+    throw new Error("Param is not a string!");
+  }
+  toPascalCase(string) {
+    if (typeof string === "string") {
+      return string.slice(0, 1).toUpperCase() + string.toLowerCase().slice(1);
     }
+    throw new Error("Param is not a string!");
+  }
 
-     filterString(string, { letters = '', regexSymbols = '', keep = false } = {}) {
-        if (typeof string !== 'string') {
-          throw new Error(`${string} is not of type String!`);
+  /**
+   *
+   * @param {String} string The string to be filtered
+   * @param {Object} options
+   * @param {String} regexSymbols[].symbol - The regex symbol.
+   * @param {Number} regexSymbols[].matches - The match limit for the regex symbol. If not provided or 0, matches any quantity.
+   * @param {Boolean} regexSymbols[].remove Keep or Reject matches
+   * @returns filtered value
+   */
+  filterString(string, regexSymbols = []) {
+    if (typeof string !== "string") {
+      throw new Error(`${string} is not of type String!`);
+    }
+    const stringSpread = string
+      .split("")
+      .map((char) => ({ char, match: true }));
+
+    for (let i = 0; i < stringSpread.length; i++) {
+      let { char, match } = stringSpread[i];
+      for (let s = 0; s < regexSymbols.length; s++) {
+        let regex = regexSymbols[s];
+        let count = "+";
+        if (regex.matches) {
+          count = `{${regex.matches}}`;
         }
-        regexSymbols = regexSymbols.split('').map(s => `\\${s}`).join('');
-        const pattern = new RegExp(`[${keep ? '^' : ''}${letters}${regexSymbols}]`, 'g');
-        string = string.replace(pattern, '');
-        return string;
+        let pattern = new RegExp(
+          `[${regex.remove ? "^" : ""}${regex.symbol}]${count}`,
+          "g"
+        );
+        if (match) {
+          regexSymbols[s].matches = pattern.test(char);
+        }
       }
-      
+    }
+    return stringSpread.map(({ char, match }) => (match ? char : "")).join("");
+  }
 
-    format(data) {
-        if (typeof data === "string") {
-          return data.trim().toLowerCase();
-        } else if (Array.isArray(data)) {
-          return data.map((str) => str.trim().toLowerCase());
-        }
-      }
+  format(data) {
+    if (typeof data === "string") {
+      return data.trim().toLowerCase();
+    } else if (Array.isArray(data)) {
+      return data.map((str) => str.trim().toLowerCase());
+    }
+  }
 
-
-      
   stringToNumber(string) {
     return Number(string.trim().split(",").join("").split("£").join(""));
   }
@@ -48,30 +71,57 @@ export default class StringUtil {
   replaceString(string, textToReplace, replacementText) {
     if (textToReplace instanceof RegExp) {
       while (textToReplace.test(string)) {
-        string = string.replace(textToReplace, replacementText)
+        string = string.replace(textToReplace, replacementText);
       }
       return string;
-
     } else {
       while (string.includes(textToReplace)) {
-        string = string.replace(textToReplace, replacementText)
+        string = string.replace(textToReplace, replacementText);
       }
       return string;
     }
-
   }
 
   removeSpecialChars(name) {
     //Remove special chars
     const specialChars = {
-      '!': '', '"': '', '#': '', '$': '', '%': ' ', '&': ' ', "'": '', '(': ' ',
-      ')': ' ', '*': '', '+': '', '-': '', '/': ' ', ':': '',
-      ';': ' ', '<': '', '=': '', '>': '', '?': '', '@': '', '[': '', '\\': '',
-      ']': '', '^': '', '_': '', '`': '', '{': '', '|': '', '}': '', '~': '',
-      '\n': ' ', '\t': ' ', ' ': ' ', '': ' '
+      "!": "",
+      '"': "",
+      "#": "",
+      $: "",
+      "%": " ",
+      "&": " ",
+      "'": "",
+      "(": " ",
+      ")": " ",
+      "*": "",
+      "+": "",
+      "-": "",
+      "/": " ",
+      ":": "",
+      ";": " ",
+      "<": "",
+      "=": "",
+      ">": "",
+      "?": "",
+      "@": "",
+      "[": "",
+      "\\": "",
+      "]": "",
+      "^": "",
+      _: "",
+      "`": "",
+      "{": "",
+      "|": "",
+      "}": "",
+      "~": "",
+      "\n": " ",
+      "\t": " ",
+      " ": " ",
+      "": " ",
     };
 
-    let newString = '';
+    let newString = "";
     for (let i = 0; i < name.length; i++) {
       let char = name[i];
 
@@ -84,13 +134,12 @@ export default class StringUtil {
     const pattern = /\s{2,}/g;
     let match;
     while ((match = pattern.exec(newString)) !== null) {
-      newString = newString.replace(pattern, ' ');
+      newString = newString.replace(pattern, " ");
     }
     pattern.lastIndex = 0;
-    return newString.trim()
+    return newString.trim();
   }
 
-  
   generateProductId(productName) {
     return this.stringUtil
       .removeSpecialChars(productName)
@@ -99,5 +148,4 @@ export default class StringUtil {
       .map((el) => el.toLowerCase())
       .join("");
   }
-
 }

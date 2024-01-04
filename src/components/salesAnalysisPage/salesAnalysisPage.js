@@ -1,4 +1,5 @@
 import { salesAnalysisPageTemplate } from "./salesAnalysisPageTemplate";
+import styles from "./salesAnalysisPage.module.css";
 
 export default class SalesAnalysis {
   constructor({ renderBody, router, fireService, utils }) {
@@ -9,14 +10,16 @@ export default class SalesAnalysis {
     this.timeUtil = utils.timeUtil;
     this.dateUtil = utils.dateUtil;
     this.domUtil = utils.domUtil;
+    this.hourlySalesChangeHandler = this._hourlySalesChangeHandler.bind(this);
     this.showView = this._showView.bind(this);
     this.slideOpen = this._slideOpen.bind(this);
+    this.hourlySales = this.workHours({});
     this.sliderContainers = [];
   }
 
   _slideOpen(e) {
-    const element = e.currentTarget;
-    const id = element.dataset.id;
+    const barElement = e.currentTarget;
+    const id = barElement.dataset.id;
     const container = document.getElementById(id);
     const isRecorded = this.sliderContainers.some(
       (element) => element.id === id
@@ -40,6 +43,11 @@ export default class SalesAnalysis {
     const selectedContainer = selectedHierarchy[startContainerIndex];
     let containerHeight = hierarchyHeightArr[startContainerIndex];
     let toggleOpen = containerHeight <= 0 ? true : false;
+    if (toggleOpen) {
+      barElement.classList.remove(styles["section__bar-closed"]);
+    } else {
+      barElement.classList.add(styles["section__bar-closed"]);
+    }
     let cumulativeHeight = this.domUtil.getContentHeight(selectedContainer);
     selectedContainer.style.height = (toggleOpen ? cumulativeHeight : 0) + "px";
     for (let i = startContainerIndex - 1; i >= 0; i--) {
@@ -71,20 +79,50 @@ export default class SalesAnalysis {
     };
   }
 
+  submitHandler(e) {
+    e.preventDefault();
+  }
+
   _showView() {
     if (!this.fireService.user) {
       this.router.redirect("/");
       return;
     }
     const weekGuide = this.dateUtil.getWeekdays([]);
+    const workHours = this.workHours();
+    this.render(
+      salesAnalysisPageTemplate(
+        this.slideOpen,
+        weekGuide,
+        workHours,
+        this.hourlySalesChangeHandler,
+        this.submitHandler
+      )
+    );
+  }
+
+  workHours(dataType = []) {
     let { openTimes } = this.getRestaurantData();
-    let workHours = Object.keys(openTimes).reduce((obj, weekday) => {
+    return Object.keys(openTimes).reduce((obj, weekday) => {
       const { startTime, endTime } = openTimes[weekday];
-      obj[weekday] = this.timeUtil.hourlyTimeWindow(startTime, endTime);
+      obj[weekday] = this.timeUtil.hourlyTimeWindow(
+        startTime,
+        endTime,
+        dataType
+      );
       return obj;
     }, {});
-    this.render(
-      salesAnalysisPageTemplate(this.slideOpen, weekGuide, workHours)
-    );
+  }
+
+  _hourlySalesChangeHandler(e) {
+    if (e.target.tagName === "INPUT") {
+      const { name, value } = e.target;
+      const [weekday, hour] = name.split("-");
+      let filteredValue = this.stringUtil.filterString(value, [
+        { symbol: "\\d" },
+        { symbol: "\\.", matches: 1 },
+      ]);
+      console.log(filteredValue);
+    }
   }
 }

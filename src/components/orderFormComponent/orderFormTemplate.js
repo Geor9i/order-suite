@@ -11,13 +11,13 @@ export const orderFormTemplate = (
  <section class=${styles['order-page__section']}>
             <div class=${styles['order__form__main__container']}>
                 <div class=${styles['order__form__container']} id="order__form__container">
-                        <div class=${styles['calendar-backdrop']} id="calendar-backdrop" @click=${closeCalendar}></div>
+                        <div class=${styles['calendar-backdrop']} id="calendar-backdrop" class="calendar-backdrop" @click=${closeCalendar}></div>
                         <form novalidate id="form" class=${styles['order__form__area']} @submit="${submitHandler}">
                             <label for="RMF-data-dump">Paste RMF order page</label>
                             <textarea name="RMF-data-dump" class=${styles['rmf-data-dump']} placeholder="Paste RMF page here!"
                                 id="RMF-data-dump" cols="30" rows="10"></textarea>
                             <h3 class=${styles['input__order__invoiced']}>All food orders invoiced?</h3>
-                            <div id="radio-container" class="radio-container">
+                            <div id="radio-container" class=${styles["radio-container"]}>
                                 <label class=${styles['radio-label']} for="previous-invoiced-yes" >Yes</label>
                                 <input @click=${receivedToday} class=${styles['radio-button']} type="radio" id="previous-invoiced-yes"
                                     name="previous-invoiced">
@@ -32,7 +32,7 @@ export const orderFormTemplate = (
                             <label id="date-label" for="date-input" >Order Date</label>
                             <div id="calendar-input-container">
                                 <input type="text" required="true" id="date-input" name="date" .value=${dateInputFieldStartingDate()}>
-                                <button id="date-button" @click=${openCalendar}>📆</button>
+                                <button id="date-button" class=${styles["date-button"]} @click=${openCalendar}>📆</button>
                             </div>
                             <div id="calendar-container" class=${styles["calendar-container"]}></div>
                             <label for="previous-sales" >Last Week's Sales:</label>
@@ -41,10 +41,10 @@ export const orderFormTemplate = (
                             <label for="sales-forecast" >Weekly Sales Forecast:</label>
                             <input type="text" id="sales-forecast" name="sales-forecast" required="true">
 
-                            <button id="create-button" type="submit">Create</button>
+                            <button id="create-button" class=${styles["create-button"]} type="submit">Create</button>
                         </form>
                 </div>
-                <div id="warning-message"></div>
+                <div id="warning-message" class=${styles["warning-message"]}></div>
             </div>
             </div>
         </section>
