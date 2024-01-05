@@ -1,4 +1,3 @@
-
 .page__container {
   display: flex;
   align-items: center;
@@ -19,7 +18,6 @@
   cursor: pointer;
   transition: width 0.2s ease-in;
 }
-
 
 .section__bar:hover {
   background-color: rgb(150, 150, 150);
@@ -76,10 +74,10 @@
 }
 
 .sales-summary-weekday h2 {
-    width: 100%;
-    background-color: var(--blacks);
-    color: var(--whites);
-    text-align: center;
+  width: 100%;
+  background-color: var(--blacks);
+  color: var(--whites);
+  text-align: center;
 }
 
 .manual-entry-weekday {
@@ -93,18 +91,18 @@
 }
 
 .hour-container {
-    width: 80%;
-    display: flex;
-    align-items: center;
-    justify-content: center
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hour-container input {
-    width: 60%;
+  width: 60%;
 }
 .hour-container label {
-    width: auto;
-    margin: 0;
+  width: auto;
+  margin: 0;
 }
 
 .hourly-totals-container {
@@ -132,6 +130,11 @@
 .hourly-totals-field label {
   font-size: 0.9rem;
   margin: 0;
+}
+
+.manual-totals {
+  background-color: #434343;
+  color: #00ffea;
 }
 
 .submit-btn-container {

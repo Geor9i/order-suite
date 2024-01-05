@@ -10,10 +10,11 @@ export default class SalesAnalysis {
     this.timeUtil = utils.timeUtil;
     this.dateUtil = utils.dateUtil;
     this.domUtil = utils.domUtil;
+    this.hourlySalesInputHandler = this._hourlySalesInputHandler.bind(this);
     this.hourlySalesChangeHandler = this._hourlySalesChangeHandler.bind(this);
     this.showView = this._showView.bind(this);
     this.slideOpen = this._slideOpen.bind(this);
-    this.hourlySales = this.workHours({});
+    this.hourlySales = this.getHourlySalesTemplate();
     this.sliderContainers = [];
   }
 
@@ -88,17 +89,30 @@ export default class SalesAnalysis {
       this.router.redirect("/");
       return;
     }
-    const weekGuide = this.dateUtil.getWeekdays([]);
-    const workHours = this.workHours();
     this.render(
       salesAnalysisPageTemplate(
         this.slideOpen,
-        weekGuide,
-        workHours,
+        this.hourlySales,
+        this.hourlySalesInputHandler,
         this.hourlySalesChangeHandler,
         this.submitHandler
       )
     );
+  }
+
+  getHourlySalesTemplate() {
+    let workHours = this.workHours({});
+    Object.keys(workHours).forEach(
+      (weekday) =>
+        (workHours[weekday] = {
+          hours: { ...workHours[weekday] },
+          totals: {
+            total: 0,
+            share: 0,
+          },
+        })
+    );
+    return workHours;
   }
 
   workHours(dataType = []) {
@@ -114,17 +128,37 @@ export default class SalesAnalysis {
     }, {});
   }
 
-  _hourlySalesChangeHandler(e) {
+  _hourlySalesInputHandler(e) {
     if (e.target.tagName === "INPUT") {
-      const { name, value } = e.target;
-      const [weekday, hour] = name.split("-");
+      const { value } = e.target;
       let filteredValue = this.stringUtil.filterString(value, [
         { symbol: "\\d" },
         { symbol: "\\.", matchLimit: 1 },
       ]);
-      console.log(filteredValue);
-      e.target.value = filteredValue;
-      this.hourlySales[weekday][hour] = filteredValue;
+      e.target.value = filteredValue || 0;
     }
+  }
+
+  _hourlySalesChangeHandler(e) {
+    if (e.target.tagName === "INPUT") {
+      const { name, value } = e.target;
+      const [weekday, hour] = name.split("-");
+      e.target.value = Number(value);
+      this.hourlySales[weekday].hours[hour] = Number(value);
+      this.updateTotals();
+      this.showView()
+    }
+  }
+
+  updateTotals() {
+    let weeklyTotal = 0;
+    Object.keys(this.hourlySales).forEach(weekday => {
+      let total = Object.keys(this.hourlySales[weekday].hours).reduce((total, hour) => total += this.hourlySales[weekday].hours[hour], 0);
+      weeklyTotal += total;
+      this.hourlySales[weekday].totals.total = total;
+    })
+    Object.keys(this.hourlySales).forEach(weekday => {
+      this.hourlySales[weekday].totals.share = ((this.hourlySales[weekday].totals.total / weeklyTotal) * 100).toFixed(2); 
+    })
   }
 }
