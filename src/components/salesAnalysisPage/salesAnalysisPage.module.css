@@ -75,6 +75,7 @@
 
 .sales-summary-weekday h2 {
   width: 100%;
+  letter-spacing: 2px;
   background-color: var(--blacks);
   color: var(--whites);
   text-align: center;
@@ -92,16 +93,17 @@
 
 .hour-container {
   width: 80%;
-  display: flex;
+  display: grid;
   align-items: center;
-  justify-content: center;
+  justify-items: center;
+  grid-template-columns: 1fr 10% 50%;
 }
 
 .hour-container input {
-  width: 60%;
+  width: 100%;
 }
 .hour-container label {
-  width: auto;
+  width: 100%;
   margin: 0;
 }
 
@@ -120,7 +122,7 @@
   display: grid;
   align-items: center;
   justify-items: center;
-  grid-template-columns: 60% 1fr 10%;
+  grid-template-columns: 60% 10% 1fr;
 }
 
 .hourly-totals-field input {
