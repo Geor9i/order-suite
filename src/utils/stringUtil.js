@@ -44,7 +44,7 @@ export default class StringUtil {
         let { symbol, matchLimit, remove } = regexSymbols[s];
         let pattern = '';
         const prefix = remove ? '^' : '';
-        if (!matchLimit) {
+        if (matchLimit === undefined) {
           pattern = new RegExp(
             `[${prefix}${symbol}]`,
             "g"

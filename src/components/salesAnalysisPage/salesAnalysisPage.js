@@ -123,6 +123,8 @@ export default class SalesAnalysis {
         { symbol: "\\.", matchLimit: 1 },
       ]);
       console.log(filteredValue);
+      e.target.value = filteredValue;
+      this.hourlySales[weekday][hour] = filteredValue;
     }
   }
 }
