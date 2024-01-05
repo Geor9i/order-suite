@@ -120,7 +120,7 @@ export default class SalesAnalysis {
       const [weekday, hour] = name.split("-");
       let filteredValue = this.stringUtil.filterString(value, [
         { symbol: "\\d" },
-        { symbol: "\\.", matches: 1 },
+        { symbol: "\\.", matchLimit: 1 },
       ]);
       console.log(filteredValue);
     }

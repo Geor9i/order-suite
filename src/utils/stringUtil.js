@@ -34,26 +34,43 @@ export default class StringUtil {
     }
     const stringSpread = string
       .split("")
-      .map((char) => ({ char, match: true }));
+      .map((char) => ({ char, matched: false }));
 
     for (let i = 0; i < stringSpread.length; i++) {
-      let { char, match } = stringSpread[i];
+      let { char, matched } = stringSpread[i];
+      if (matched) continue;
+
       for (let s = 0; s < regexSymbols.length; s++) {
-        let regex = regexSymbols[s];
-        let count = "+";
-        if (regex.matches) {
-          count = `{${regex.matches}}`;
-        }
-        let pattern = new RegExp(
-          `[${regex.remove ? "^" : ""}${regex.symbol}]${count}`,
-          "g"
-        );
-        if (match) {
-          regexSymbols[s].matches = pattern.test(char);
+        let { symbol, matchLimit, remove } = regexSymbols[s];
+        let pattern = '';
+        const prefix = remove ? '^' : '';
+        if (!matchLimit) {
+          pattern = new RegExp(
+            `[${prefix}${symbol}]`,
+            "g"
+          );
+        } else if ( matchLimit > 0) {
+          pattern = new RegExp(
+            `[${prefix}${symbol}]{${matchLimit}}`,
+            "g"
+          );
+         } else {
+          continue;
+         }
+
+        if (!matched) {
+          let pass = pattern.test(char);
+          if (pass) {
+            stringSpread[i].matched = pass;
+            if (regexSymbols[s].matchLimit) {
+              regexSymbols[s].matchLimit -= 1;
+            }
+            break;
+          }
         }
       }
     }
-    return stringSpread.map(({ char, match }) => (match ? char : "")).join("");
+    return stringSpread.map(({ char, matched: match }) => (match ? char : "")).join("");
   }
 
   format(data) {
