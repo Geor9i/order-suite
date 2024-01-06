@@ -25,6 +25,7 @@ import StringUtil from "./utils/stringUtil.js";
 import FormUtil from "./utils/formUtil.js";
 import DomUtil from "./utils/domUtil.js";
 import ObjectUtil from "./utils/objectUtil.js";
+import MathUtil from "./utils/mathUtil.js";
 import { storeSettings } from "./storeSettings.js";
 import ComponentManager from "./lib/componentManager.js";
 
@@ -51,6 +52,7 @@ const utils = {
   formUtil: new FormUtil(),
   domUtil: new DomUtil(),
   objUtil: new ObjectUtil(),
+  mathUtil: new MathUtil(),
 };
 
 //Product Processor

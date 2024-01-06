@@ -10,6 +10,7 @@ export default class SalesAnalysis {
     this.timeUtil = utils.timeUtil;
     this.dateUtil = utils.dateUtil;
     this.domUtil = utils.domUtil;
+    this.mathUtil = utils.mathUtil;
     this.hourlySalesInputHandler = this._hourlySalesInputHandler.bind(this);
     this.hourlySalesChangeHandler = this._hourlySalesChangeHandler.bind(this);
     this.showView = this._showView.bind(this);
@@ -104,13 +105,13 @@ export default class SalesAnalysis {
     let workHours = this.workHours({});
     Object.keys(workHours).forEach(
       (weekday) =>
-        (workHours[weekday] = {
-          hours: { ...workHours[weekday] },
-          totals: {
-            total: 0,
-            share: 0,
-          },
-        })
+      (workHours[weekday] = {
+        hours: { ...workHours[weekday] },
+        totals: {
+          total: 0,
+          share: 0,
+        },
+      })
     );
     return workHours;
   }
@@ -130,24 +131,38 @@ export default class SalesAnalysis {
 
   _hourlySalesInputHandler(e) {
     if (e.target.tagName === "INPUT") {
-      const { value } = e.target;
+      const { value, name } = e.target;
+      const [weekday, hour] = name.split("-");
       let filteredValue = this.stringUtil.filterString(value, [
         { symbol: "\\d" },
         { symbol: "\\.", matchLimit: 1 },
       ]);
-      e.target.value = filteredValue || 0;
+      // e.target.value = filteredValue || 0;
+      this.hourlySales[weekday].hours[hour] = filteredValue || 0;
+      requestAnimationFrame(() => {
+        this.showView();
+      });
     }
   }
 
   _hourlySalesChangeHandler(e) {
-    if (e.target.tagName === "INPUT") {
+
+    if (e.target.tagName === "INPUT" && e.target.id) {
+      const [field, weekday] = e.target.id.split('-');
+      const { value } = e.target;
+      this.hourlySales[weekday].totals[field] = Number(value);
+      e.target.value = Number(value);
+
+    } else if (e.target.tagName === "INPUT") {
       const { name, value } = e.target;
       const [weekday, hour] = name.split("-");
-      e.target.value = Number(value);
+      // e.target.value = Number(value);
       this.hourlySales[weekday].hours[hour] = Number(value);
       this.updateTotals();
-      this.showView()
     }
+    requestAnimationFrame(() => {
+      this.showView();
+    });
   }
 
   updateTotals() {
@@ -158,7 +173,7 @@ export default class SalesAnalysis {
       this.hourlySales[weekday].totals.total = total;
     })
     Object.keys(this.hourlySales).forEach(weekday => {
-      this.hourlySales[weekday].totals.share = ((this.hourlySales[weekday].totals.total / weeklyTotal) * 100).toFixed(2); 
+      this.hourlySales[weekday].totals.share = ((this.hourlySales[weekday].totals.total / weeklyTotal) * 100).toFixed(2);
     })
   }
 }

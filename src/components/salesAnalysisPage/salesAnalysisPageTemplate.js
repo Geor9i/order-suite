@@ -37,14 +37,14 @@ export const salesAnalysisPageTemplate = (slideOpen, hourlySales, hourlySalesInp
                             </div>
                             <div class=${styles['hourly-totals-container']}>
                                 <div class=${styles['hourly-totals-field']}>
-                                    <label for="total-value">Total</label>
+                                    <label for="total-${weekday}">Total</label>
                                     <p>£</p>
-                                    <input class=${styles['manual-totals']} disabled id="total-value-${weekday}" value=${hourlySales[weekday].totals.total}></input>
+                                    <input class=${styles['manual-totals']} id="total-${weekday}" value=${hourlySales[weekday].totals.total}></input>
                                 </div>
                                 <div class=${styles['hourly-totals-field'] }>
-                                    <label for="total-percentage">Weekly Share</label>
+                                    <label for="share-${weekday}">Weekly Share</label>
                                     <p>%</p>
-                                    <input class=${styles['manual-totals']} disabled id="total-percentage-${weekday}" value=${hourlySales[weekday].totals.share}></input>
+                                    <input class=${styles['manual-totals']} id="share-${weekday}" value=${hourlySales[weekday].totals.share}></input>
                                 </div>
                             </div>
                         </div>
