@@ -31,7 +31,7 @@ export const salesAnalysisPageTemplate = (slideOpen, hourlySales, hourlySalesInp
                                     <div class=${styles['hour-container']}>
                                         <label for="${weekday}-${hour}">${hour}:00</label>
                                         <p>£</p>
-                                        <input maxLength="8" @click=${(e) => e.currentTarget.select()} for="${weekday}-${hour}" name="${weekday}-${hour}" value=${hourlySales[weekday].hours[hour]}></input>
+                                        <input maxLength="8" @click=${(e) => e.currentTarget.select()} for="${weekday}-${hour}" name="${weekday}-${hour}" .value=${hourlySales[weekday].hours[hour]}></input>
                                     </div>
                                 `)}
                             </div>
@@ -39,12 +39,12 @@ export const salesAnalysisPageTemplate = (slideOpen, hourlySales, hourlySalesInp
                                 <div class=${styles['hourly-totals-field']}>
                                     <label for="total-${weekday}">Total</label>
                                     <p>£</p>
-                                    <input class=${styles['manual-totals']} id="total-${weekday}" value=${hourlySales[weekday].totals.total}></input>
+                                    <input @click=${(e) => e.currentTarget.select()} class=${styles['manual-totals']} id="total-${weekday}" .value=${hourlySales[weekday].totals.total}></input>
                                 </div>
                                 <div class=${styles['hourly-totals-field'] }>
                                     <label for="share-${weekday}">Weekly Share</label>
                                     <p>%</p>
-                                    <input class=${styles['manual-totals']} id="share-${weekday}" value=${hourlySales[weekday].totals.share}></input>
+                                    <input @click=${(e) => e.currentTarget.select()} class=${styles['manual-totals']} id="share-${weekday}" .value=${hourlySales[weekday].totals.share}></input>
                                 </div>
                             </div>
                         </div>
