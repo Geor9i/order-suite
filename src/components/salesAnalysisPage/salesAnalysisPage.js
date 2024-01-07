@@ -105,13 +105,13 @@ export default class SalesAnalysis {
     let workHours = this.workHours({});
     Object.keys(workHours).forEach(
       (weekday) =>
-        (workHours[weekday] = {
-          hours: { ...workHours[weekday] },
-          totals: {
-            total: 0,
-            share: 0,
-          },
-        })
+      (workHours[weekday] = {
+        hours: { ...workHours[weekday] },
+        totals: {
+          total: 0,
+          share: 0,
+        },
+      })
     );
     return workHours;
   }
@@ -139,11 +139,11 @@ export default class SalesAnalysis {
     if (e.target.tagName === "INPUT" && e.target.id) {
       const [field, weekday] = e.target.id.split("-");
       this.hourlySales[weekday].totals[field] = filteredValue;
-    }
-    if (e.target.tagName === "INPUT") {
+    } else if (e.target.tagName === "INPUT") {
       const [weekday, hour] = name.split("-");
       this.hourlySales[weekday].hours[hour] = filteredValue;
     }
+    e.target.value = filteredValue;
     this.showView();
   }
 
@@ -152,7 +152,7 @@ export default class SalesAnalysis {
     if (e.target.tagName === "INPUT" && e.target.id) {
       const [field, weekday] = e.target.id.split("-");
       this.hourlySales[weekday].totals[field] = Number(value);
-      e.target.value = Number(value);
+      this.calcFromTotals(field, weekday);
     } else if (e.target.tagName === "INPUT") {
       const [weekday, hour] = name.split("-");
       this.hourlySales[weekday].hours[hour] = Number(value);
@@ -160,6 +160,27 @@ export default class SalesAnalysis {
     }
     this.showView();
   }
+
+  calcFromTotals(field, weekday) {
+    let weeklyTotal = 0;
+    Object.keys(this.hourlySales).forEach((weekday) => {
+      weeklyTotal += this.hourlySales[weekday].totals.total
+    });
+    const { total, share } = this.hourlySales[weekday].totals;
+    if (field === 'total') {
+      const hourValuesArr = Object.values(this.hourlySales[weekday].hours);
+      const hourKeysArr = Object.keys(this.hourlySales[weekday].hours);
+      let adjustedValuesArr = this.mathUtil.evenArrRatioToSum(hourValuesArr, total, 2, true);
+      for (let hour of hourKeysArr) {
+        this.hourlySales[weekday].hours[hour] = adjustedValuesArr.shift();
+      }
+    } else if (field === 'share') {
+
+    }
+    this.updateTotals()
+    this.showView();
+  }
+
 
   updateTotals() {
     let weeklyTotal = 0;

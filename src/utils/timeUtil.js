@@ -354,7 +354,8 @@ export default class TimeUtil {
   currentWorkHoursPercentage() {
     const date = new Date();
     const weekdays = this.dateUtil.getWeekdays([]);
-    const currentWeekday = weekdays[date.getDay() - 1];
+    let currentWeekday = date.getDay() - 1;
+    currentWeekday = currentWeekday <= 0 ? weekdays[6] : weekdays[currentWeekday]
     const { startTime, endTime } = this.storeSettings.openTimes[currentWeekday];
     let lzH = date.getHours() < 10 ? "0" : "";
     let lzM = date.getMinutes() < 10 ? "0" : "";
