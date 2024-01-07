@@ -11,17 +11,38 @@ export default class MathUtil {
         let value = numArr[i];
         let adjustedValue;
         if (averageZeroValues && adjustment === sum) {
-          adjustedValue = decimalCount >= 0 ? Number((sum / numArr.length).toFixed(decimalCount)) : sum / numArr.length;
+          adjustedValue = sum / numArr.length;
         } else {
-          if (decimalCount >= 0) {
-            adjustedValue = Number((adjustment * (value / arrSum)).toFixed(decimalCount));
-          } else {
             adjustedValue = adjustment * (value / arrSum);
-          }
         }
-        numArr[i] = value + adjustedValue;
+        if (decimalCount >= 0) {
+          numArr[i] = Number((value + adjustedValue).toFixed(decimalCount));
+        } else {
+          numArr[i] = value + adjustedValue;
+        }
       }
     } 
     return numArr;
+  }
+
+  spreadProportionateValueArr(valueArr, value, skipIndex = -1) {
+    valueArr = [...valueArr];
+    let skip = skipIndex >= 0;
+    let valueArrSum = 0;
+    for (let i = 0;i < valueArr.length;i++) {
+      if (skip && skipIndex === i) {
+        continue;
+      }
+      valueArrSum += valueArr[i];
+    }
+    for (let i = 0;i < valueArr.length;i++) {
+      if (skip && skipIndex === i) {
+        continue;
+      }
+      let currentRatio = valueArr[i] / valueArrSum;
+      let valueProportion = value * currentRatio;
+      valueArr[i] = valueArr[i] + valueProportion;
+    }
+    return valueArr
   }
 }

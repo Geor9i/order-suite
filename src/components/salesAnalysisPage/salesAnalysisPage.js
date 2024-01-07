@@ -105,13 +105,13 @@ export default class SalesAnalysis {
     let workHours = this.workHours({});
     Object.keys(workHours).forEach(
       (weekday) =>
-      (workHours[weekday] = {
-        hours: { ...workHours[weekday] },
-        totals: {
-          total: 0,
-          share: 0,
-        },
-      })
+        (workHours[weekday] = {
+          hours: { ...workHours[weekday] },
+          totals: {
+            total: 0,
+            share: 0,
+          },
+        })
     );
     return workHours;
   }
@@ -156,50 +156,99 @@ export default class SalesAnalysis {
     } else if (e.target.tagName === "INPUT") {
       const [weekday, hour] = name.split("-");
       this.hourlySales[weekday].hours[hour] = Number(value);
+      const weeklyTotal = this.getWeeklyTotal();
       this.updateTotals();
+      this.updateWeeklyShare(weeklyTotal);
     }
     this.showView();
   }
 
   calcFromTotals(field, weekday) {
-    let weeklyTotal = 0;
-    Object.keys(this.hourlySales).forEach((weekday) => {
-      weeklyTotal += this.hourlySales[weekday].totals.total
-    });
-    const { total, share } = this.hourlySales[weekday].totals;
-    if (field === 'total') {
-      const hourValuesArr = Object.values(this.hourlySales[weekday].hours);
-      const hourKeysArr = Object.keys(this.hourlySales[weekday].hours);
-      let adjustedValuesArr = this.mathUtil.evenArrRatioToSum(hourValuesArr, total, 2, true);
-      for (let hour of hourKeysArr) {
-        this.hourlySales[weekday].hours[hour] = adjustedValuesArr.shift();
-      }
-    } else if (field === 'share') {
-
+    let weeklyTotal = this.getWeeklyTotal(true);
+    if (field === "total") {
+      this.updateHours(weekday);
+      this.updateWeeklyShare(weeklyTotal);
+    } else if (field === "share") {
+      if (weeklyTotal === 0) return;
+      
+      let currentShareTotal = 0;
+      Object.keys(this.hourlySales).forEach(day => {
+          currentShareTotal += this.hourlySales[day].totals.share;
+      })
+      let shareDifference = 100 - currentShareTotal;
+      const sharesArr = [];
+      let selectedShareIndex;
+      Object.keys(this.hourlySales).forEach((day, i) => {
+        if (weekday === day) {
+          selectedShareIndex = i;
+        }
+          sharesArr.push(this.hourlySales[day].totals.share);
+      })
+        let adjustedShares = this.mathUtil.spreadProportionateValueArr(sharesArr, shareDifference, selectedShareIndex);
+      Object.keys(this.hourlySales).forEach((day, i) => {
+        if (weekday === day) {
+          return;
+        }
+          this.hourlySales[day].totals.share = adjustedShares[i];
+          this.hourlySales[day].totals.total = weeklyTotal * (adjustedShares[i] / 100);
+          this.updateHours(day)
+      })
     }
-    this.updateTotals()
     this.showView();
   }
 
+  updateHours(weekday) {
+    const { total } = this.hourlySales[weekday].totals;
+    const hourValuesArr = Object.values(this.hourlySales[weekday].hours);
+    const hourKeysArr = Object.keys(this.hourlySales[weekday].hours);
+    let adjustedValuesArr = this.mathUtil.evenArrRatioToSum(
+      hourValuesArr,
+      total,
+      2,
+      true
+    );
+    for (let hour of hourKeysArr) {
+      this.hourlySales[weekday].hours[hour] = adjustedValuesArr.shift();
+    }
+  }
+
+  updateWeeklyShare(weeklyTotal) {
+    if (weeklyTotal === 0) return null;
+    Object.keys(this.hourlySales).forEach((weekday) => {
+      this.hourlySales[weekday].totals.share = Number(
+        ((this.hourlySales[weekday].totals.total / weeklyTotal) * 100).toFixed(
+          2
+        )
+      );
+    });
+  }
+
+  getWeeklyTotal(fromTotal = false) {
+    let weeklyTotal = 0;
+    Object.keys(this.hourlySales).forEach((weekday) => {
+      let total = 0;
+      if (fromTotal) {
+        total = Number(this.hourlySales[weekday].totals.total);
+      } else {
+        total = Object.keys(this.hourlySales[weekday].hours).reduce(
+          (total, hour) =>
+            (total += Number(this.hourlySales[weekday].hours[hour])),
+          0
+        );
+      }
+      weeklyTotal += total;
+    });
+    return weeklyTotal;
+  }
 
   updateTotals() {
-    let weeklyTotal = 0;
     Object.keys(this.hourlySales).forEach((weekday) => {
       let total = Object.keys(this.hourlySales[weekday].hours).reduce(
         (total, hour) =>
           (total += Number(this.hourlySales[weekday].hours[hour])),
         0
       );
-      weeklyTotal += total;
-      this.hourlySales[weekday].totals.total = total;
-    });
-    if (weeklyTotal === 0) return;
-
-    Object.keys(this.hourlySales).forEach((weekday) => {
-      this.hourlySales[weekday].totals.share = (
-        (this.hourlySales[weekday].totals.total / weeklyTotal) *
-        100
-      ).toFixed(2);
+      this.hourlySales[weekday].totals.total = Number(total.toFixed(2));
     });
   }
 }
