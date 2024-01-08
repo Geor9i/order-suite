@@ -186,9 +186,6 @@ export default class SalesAnalysis {
       })
         let adjustedShares = this.mathUtil.spreadProportionateValueArr(sharesArr, shareDifference, selectedShareIndex);
       Object.keys(this.hourlySales).forEach((day, i) => {
-        if (weekday === day) {
-          return;
-        }
           this.hourlySales[day].totals.share = adjustedShares[i];
           this.hourlySales[day].totals.total = weeklyTotal * (adjustedShares[i] / 100);
           this.updateHours(day)
