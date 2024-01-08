@@ -139,6 +139,18 @@
   color: #00ffea;
 }
 
+.weekly-total-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 2rem;
+}
+
+.weekly-total-container label{
+  margin: 0;
+}
+
 .submit-btn-container {
   display: flex;
   align-items: center;

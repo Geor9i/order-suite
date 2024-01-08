@@ -35,6 +35,8 @@ export default class MathUtil {
       }
       valueArrSum += valueArr[i];
     }
+    if (valueArrSum === 0) return valueArr;
+    
     for (let i = 0;i < valueArr.length;i++) {
       if (skip && skipIndex === i) {
         continue;

@@ -16,6 +16,7 @@ export default class SalesAnalysis {
     this.showView = this._showView.bind(this);
     this.slideOpen = this._slideOpen.bind(this);
     this.hourlySales = this.getHourlySalesTemplate();
+    this.weeklyTotal = 0;
     this.sliderContainers = [];
   }
 
@@ -96,6 +97,7 @@ export default class SalesAnalysis {
         this.hourlySales,
         this.hourlySalesInputHandler,
         this.hourlySalesChangeHandler,
+        this.weeklyTotal,
         this.submitHandler
       )
     );
@@ -160,6 +162,7 @@ export default class SalesAnalysis {
       this.updateTotals();
       this.updateWeeklyShare(weeklyTotal);
     }
+    this.weeklyTotal = this.getWeeklyTotal(true);
     this.showView();
   }
 

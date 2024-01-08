@@ -3,7 +3,7 @@ import styles from './salesAnalysisPage.module.css';
 import StringUtil from '../../utils/stringUtil.js';
 const stringUtil = new StringUtil();
 
-export const salesAnalysisPageTemplate = (slideOpen, hourlySales, hourlySalesInputHandler, hourlySalesChangeHandler, submitHandler) => html`
+export const salesAnalysisPageTemplate = (slideOpen, hourlySales, hourlySalesInputHandler, hourlySalesChangeHandler, weeklyTotal, submitHandler) => html`
 <div class=${styles['page__container']}>
     <div @click=${slideOpen} data-id="sales-summary-dropdown" class=${`${styles['section__bar']} ${styles['section__bar-closed']}`}>Sales Summary
     </div>
@@ -49,6 +49,10 @@ export const salesAnalysisPageTemplate = (slideOpen, hourlySales, hourlySalesInp
                             </div>
                         </div>
                 `)}
+            </div>
+            <div class=${styles['weekly-total-container']}>
+                <label for="weekly-total-field">Total Sales</label>
+                <input disabled id="weekly-total-field" name="weekly-total-field" .value=${weeklyTotal}></input>
             </div>
         </div>
         <div @click=${slideOpen} data-id="sales-summary-analysis" class=${`${styles['section__bar']} ${styles['section__bar-inner']} ${styles['section__bar-closed']}`}>Report Analysis
