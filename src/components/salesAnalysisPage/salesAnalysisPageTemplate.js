@@ -31,7 +31,7 @@ export const salesAnalysisPageTemplate = (slideOpen, hourlySales, hourlySalesInp
                                     <div class=${styles['hour-container']}>
                                         <label for="${weekday}-${hour}">${hour}:00</label>
                                         <p>£</p>
-                                        <input maxLength="8" @click=${(e) => e.currentTarget.select()} for="${weekday}-${hour}" name="${weekday}-${hour}" .value=${hourlySales[weekday].hours[hour]}></input>
+                                        <input maxLength="8" @click=${(e) => e.currentTarget.select()} for="${weekday}-${hour}" name="${weekday}-${hour}" .value=${Number(hourlySales[weekday].hours[hour].toFixed(2))}></input>
                                     </div>
                                 `)}
                             </div>
@@ -39,12 +39,12 @@ export const salesAnalysisPageTemplate = (slideOpen, hourlySales, hourlySalesInp
                                 <div class=${styles['hourly-totals-field']}>
                                     <label for="total-${weekday}">Total</label>
                                     <p>£</p>
-                                    <input @click=${(e) => e.currentTarget.select()} class=${styles['manual-totals']} id="total-${weekday}" .value=${hourlySales[weekday].totals.total}></input>
+                                    <input @click=${(e) => e.currentTarget.select()} class=${styles['manual-totals']} id="total-${weekday}" .value=${Number(hourlySales[weekday].totals.total.toFixed(2))}></input>
                                 </div>
                                 <div class=${styles['hourly-totals-field'] }>
                                     <label for="share-${weekday}">Weekly Share</label>
                                     <p>%</p>
-                                    <input @click=${(e) => e.currentTarget.select()} class=${styles['manual-totals']} id="share-${weekday}" .value=${hourlySales[weekday].totals.share}></input>
+                                    <input @click=${(e) => e.currentTarget.select()} class=${styles['manual-totals']} id="share-${weekday}" .value=${Number(hourlySales[weekday].totals.share.toFixed(2))}></input>
                                 </div>
                             </div>
                         </div>
@@ -52,7 +52,7 @@ export const salesAnalysisPageTemplate = (slideOpen, hourlySales, hourlySalesInp
             </div>
             <div class=${styles['weekly-total-container']}>
                 <label for="weekly-total-field">Total Sales</label>
-                <input disabled id="weekly-total-field" name="weekly-total-field" .value=${weeklyTotal}></input>
+                <input disabled id="weekly-total-field" name="weekly-total-field" .value=${Number(weeklyTotal.toFixed(2))}></input>
             </div>
         </div>
         <div @click=${slideOpen} data-id="sales-summary-analysis" class=${`${styles['section__bar']} ${styles['section__bar-inner']} ${styles['section__bar-closed']}`}>Report Analysis
