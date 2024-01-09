@@ -55,10 +55,23 @@ export const salesAnalysisPageTemplate = (slideOpen, hourlySales, hourlySalesInp
                 <input disabled id="weekly-total-field" name="weekly-total-field" .value=${Number(weeklyTotal.toFixed(2))}></input>
             </div>
         </div>
-        <div @click=${slideOpen} data-id="sales-summary-analysis" class=${`${styles['section__bar']} ${styles['section__bar-inner']} ${styles['section__bar-closed']}`}>Report Analysis
+        <div @click=${slideOpen} data-id="hourly-sales-analysis" class=${`${styles['section__bar']} ${styles['section__bar-inner']} ${styles['section__bar-closed']}`}>Report Analysis
         </div>
-        <div id="sales-summary-analysis" class=${styles['expand__container']}>
-       
+        <div id="hourly-sales-analysis" class=${styles['expand__container']}>
+            <div class=${styles['expand-content']}>
+                <div class=${styles['input-group']}>
+                    <label for="hourly-report-dump">Paste RMF Hourly Sales Report</label>
+                    <input id="hourly-report-dump" class=${styles['report-dump']}></input>
+                </div>
+                <div class=${styles['input-group']}>
+                    <label for=hourly-report-select">Paste RMF Hourly Sales Report</label>
+                    <select id="hourly-report-select" class=${styles['hourly-report-select']}>
+                        <option value="averageReport">Weekly Average Report</option>
+                        ${Object.keys(hourlySales).map(weekday => html`<option value=${weekday}>${stringUtil.toPascalCase(weekday)}</option>`)}
+                    </select>
+                </div>
+                <button class=${styles['process-btn']}>Process</button>
+            </div>
         </div>
         <div class=${styles['submit-btn-container']}>
             <button class=${styles['submit-btn']}>Submit</button>
