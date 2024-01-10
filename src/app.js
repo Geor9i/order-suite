@@ -83,7 +83,7 @@ page("/order-form", () => CM.mount(OrderFormComponent, baseLoader, funcLoader));
 page("/order-details", () => CM.mount(OrderPage, baseLoader, funcLoader));
 page("/restaurant", () => CM.mount(RestaurantMenu, baseLoader));
 page("/restaurant-template", () => CM.mount(StoreTemplateScreen, baseLoader));
-page("/restaurant-sales", () => CM.mount(SalesAnalysis, baseLoader));
+page("/restaurant-sales", () => CM.mount(SalesAnalysis, baseLoader, funcLoader));
 page("/product-manager", () => CM.mount(ProductManager, baseLoader));
 page("/404", () => CM.mount(NotFoundPage, baseLoader));
 

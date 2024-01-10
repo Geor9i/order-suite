@@ -2,9 +2,10 @@ import { salesAnalysisPageTemplate } from "./salesAnalysisPageTemplate";
 import styles from "./salesAnalysisPage.module.css";
 
 export default class SalesAnalysis {
-  constructor({ renderBody, router, fireService, utils }) {
+  constructor({ renderBody, router, fireService, utils, harvester }) {
     this.render = renderBody;
     this.router = router;
+    this.harvester = harvester;
     this.fireService = fireService;
     this.stringUtil = utils.stringUtil;
     this.timeUtil = utils.timeUtil;
@@ -13,10 +14,13 @@ export default class SalesAnalysis {
     this.mathUtil = utils.mathUtil;
     this.hourlySalesInputHandler = this._hourlySalesInputHandler.bind(this);
     this.hourlySalesChangeHandler = this._hourlySalesChangeHandler.bind(this);
+    this.hourlySalesDumpHandler = this._hourlySalesDumpHandler.bind(this);
+    this.hourlySalesReportHandler = this._hourlySalesReportHandler.bind(this);
     this.showView = this._showView.bind(this);
     this.slideOpen = this._slideOpen.bind(this);
     this.hourlySales = this.getHourlySalesTemplate();
     this.weeklyTotal = 0;
+    this.hourlySalesReport = null;
     this.sliderContainers = [];
   }
 
@@ -98,6 +102,8 @@ export default class SalesAnalysis {
         this.hourlySalesInputHandler,
         this.hourlySalesChangeHandler,
         this.weeklyTotal,
+        this.hourlySalesDumpHandler,
+        this.hourlySalesReportHandler,
         this.submitHandler
       )
     );
@@ -107,13 +113,13 @@ export default class SalesAnalysis {
     let workHours = this.workHours({});
     Object.keys(workHours).forEach(
       (weekday) =>
-      (workHours[weekday] = {
-        hours: { ...workHours[weekday] },
-        totals: {
-          total: 0,
-          share: 0,
-        },
-      })
+        (workHours[weekday] = {
+          hours: { ...workHours[weekday] },
+          totals: {
+            total: 0,
+            share: 0,
+          },
+        })
     );
     return workHours;
   }
@@ -175,9 +181,9 @@ export default class SalesAnalysis {
       if (weeklyTotal === 0) return;
 
       let currentShareTotal = 0;
-      Object.keys(this.hourlySales).forEach(day => {
+      Object.keys(this.hourlySales).forEach((day) => {
         currentShareTotal += this.hourlySales[day].totals.share;
-      })
+      });
       let shareDifference = 100 - currentShareTotal;
       const sharesArr = [];
       let selectedShareIndex;
@@ -186,13 +192,18 @@ export default class SalesAnalysis {
           selectedShareIndex = i;
         }
         sharesArr.push(this.hourlySales[day].totals.share);
-      })
-      let adjustedShares = this.mathUtil.spreadProportionateValueArr(sharesArr, shareDifference, selectedShareIndex);
+      });
+      let adjustedShares = this.mathUtil.spreadProportionateValueArr(
+        sharesArr,
+        shareDifference,
+        selectedShareIndex
+      );
       Object.keys(this.hourlySales).forEach((day, i) => {
         this.hourlySales[day].totals.share = adjustedShares[i];
-        this.hourlySales[day].totals.total = weeklyTotal * (adjustedShares[i] / 100);
-        this.updateHours(day)
-      })
+        this.hourlySales[day].totals.total =
+          weeklyTotal * (adjustedShares[i] / 100);
+        this.updateHours(day);
+      });
     }
     this.showView();
   }
@@ -215,8 +226,8 @@ export default class SalesAnalysis {
   updateWeeklyShare(weeklyTotal) {
     if (weeklyTotal === 0) return null;
     Object.keys(this.hourlySales).forEach((weekday) => {
-      this.hourlySales[weekday].totals.share = (this.hourlySales[weekday].totals.total / weeklyTotal) * 100
-
+      this.hourlySales[weekday].totals.share =
+        (this.hourlySales[weekday].totals.total / weeklyTotal) * 100;
     });
   }
 
@@ -247,5 +258,42 @@ export default class SalesAnalysis {
       );
       this.hourlySales[weekday].totals.total = total;
     });
+  }
+
+  _hourlySalesDumpHandler(e) {
+    const dump = e.currentTarget;
+    const { value } = dump;
+    this.hourlySalesReport = this.harvester.hourlySalesExtractor(value);
+    dump.value = !this.hourlySalesReport ? "Wrong Data!" : "Received!";
+    setTimeout(() => {
+      dump.value = "";
+    }, 3000);
+  }
+
+  _hourlySalesReportHandler() {
+    if (!this.hourlySalesReport) return;
+
+    const selectValue = document.getElementById('hourly-report-select').value;
+    if (selectValue === 'averageReport') {
+      const weekdayCount = Object.keys(this.hourlySales).length
+      for (let weekday in this.hourlySales) {
+        for (let hour in this.hourlySales[weekday].hours) {
+          if (this.hourlySalesReport.hours.hasOwnProperty(hour)) {
+            this.hourlySales[weekday].hours[hour] = this.hourlySalesReport.hours[hour].hourlySales / weekdayCount;
+          }
+        }
+      }
+    } else {
+      for (let hour in this.hourlySales[selectValue].hours) {
+        if (this.hourlySalesReport.hours.hasOwnProperty(hour)) {
+          this.hourlySales[selectValue].hours[hour] = this.hourlySalesReport.hours[hour].hourlySales
+        }
+      }
+    }
+    const weeklyTotal = this.getWeeklyTotal();
+    this.updateTotals()
+    this.weeklyTotal = this.getWeeklyTotal(true);
+    this.updateWeeklyShare(weeklyTotal)
+    this.showView()
   }
 }

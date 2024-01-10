@@ -9,6 +9,8 @@ export const salesAnalysisPageTemplate = (
   hourlySalesInputHandler,
   hourlySalesChangeHandler,
   weeklyTotal,
+  hourlySalesDumpHandler,
+  hourlySalesReportHandler,
   submitHandler
 ) => html`
 <div class=${styles["page__container"]}>
@@ -46,7 +48,7 @@ export const salesAnalysisPageTemplate = (
                                         <label for="${weekday}-${hour}">${hour}:00</label>
                                         <p>£</p>
                                         <input maxLength="8" @click=${(e) =>
-                                          e.currentTarget.select()} for="${weekday}-${hour}" name="${weekday}-${hour}" .value=${Number(
+                                          e.currentTarget.select()} id="${weekday}-${hour}" name="${weekday}-${hour}" .value=${Number(
                                     hourlySales[weekday].hours[hour].toFixed(2)
                                   )}></input>
                                     </div>
@@ -94,12 +96,12 @@ export const salesAnalysisPageTemplate = (
             <div class=${styles["expand-content"]}>
                 <div class=${styles["input-group"]}>
                     <label for="hourly-report-dump">Paste RMF Hourly Sales Report</label>
-                    <input id="hourly-report-dump" class=${
+                    <input @input=${hourlySalesDumpHandler} id="hourly-report-dump" class=${
                       styles["report-dump"]
                     }></input>
                 </div>
                 <div class=${styles["input-group"]}>
-                    <label for=hourly-report-select">Paste RMF Hourly Sales Report</label>
+                    <label for="hourly-report-select">Paste RMF Hourly Sales Report</label>
                     <select id="hourly-report-select" class=${
                       styles["hourly-report-select"]
                     }>
@@ -112,7 +114,7 @@ export const salesAnalysisPageTemplate = (
                         )}
                     </select>
                 </div>
-                <button class=${styles["process-btn"]}>Process</button>
+                <button @click=${hourlySalesReportHandler} class=${styles["process-btn"]}>Process</button>
             </div>
         </div>
         <div class=${styles["submit-btn-container"]}>
