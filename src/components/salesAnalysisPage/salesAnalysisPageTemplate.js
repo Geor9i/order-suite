@@ -48,9 +48,8 @@ export const salesAnalysisPageTemplate = (
                                         <label for="${weekday}-${hour}">${hour}:00</label>
                                         <p>£</p>
                                         <input maxLength="8" @click=${(e) =>
-                                          e.currentTarget.select()} id="${weekday}-${hour}" name="${weekday}-${hour}" .value=${Number(
-                                    hourlySales[weekday].hours[hour].toFixed(2)
-                                  )}></input>
+                                          e.currentTarget.select()} id="${weekday}-${hour}" name="${weekday}-${hour}" .value=${Number(Number(
+                                    hourlySales[weekday].hours[hour]).toFixed(2))}></input>
                                     </div>
                                 `
                                 )}
@@ -62,9 +61,8 @@ export const salesAnalysisPageTemplate = (
                                     <input @click=${(e) =>
                                       e.currentTarget.select()} class=${
                       styles["manual-totals"]
-                    } id="total-${weekday}" .value=${Number(
-                      hourlySales[weekday].totals.total.toFixed(2)
-                    )}></input>
+                    } id="total-${weekday}" .value=${Number(Number(
+                      hourlySales[weekday].totals.total).toFixed(2))}></input>
                                 </div>
                                 <div class=${styles["hourly-totals-field"]}>
                                     <label for="share-${weekday}">Weekly Share</label>
@@ -72,9 +70,9 @@ export const salesAnalysisPageTemplate = (
                                     <input @click=${(e) =>
                                       e.currentTarget.select()} class=${
                       styles["manual-totals"]
-                    } id="share-${weekday}" .value=${Number(
-                      hourlySales[weekday].totals.share.toFixed(2)
-                    )}></input>
+                    } id="share-${weekday}" .value=${Number(Number(
+                      hourlySales[weekday].totals.share).toFixed(2))
+                      }></input>
                                 </div>
                             </div>
                         </div>

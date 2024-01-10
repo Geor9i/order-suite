@@ -57,6 +57,7 @@ export default class SalesAnalysis {
     }
     let cumulativeHeight = this.domUtil.getContentHeight(selectedContainer);
     selectedContainer.style.height = (toggleOpen ? cumulativeHeight : 0) + "px";
+    // selectedContainer.style.overflow = toggleOpen ? 'auto' : 'hidden';
     for (let i = startContainerIndex - 1; i >= 0; i--) {
       if (selectedHierarchy[i].contains(selectedContainer)) {
         const currentParentContainer = selectedHierarchy[i];
@@ -138,14 +139,15 @@ export default class SalesAnalysis {
   }
 
   _hourlySalesInputHandler(e) {
-    const { value, name } = e.target;
+    const { value, name, id } = e.target;
     let filteredValue = this.stringUtil.filterString(value, [
       { symbol: "\\d" },
       { symbol: "\\.", matchLimit: 1 },
     ]);
     filteredValue = filteredValue || 0;
-    if (e.target.tagName === "INPUT" && e.target.id) {
+    if (e.target.tagName === "INPUT" && (id.includes('total') || id.includes('share'))) {
       const [field, weekday] = e.target.id.split("-");
+      console.log(weekday);
       this.hourlySales[weekday].totals[field] = filteredValue;
     } else if (e.target.tagName === "INPUT") {
       const [weekday, hour] = name.split("-");
@@ -156,8 +158,8 @@ export default class SalesAnalysis {
   }
 
   _hourlySalesChangeHandler(e) {
-    let { name, value } = e.target;
-    if (e.target.tagName === "INPUT" && e.target.id) {
+    let { name, value, id } = e.target;
+    if (e.target.tagName === "INPUT" && (id.includes('total') || id.includes('share'))) {
       const [field, weekday] = e.target.id.split("-");
       this.hourlySales[weekday].totals[field] = Number(value);
       this.calcFromTotals(field, weekday);
