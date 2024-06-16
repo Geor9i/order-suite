@@ -81,16 +81,17 @@ export default class Processor {
         currProd
       );
 
-      let productRemain =
-        this.objUtil.getLastMapEntry(populatedUsageMap)[1].onHand;
+      const lastEntry = this.objUtil.getLastMapEntry(populatedUsageMap)[1];
+      const safeQuantity = lastEntry.usage;
+      const remainingProduct = lastEntry.onHand;
       let orderNow = 0;
-      if (productRemain < 0) {
-        orderNow = Math.abs(productRemain) + currProd.safeQuantity;
+      if (remainingProduct < 0) {
+        orderNow = Math.abs(remainingProduct) + safeQuantity;
       } else {
         orderNow =
-          productRemain >= currProd.safeQuantity
+        remainingProduct >= safeQuantity
             ? 0
-            : currProd.safeQuantity - productRemain;
+            : currProd.safeQuantity - remainingProduct;
       }
 
       //Get Delivery day date
@@ -113,7 +114,7 @@ export default class Processor {
           order,
           count,
           stockOnOrderDay: Number(orderDayOnHand.toFixed(2)),
-          nextOrderDayOnHand: Number(productRemain.toFixed(2)),
+          nextOrderDayOnHand: Number(remainingProduct.toFixed(2)),
           sideDisplay: true,
         };
       }
