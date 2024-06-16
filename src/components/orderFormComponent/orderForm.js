@@ -156,7 +156,8 @@ export default class OrderFormComponent {
       if (dateCheckPattern.test(orderInvoiceDate)) {
         orderInvoiceDate = this.dateUtil.op(orderInvoiceDate).format();
         let invoiceWeekday = weekdays[orderInvoiceDate.getDay() - 1];
-        if (!this.storeSettings.orderDays.includes(invoiceWeekday)) {
+        const deliveryDayAvailable = Object.keys(this.storeSettings.orderDays).includes(invoiceWeekday);
+        if (!deliveryDayAvailable) {
           this.print("Select an available delivery date!");
         }
 

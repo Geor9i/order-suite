@@ -91,6 +91,20 @@ export default class SalesAnalysis {
     e.preventDefault();
   }
 
+  salesGraph() {
+    const canvas = document.getElementById('salesGraph');
+    canvas.width = window.innerWidth / 2;
+    canvas.height = window.innerHeight / 2;
+    const c = canvas.getContext('2d');
+    
+    c.beginPath();
+    c.fillStyle = 'blue'
+    c.arc(100, 100, 50, 0, Math.PI * 2);
+    c.fill()
+
+    console.log(c);
+  }
+
   _showView() {
     if (!this.fireService.user) {
       this.router.redirect("/");
@@ -108,6 +122,7 @@ export default class SalesAnalysis {
         this.submitHandler
       )
     );
+    this.salesGraph()
   }
 
   getHourlySalesTemplate() {

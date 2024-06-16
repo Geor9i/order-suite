@@ -74,16 +74,11 @@ export default class Harvester {
             price: Number(match.groups.productPrice),
             previousOrderQuantity: Number(match.groups.previousOrderQuantity),
             previousOrderDate: `${match.groups.previousOrderQuantityYear}/${match.groups.previousOrderQuantityMonth}/${match.groups.previousOrderQuantityDay}`,
-            previousWeeksUsage: Number(match.groups.previousWeeksUsage),
-            onHand: Number(match.groups.onHand),
-            // safeQuantity: safeQuantity,
-            // sustainAmount: sustainAmount,
-            // quotaReverse: quotaReverse,
-            // dailyUse: dailyUse,
+            previousWeeksUsage: Math.max(Number(match.groups.previousWeeksUsage), 0),
+            onHand: Math.max(Number(match.groups.onHand), 0),
           };
         }
       }
-      // discoveredProducts.push(match.groups.product);
     }
 
     return Object.keys(reportProducts).length > 0 ? reportProducts : null;
@@ -219,7 +214,7 @@ export default class Harvester {
     let salesSummaryExtractDataPattern =
       /\b(?<=[A-Z][a-z]{2},\s)(?<day>\d{2})-(?<month>[A-Z][a-z]{2})-(?<year>\d{4})\s(?<grossSales>[\d\.,]+)\s(?<tax>[\d.,]+)\s(?<netSales>[\d.,]+)\s(?<transactions>[\d.,]+)\b/g;
 
-    const salesSummaryRecord = {};
+    const salesSummaryRecord = new Map();
     const months = this.dateUtil
       .getMonths([], { short: true })
       .map((month) => this.stringUtil.toPascalCase(month));
@@ -233,14 +228,14 @@ export default class Harvester {
       let currDate = `${year}/${months.indexOf(month)}/${day}`;
 
       if (!salesSummaryRecord.hasOwnProperty(currDate)) {
-        salesSummaryRecord[currDate] = {
+        salesSummaryRecord.set(currDate, {
           salesTotal: this.stringUtil.stringToNumber(
             salesDateMatch.groups.netSales
           ),
           transactionsTotal: this.stringUtil.stringToNumber(
             salesDateMatch.groups.transactions
           ),
-        };
+        })
       }
     }
     return salesSummaryRecord;

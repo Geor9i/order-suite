@@ -111,7 +111,7 @@ export default class DateUtil {
     const weekGuide = this.getWeekdays([]);
     dateFrom =
       typeof dateFrom === "object" ? dateFrom : this.op(dateFrom).format();
-    let orderDays = storeSettings.orderDays.map(
+    let orderDays = Object.keys(storeSettings.orderDays).map(
       (day) => weekGuide.indexOf(day) + 1
     );
     let step = options.goBack ? -1 : 1;

@@ -28,7 +28,7 @@ import ObjectUtil from "./utils/objectUtil.js";
 import MathUtil from "./utils/mathUtil.js";
 import { storeSettings } from "./storeSettings.js";
 import ComponentManager from "./lib/componentManager.js";
-
+import { report } from "../inventoryReport.js";
 
 const app = initializeApp(firebaseConfig);
 const fireService = new FireService(app);
@@ -59,7 +59,6 @@ const utils = {
 const processor = new Processor(storeSettings, utils);
 const harvester = new Harvester(utils);
 const CM = new ComponentManager();
-
 //Components
 const navComponent = new NavComponent(renderNav, router, fireService, utils);
 const calendarComponent = new Calendar(renderCalender, utils);
@@ -83,8 +82,31 @@ page("/order-form", () => CM.mount(OrderFormComponent, baseLoader, funcLoader));
 page("/order-details", () => CM.mount(OrderPage, baseLoader, funcLoader));
 page("/restaurant", () => CM.mount(RestaurantMenu, baseLoader));
 page("/restaurant-template", () => CM.mount(StoreTemplateScreen, baseLoader));
-page("/restaurant-sales", () => CM.mount(SalesAnalysis, baseLoader, funcLoader));
+page("/restaurant-sales", () =>
+  CM.mount(SalesAnalysis, baseLoader, funcLoader)
+);
 page("/product-manager", () => CM.mount(ProductManager, baseLoader));
 page("/404", () => CM.mount(NotFoundPage, baseLoader));
 
 page.start();
+// const salesDataMap = harvester.salesSummaryExtractor(report);
+
+// // Convert Map entries to an array of strings
+// const mapEntries = Array.from(salesDataMap.entries())
+//   .map(([key, value]) => `salesData.set('${key}', ${JSON.stringify(value)});`);
+
+// // Join the array into a single string
+// const salesDataString = `
+// const salesData = new Map();
+// ${mapEntries.join('\n')}
+// `;
+
+// const blob = new Blob([salesDataString], { type: 'application/javascript' });
+
+// const a = document.createElement('a');
+// a.href = URL.createObjectURL(blob);
+// a.download = 'salesData.js';
+
+// document.body.appendChild(a);
+// a.click();
+// document.body.removeChild(a);

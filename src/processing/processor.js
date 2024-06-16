@@ -71,7 +71,7 @@ export default class Processor {
         currentDemand: products[product].previousWeeksUsage,
         lastOrderQuantity: products[product].previousOrderQuantity,
         price: products[product].price,
-        safeQuantity: products[product].safeQuantity || 0,
+        safeQuantity: 0,
         productArrivalDate: this.dateUtil.op(productArrivalDate).format(),
       };
 
@@ -129,11 +129,12 @@ export default class Processor {
     const { weekendSalesPercent } = this.storeSettings;
     const weekGuide = this.dateUtil.getWeekdays([]);
     // Estimate days to cover sales quota
-    let weekdaySales = Math.abs((100 - weekendSalesPercent) / 4);
+    let weekdaySales = (100 - weekendSalesPercent) / 4;
     let weekendSales = weekendSalesPercent / 3;
     // Adjust previous weeks usage based on sales forecast!
-    let usagePerThousand = (p.weeklyUsage / this.previousSales) * 1000;
-    p.weeklyUsage = usagePerThousand * (this.salesForecast / 1000);
+    let usageRate = p.weeklyUsage / this.previousSales;
+    p.weeklyUsage = usageRate * this.salesForecast;
+    product.safeQuantity = p.weeklyUsage * 0.1;
     //DeliveryDay Reached marker
     let deliveryDayMarker = false;
     // map out usage and onHand within productMap
