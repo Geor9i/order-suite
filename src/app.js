@@ -20,16 +20,10 @@ import RestaurantMenu from "./components/restaurantMenu/restaurantMenu.js";
 import SalesAnalysis from "./components/salesAnalysisPage/salesAnalysisPage.js";
 import ProductManager from "./components/productManager/productManager.js";
 
-import DateUtil from "./utils/dateUtil.js";
-import TimeUtil from "./utils/timeUtil.js";
-import StringUtil from "./utils/stringUtil.js";
-import FormUtil from "./utils/formUtil.js";
-import DomUtil from "./utils/domUtil.js";
-import ObjectUtil from "./utils/objectUtil.js";
-import MathUtil from "./utils/mathUtil.js";
 import { storeSettings } from "./storeSettings.js";
 import ComponentManager from "./lib/componentManager.js";
 import { report } from "../inventoryReport.js";
+import { utils } from "./utils/utilConfig.js";
 
 const app = initializeApp(firebaseConfig);
 const fireService = new FireService(app);
@@ -44,17 +38,6 @@ const router = {
 const renderNav = (template) => render(template, nav);
 const renderBody = (template) => render(template, main);
 const renderCalender = (template, parent) => render(template, parent);
-
-//Utils
-const utils = {
-  dateUtil: new DateUtil(),
-  timeUtil: new TimeUtil(storeSettings),
-  stringUtil: new StringUtil(),
-  formUtil: new FormUtil(),
-  domUtil: new DomUtil(),
-  objUtil: new ObjectUtil(),
-  mathUtil: new MathUtil(),
-};
 
 //Product Processor
 const processor = new Processor(storeSettings, utils);
@@ -88,7 +71,6 @@ page("/restaurant-sales", () =>
 );
 page("/product-manager", () => CM.mount(ProductManager, baseLoader));
 page("/404", () => CM.mount(NotFoundPage, baseLoader));
-
 page.start();
 // const salesDataMap = harvester.salesSummaryExtractor(report);
 

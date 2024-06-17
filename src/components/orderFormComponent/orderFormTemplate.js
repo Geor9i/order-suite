@@ -36,10 +36,10 @@ export const orderFormTemplate = (
                             </div>
                             <div id="calendar-container" class=${styles["calendar-container"]}></div>
                             <label for="previous-sales" >Last Week's Sales:</label>
-                            <input type="text" required="true" id="previous-sales" name="previous-sales">
+                            <input required type="text" id="previous-sales" name="previous-sales">
 
                             <label for="sales-forecast" >Weekly Sales Forecast:</label>
-                            <input type="text" id="sales-forecast" name="sales-forecast" required="true">
+                            <input required type="text" id="sales-forecast" name="sales-forecast">
 
                             <button id="create-button" class=${styles["create-button"]} type="submit">Create</button>
                         </form>

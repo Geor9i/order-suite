@@ -1,7 +1,7 @@
 import DateUtil from "./dateUtil.js";
-
+import { storeSettings } from "../storeSettings.js";
 export default class TimeUtil {
-  constructor(storeSettings) {
+  constructor() {
     this.storeSettings = storeSettings;
     this.dateUtil = new DateUtil();
   }
