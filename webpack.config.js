@@ -1,12 +1,28 @@
 const path = require('path');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   mode: 'development',
   entry: './src/app.js',
   devtool: 'eval-source-map', // or 'cheap-source-map'
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: "[name].js",
+    chunkFilename: "[id].[chunkhash].js",
+    path: path.resolve(__dirname, "dist"),
+  },
+  devServer: {
+    port: 9000,
+    static: {
+      directory: path.resolve(__dirname, "dist"),
+    },
+    watchFiles: ["*.html"],
+    compress: true,
+    open: true,
+    hot: false, // Enable HMR
+    historyApiFallback: {
+      index: "/",
+      disableDotRule: true,
+    },
   },
   watch: true,
   module: {
@@ -30,4 +46,11 @@ module.exports = {
       // Add other aliases as needed
     },
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: "index.html",
+      chunks: ["main"],
+    }),
+  ],
 };
