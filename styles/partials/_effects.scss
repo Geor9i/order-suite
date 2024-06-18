@@ -9,3 +9,22 @@
     -webkit-box-shadow: $shadow;
     -moz-box-shadow: $shadow;
 }
+
+@mixin gradient($direction, $colors...) {
+    $gradient: '';
+  
+    @each $color in $colors {
+      $color-value: nth($color, 1); // Extract the color
+      $alpha-value: nth($color, 2); // Extract the alpha
+      $rgba-color: rgba($color-value, $alpha-value);
+  
+      // Append the rgba color to the gradient string
+      @if length($gradient) > 0 {
+        $gradient: #{$gradient}, #{$rgba-color};
+      } @else {
+        $gradient: #{$rgba-color};
+      }
+    }
+  
+    background: linear-gradient($direction, $gradient);
+  }

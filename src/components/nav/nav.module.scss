@@ -1,6 +1,11 @@
+@import '../../../styles/partials/flex';
+@import '../../../styles/partials/box';
+
+$glass: linear-gradient(135deg, rgba(233, 239, 241, 0.5) 0%, rgba(235, 229, 233, 0.5) 40%, rgba(250, 249, 249, 0.5) 100%);
+
+
 
 a {
-    text-decoration: none;
     color: rgb(129, 129, 129);
 }
 
@@ -56,7 +61,7 @@ a {
     position: absolute;
     z-index: 1000;
     font-size: 2.5rem;
-    background-color: rgb(230, 230, 230);
+    background: $glass;
     border-bottom: 0.1rem solid rgba(0, 0, 0, 0.4);
     box-shadow: inset 0 0 2rem 0.5rem rgba(82, 82, 82, 0.1);
     color: rgb(117, 117, 117);
@@ -65,18 +70,16 @@ a {
     margin: 0;
     padding: 0.5rem;
     backdrop-filter: blur(10px);
-    transition: background-color 0.8s ease, color 1s ease;
+    transition: background 0.8s ease, color 1s ease;
+    cursor: pointer;
+    &:hover {
+      color: rgb(253, 253, 253);
+      text-shadow: 0px 0px 8px #ffffff, -1px -1px 0 #c2c2c2, 1px -1px 0 #b9b9b9,
+        -1px 1px 0 #ffffff, 1px 1px 3px #0920a5, 2px 0px 5px #ffffff,
+        -1px -1px 3px #ffd3c6;
+    }
   }
   
-  .main__title:hover {
-    background-color: rgba(126, 126, 126, 0.2);
-    color: rgb(253, 253, 253);
-    text-shadow: 0px 0px 8px #ffffff, -1px -1px 0 #c2c2c2, 1px -1px 0 #b9b9b9,
-      -1px 1px 0 #ffffff, 1px 1px 3px #0920a5, 2px 0px 5px #ffffff,
-      -1px -1px 3px #ffd3c6;
-    transition: background-color 0.8s ease, color 0.6s ease;
-    cursor: pointer;
-  }
   
   .dropdown__menu {
     margin-top: 5rem;
@@ -91,7 +94,7 @@ a {
     transform: translateY(-60rem);
     transition: transform 0.5s ease;
     z-index: 100;
-    background-color: rgba(180, 180, 180, 0.4);
+    @include gradient(135deg, (#ff0000, 0.2), (#ec97cba2, 0.4), (#e4f3fc, 0.5), (#93d8f3, 0.3));
     backdrop-filter: blur(1rem);
   }
   
@@ -127,14 +130,10 @@ a {
   }
   
   .menu__selector {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+    @include flex(column);
+    @include rect(10em);
     background-color: rgba(146, 146, 146, 0.9);
     border: 0.1rem solid rgba(146, 146, 146, 0.2);
-    width: 20rem;
-    height: 20rem;
     border-radius: 50%;
     font-size: 2rem;
     text-align: center;
