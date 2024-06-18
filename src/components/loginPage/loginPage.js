@@ -1,17 +1,17 @@
 import { loginPageTemplate } from "./loginPageTemplate.js";
 
 export default class LoginPage {
-  constructor({ renderBody, router, fireService, utils }) {
+  constructor({ renderBody, router, authService, utils }) {
     this.render = renderBody;
     this.router = router;
-    this.fireService = fireService;
+    this.authService = authService;
     this.formUtil = utils.formUtil;
     this.showView = this._showView.bind(this);
     this.submitHandler = this._submitHandler.bind(this);
   }
 
   _showView(ctx) {
-    if (this.fireService.user) {
+    if (this.authService.user) {
       this.router.redirect("/");
       return;
     }
@@ -25,7 +25,7 @@ export default class LoginPage {
     if (this.formUtil.formValidator(formData, 6)) {
       const { email, password } = formData;
       try {
-        await this.fireService.login(email, password);
+        await this.authService.login(email, password);
         this.router.redirect("/");
       } catch (err) {
         console.log(err);

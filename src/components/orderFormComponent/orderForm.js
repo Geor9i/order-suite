@@ -8,7 +8,7 @@ export default class OrderFormComponent {
     harvester,
     processor,
     storeSettings,
-    fireService,
+    authService,
     utils,
   }) {
     this.storeSettings = storeSettings;
@@ -18,7 +18,7 @@ export default class OrderFormComponent {
     this.stringUtil = utils.stringUtil;
     this.renderHandler = renderBody;
     this.router = router;
-    this.fireService = fireService;
+    this.authService = authService;
     this.calendarComponent = calendarComponent;
     this.harvester = harvester;
     this.processor = processor;
@@ -32,7 +32,7 @@ export default class OrderFormComponent {
   }
 
   _showView(ctx) {
-    if (!this.fireService.user) {
+    if (!this.authService.user) {
       this.router.redirect("/");
       return;
     }

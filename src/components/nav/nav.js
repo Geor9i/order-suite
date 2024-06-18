@@ -4,10 +4,10 @@ import { userNavTemplate } from "./userNavTemplate.js";
 import styles from "./nav.module.css";
 
 export default class NavComponent {
-  constructor(renderHandler, router, fireService, utils) {
+  constructor(renderHandler, router, authService, utils) {
     this.domUtil = utils.domUtil;
     this.renderHandler = renderHandler;
-    this.fireService = fireService;
+    this.authService = authService;
     this.router = router;
     this.showView = this._showView.bind(this);
     this.navDropdown = this._navDropdown.bind(this);
@@ -15,7 +15,7 @@ export default class NavComponent {
   }
 
   _showView(ctx, next) {
-    this.fireService.auth.onAuthStateChanged((user) => {
+    this.authService.auth.onAuthStateChanged((user) => {
       let template;
       if (user) {
         template = userNavTemplate(this.navDropdown, this.logoutHandler);
@@ -39,7 +39,7 @@ export default class NavComponent {
   }
 
   async _logoutHandler() {
-    await this.fireService.logout();
+    await this.authService.logout();
     this.router.redirect("/");
   }
 }

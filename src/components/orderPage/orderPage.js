@@ -1,13 +1,13 @@
 import { orderPageTemplate } from "./orderPageTemplate.js";
 
 export default class OrderPage {
-  constructor({ renderBody, router, processor, fireService, utils }) {
+  constructor({ renderBody, router, processor, authService, utils }) {
     this.stringUtil = utils.stringUtil;
     this.dateUtil = utils.dateUtil;
     this.domUtil = utils.domUtil;
     this.renderHandler = renderBody;
     this.router = router;
-    this.fireService = fireService;
+    this.authService = authService;
     this.processor = processor;
     this.valueButtonClick = this._valueButtonClick.bind(this);
     this.searchHandler = this._searchHandler.bind(this);
@@ -18,7 +18,7 @@ export default class OrderPage {
   }
 
   _showView(ctx) {
-    if (!this.fireService.user) {
+    if (!this.authService.user) {
       this.router.redirect("/");
       return;
     }

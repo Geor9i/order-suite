@@ -1,9 +1,7 @@
-import { render } from "../node_modules/lit-html/lit-html.js";
 import '../styles/styles.css';
 import page from "../node_modules/page/page.mjs";
-import { firebaseConfig } from "../config/firebaseConfig.js";
-import { initializeApp } from "firebase/app";
-import FireService from "./services/fireService.js";
+import { render } from "../node_modules/lit-html/lit-html.js";
+import { authService, firestoreService } from './config/firebaseConfig.js';
 
 import Processor from "./processing/processor.js";
 import Calendar from "./components/calendar/calendar.js";
@@ -22,11 +20,8 @@ import ProductManager from "./components/productManager/productManager.js";
 
 import { storeSettings } from "./storeSettings.js";
 import ComponentManager from "./lib/componentManager.js";
-import { report } from "../inventoryReport.js";
 import { utils } from "./utils/utilConfig.js";
 
-const app = initializeApp(firebaseConfig);
-const fireService = new FireService(app);
 const main = document.querySelector("main");
 const nav = document.querySelector("header");
 
@@ -44,11 +39,11 @@ const processor = new Processor(storeSettings, utils);
 const harvester = new Harvester(utils);
 const CM = new ComponentManager();
 //Components
-const navComponent = new NavComponent(renderNav, router, fireService, utils);
+const navComponent = new NavComponent(renderNav, router, authService, utils);
 const calendarComponent = new Calendar(renderCalender, utils);
 
 //Loaders
-const baseLoader = { renderBody, router, fireService, utils };
+const baseLoader = { renderBody, router, authService, firestoreService, utils };
 const funcLoader = {
   calendarComponent,
   harvester,
@@ -56,7 +51,7 @@ const funcLoader = {
   storeSettings,
 };
 
-page(fireService.confirmUser);
+page(authService.confirmUser);
 page(navComponent.showView);
 page("/index.html", "/");
 page("/", () => CM.mount(HomeComponent, baseLoader));
@@ -66,9 +61,7 @@ page("/order-form", () => CM.mount(OrderFormComponent, baseLoader, funcLoader));
 page("/order-details", () => CM.mount(OrderPage, baseLoader, funcLoader));
 page("/restaurant", () => CM.mount(RestaurantMenu, baseLoader));
 page("/restaurant-template", () => CM.mount(StoreTemplateScreen, baseLoader));
-page("/restaurant-sales", () =>
-  CM.mount(SalesAnalysis, baseLoader, funcLoader)
-);
+page("/restaurant-sales", () => CM.mount(SalesAnalysis, baseLoader, funcLoader));
 page("/product-manager", () => CM.mount(ProductManager, baseLoader));
 page("/404", () => CM.mount(NotFoundPage, baseLoader));
 page.start();

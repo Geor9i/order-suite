@@ -2,10 +2,10 @@ import { storeSetupTemplate } from "./StoreSetupTemplate.js";
 import styles from './storeSetupScreen.module.css';
 
 export default class StoreTemplateScreen {
-  constructor({ renderBody, router, fireService, utils }) {
+  constructor({ renderBody, router, authService, utils }) {
     this.render = renderBody;
     this.router = router;
-    this.fireService = fireService;
+    this.authService = authService;
     this.stringUtil = utils.stringUtil;
     this.dateUtil = utils.dateUtil;
     this.domUtil = utils.domUtil;
@@ -17,7 +17,7 @@ export default class StoreTemplateScreen {
   }
 
   _showView(ctx) {
-    if (!this.fireService.user) {
+    if (!this.authService.user) {
       this.router.redirect("/");
       return;
     }

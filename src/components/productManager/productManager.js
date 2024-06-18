@@ -2,10 +2,10 @@ import { productManagerTemplate } from "./productManagerTemplate";
 
 
 export default class ProductManager {
-    constructor({ renderBody, router, fireService, utils }) {
+    constructor({ renderBody, router, authService, utils }) {
         this.render = renderBody;
         this.router = router;
-        this.fireService = fireService;
+        this.authService = authService;
         this.stringUtil = utils.stringUtil;
         this.timeUtil = utils.timeUtil;
         this.dateUtil = utils.dateUtil;
@@ -176,7 +176,7 @@ export default class ProductManager {
     }
 
     _showView() {
-        if (!this.fireService.user) {
+        if (!this.authService.user) {
             this.router.redirect("/");
             return;
         }

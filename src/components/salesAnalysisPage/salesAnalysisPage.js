@@ -2,11 +2,11 @@ import { salesAnalysisPageTemplate } from "./salesAnalysisPageTemplate";
 import styles from "./salesAnalysisPage.module.css";
 
 export default class SalesAnalysis {
-  constructor({ renderBody, router, fireService, utils, harvester }) {
+  constructor({ renderBody, router, authService, utils, harvester }) {
     this.render = renderBody;
     this.router = router;
     this.harvester = harvester;
-    this.fireService = fireService;
+    this.authService = authService;
     this.stringUtil = utils.stringUtil;
     this.timeUtil = utils.timeUtil;
     this.dateUtil = utils.dateUtil;
@@ -106,7 +106,7 @@ export default class SalesAnalysis {
   }
 
   _showView() {
-    if (!this.fireService.user) {
+    if (!this.authService.user) {
       this.router.redirect("/");
       return;
     }

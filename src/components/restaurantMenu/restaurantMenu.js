@@ -1,16 +1,16 @@
 import { restaurantMenuTemplate } from "./restaurantMenuTemplate.js";
 
 export default class RestaurantMenu {
-    constructor({ renderBody, router, fireService }) {
+    constructor({ renderBody, router, authService }) {
         this.render = renderBody;
         this.router = router;
-        this.fireService = fireService;
+        this.authService = authService;
         this.showView = this._showView.bind(this);
         this.menuButtonHandler = this._menuButtonHandler.bind(this);
     }
 
     _showView(ctx) {
-        if (!this.fireService.user) {
+        if (!this.authService.user) {
             this.router.redirect("/");
             return;
         }
