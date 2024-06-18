@@ -1,5 +1,5 @@
 import { html } from "lit-html";
-import styles from './nav.module.css';
+import styles from './nav.module.scss';
 
 export const guestNavTemplate = (dropDown) => html`
 <div class=${styles['guest-nav-container']}>

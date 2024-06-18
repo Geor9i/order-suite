@@ -1,5 +1,5 @@
 import { html } from "lit-html";
-import styles from './notFoundPage.module.css'
+import styles from './notFoundPage.module.scss'
 export const notFoundPageTemplate = () => html`
 <div class=${styles['container']}>
 <div class=${styles['not-found_container']}>

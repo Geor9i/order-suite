@@ -1,4 +1,4 @@
-import '../styles/styles.css';
+import '../styles/styles.scss';
 import page from "../node_modules/page/page.mjs";
 import { render } from "../node_modules/lit-html/lit-html.js";
 import { authService, firestoreService } from './config/firebaseConfig.js';

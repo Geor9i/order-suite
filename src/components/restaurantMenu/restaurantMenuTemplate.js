@@ -1,5 +1,5 @@
 import { html } from "lit-html"
-import styles from './restaurantMenu.module.css'
+import styles from './restaurantMenu.module.scss'
 export const restaurantMenuTemplate = (menuButtonhandler) => html`
 
 <div class=${styles['restaurant-menu']}>

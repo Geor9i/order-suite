@@ -1,5 +1,5 @@
 import { orderFormTemplate } from "./orderFormTemplate.js";
-import styles from './orderForm.module.css'
+import styles from './orderForm.module.scss'
 export default class OrderFormComponent {
   constructor({
     renderBody,

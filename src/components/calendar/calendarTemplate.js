@@ -1,5 +1,5 @@
 import { html } from "../../../node_modules/lit-html/lit-html.js";
-import styles from './calendar.module.css';
+import styles from './calendar.module.scss';
 
 export const calendarTemplate = (dateUtil, stringUtil, upArrowClick, downArrowClick, clickDate) => {
     const weekdays = dateUtil.getWeekdays([]).map(day => stringUtil.toPascalCase(day));

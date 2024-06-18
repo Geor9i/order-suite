@@ -1,5 +1,5 @@
 import { html } from 'lit-html';
-import styles from './productManager.module.css'
+import styles from './productManager.module.scss'
 
 
 export const productManagerTemplate = (slideOpen, records, products, rules) => html`

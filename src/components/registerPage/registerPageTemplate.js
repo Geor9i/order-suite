@@ -1,5 +1,5 @@
 import { html } from "lit-html";
-import styles from './registerPage.module.css'
+import styles from './registerPage.module.scss'
 
 export const registerPageTemplate = (submitHandler) => html`
  <div class=${styles['container']}>

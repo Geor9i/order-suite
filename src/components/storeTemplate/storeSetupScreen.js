@@ -1,5 +1,5 @@
 import { storeSetupTemplate } from "./StoreSetupTemplate.js";
-import styles from './storeSetupScreen.module.css';
+import styles from './storeSetupScreen.module.scss';
 
 export default class StoreTemplateScreen {
   constructor({ renderBody, router, authService, utils }) {

@@ -1,5 +1,5 @@
 import { salesAnalysisPageTemplate } from "./salesAnalysisPageTemplate";
-import styles from "./salesAnalysisPage.module.css";
+import styles from "./salesAnalysisPage.module.scss";
 
 export default class SalesAnalysis {
   constructor({ renderBody, router, authService, utils, harvester }) {

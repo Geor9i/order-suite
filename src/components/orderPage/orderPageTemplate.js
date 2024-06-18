@@ -1,5 +1,5 @@
 import { html } from "../../../node_modules/lit-html/lit-html.js";
-import styles from './orderPage.module.css';
+import styles from './orderPage.module.scss';
 
 let tableData = (headerData, products, valueButtonClick, deleteHandler) => html`
   <div class=${styles['order__table__header']}>

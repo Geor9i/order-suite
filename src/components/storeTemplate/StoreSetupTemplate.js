@@ -1,5 +1,5 @@
 import { html } from "../../../node_modules/lit-html/lit-html.js";
-import styles from "./storeSetupScreen.module.css";
+import styles from "./storeSetupScreen.module.scss";
 
 export const storeSetupTemplate = (
   slideOpen,

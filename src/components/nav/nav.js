@@ -1,7 +1,7 @@
 import { guestNavTemplate } from "./guestNavTemplate.js";
 import { userNavTemplate } from "./userNavTemplate.js";
 
-import styles from "./nav.module.css";
+import styles from "./nav.module.scss";
 
 export default class NavComponent {
   constructor(renderHandler, router, authService, utils) {

@@ -1,5 +1,5 @@
 import { html } from "lit-html";
-import styles from './nav.module.css'
+import styles from './nav.module.scss'
 
 export const userNavTemplate = (dropDown, logoutHandler) => html`
 <section id="top__section">
@@ -7,14 +7,14 @@ export const userNavTemplate = (dropDown, logoutHandler) => html`
         </section>
         <div id="dropdown__menu" class=${styles['dropdown__menu']}>
             <div class=${styles['dropdown__menu-account-container']}>
-            <a @click=${(e) => {dropDown(e)}} href="/" class=${`${styles['menu__selector']} ${styles['selector-logout']}`}>
+            <a @click=${(e) => {dropDown(e)}} href="/" class=${`${styles['menu__selector']} ${styles['menu__selector__account']}`}>
                     <p>Home</p>
                 </a>
             <a @click=${dropDown} href="/account" class=${`${styles['menu__selector']} ${styles['menu__selector__account']}`}>
                     <p>Farnborough KFC</p>
                     <p>Account</p>
                 </a>
-                <a @click=${(e) => {dropDown(e); logoutHandler(e)}} class=${`${styles['menu__selector']} ${styles['selector-logout']}`}>
+                <a @click=${(e) => {dropDown(e); logoutHandler(e)}} class=${`${styles['menu__selector']} ${styles['menu__selector__account']}`}>
                     <p>Logout</p>
                 </a>
             </div>

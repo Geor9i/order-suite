@@ -1,5 +1,5 @@
 import { html } from "lit-html";
-import styles from './loginPage.module.css'
+import styles from './loginPage.module.scss'
 
 export const loginPageTemplate = (submitHandler) => html`
  <div class=${styles['login-container']}>

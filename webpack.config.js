@@ -29,7 +29,7 @@ module.exports = {
     rules: [
       // Add this rule for handling CSS files
       {
-        test: /\.css$/,
+        test: /\.scss$/,
         use: ['style-loader', {
           loader: 'css-loader',
           options: {
@@ -37,7 +37,9 @@ module.exports = {
               localIdentName: '[local]__[hash:base64:5]',
             },
           },
-        },],
+        },
+        'sass-loader'
+      ],
       },
       {
         test: /\.(js|jsx)$/,

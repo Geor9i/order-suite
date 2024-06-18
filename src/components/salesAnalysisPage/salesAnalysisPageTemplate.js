@@ -1,5 +1,5 @@
 import { html } from "lit-html";
-import styles from "./salesAnalysisPage.module.css";
+import styles from "./salesAnalysisPage.module.scss";
 import StringUtil from "../../utils/stringUtil.js";
 const stringUtil = new StringUtil();
 
