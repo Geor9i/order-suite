@@ -1,30 +1,43 @@
 import { guestNavTemplate } from "./guestNavTemplate.js";
 import { userNavTemplate } from "./userNavTemplate.js";
-
+import { eventBus } from '../../services/eventbus.js';
+import { bus } from '../../constants/busEvents.js'
 import styles from "./nav.module.scss";
 
 export default class NavComponent {
-  constructor(renderHandler, router, authService, utils) {
+  constructor(renderHandler, router, authService, firestoreService, utils) {
     this.domUtil = utils.domUtil;
     this.renderHandler = renderHandler;
     this.authService = authService;
+    this.firestoreService = firestoreService;
     this.router = router;
     this.showView = this._showView.bind(this);
     this.navDropdown = this._navDropdown.bind(this);
     this.logoutHandler = this._logoutHandler.bind(this);
+    this.subscriberId = 'NavComponent';
+    this.eventBusUnsubscribe = null;
   }
 
   _showView(ctx, next) {
-    this.authService.auth.onAuthStateChanged((user) => {
-      let template;
-      if (user) {
-        template = userNavTemplate(this.navDropdown, this.logoutHandler);
-      } else {
-        template = guestNavTemplate();
-      }
-      this.renderHandler(template);
-      next();
+    let toggleNav = this._toggleNav.bind(this);
+    if (this.eventBusUnsubscribe !== null) {
+      this.eventBusUnsubscribe();
+    }
+    this.eventBusUnsubscribe = eventBus.on(bus.AUTH_STATE_CHANGE, this.subscriberId, (user) => {
+      toggleNav(user, next); 
     });
+    toggleNav(this.authService.user, next);
+  }
+
+  _toggleNav(user, next) {
+    let template;
+    if (user) {
+      template = userNavTemplate(this.navDropdown, this.logoutHandler, this.firestoreService.state?.storeName);
+    } else {
+      template = guestNavTemplate();
+    }
+    this.renderHandler(template);
+    next();
   }
 
   _navDropdown() {

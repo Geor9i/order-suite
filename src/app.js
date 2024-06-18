@@ -39,7 +39,7 @@ const processor = new Processor(storeSettings, utils);
 const harvester = new Harvester(utils);
 const CM = new ComponentManager();
 //Components
-const navComponent = new NavComponent(renderNav, router, authService, utils);
+const navComponent = new NavComponent(renderNav, router, authService, firestoreService, utils);
 const calendarComponent = new Calendar(renderCalender, utils);
 
 //Loaders

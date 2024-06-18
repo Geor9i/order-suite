@@ -13,7 +13,7 @@ export const orderFormTemplate = (
     <form novalidate id="form" class=${styles['order-form']} @submit="${submitHandler}">
         <div class=${styles['form-group']}>
             <label for="RMF-data-dump">Paste RMF order page</label>
-            <textarea name="RMF-data-dump" class=${styles['rmf-data-dump']} placeholder="Paste RMF page here!" id="RMF-data-dump" cols="30" rows="10"></textarea>
+            <textarea name="RMF-data-dump" class=${styles['rmf-data-dump']} placeholder="Paste RMF page here!" id="RMF-data-dump"></textarea>
         </div>
         <div class=${styles['form-group']}>
             <h3 class=${styles['input__order__invoiced']}>All food orders invoiced?</h3>

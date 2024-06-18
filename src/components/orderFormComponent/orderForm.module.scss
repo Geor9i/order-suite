@@ -10,10 +10,11 @@
     @include rect(100%, 100%);
 
     .order-form {
+      box-shadow: 25px 15px 10px rgba($color: #000000, $alpha: 0.15);
       @include rect(25%, auto, 500px);
       @include flex(column);
       padding: 2em;
-      background-color: rgba(217, 220, 224, 0.76);
+      background: linear-gradient(135deg, rgb(233, 239, 241) 0%, rgb(235, 229, 233) 40%, rgb(250, 249, 249) 100%);
       border: 1px solid rgb(255, 255, 255);
       margin: 0;
       border-radius: 13px;
@@ -21,6 +22,7 @@
       .form-group {
         @include flex(column);
         width: 100%;
+        position: relative;
         
         .input__order__invoiced {
           align-self: center;
@@ -30,7 +32,6 @@
         .radio-container {
           width: 15rem;
           text-align: center;
-          /* border: 1px solid black; */
           display: block;
           margin-bottom: 1rem;
         }
@@ -101,9 +102,8 @@
     
       .calendar-container {
         display: none;
+        top: 100%;
         position: absolute;
-        margin: auto;
-        @include rect(100px);
         z-index: 1001;
     }
       
@@ -127,21 +127,18 @@
   }
  
   .rmf-data-dump {
-    @include rect(15rem, 3rem);
-    @include flex();
+    @include rect(15rem, 3.5rem);
+    @include input(13px);
+    padding: 1em;
     resize: none;
-    text-align: center;
     background-color: black;
-    border-radius: 13px;
     color: white;
     font-weight: bold;
     font-size: 1rem;
-    border: none;
-    outline: none;
     transition: box-shadow 0.3s ease;
+    text-align: center;
     &::placeholder {
       color: transparent;
-      text-align: center;
     }
     &:hover::placeholder {
       color: rgb(255, 255, 255);
@@ -169,7 +166,7 @@
   
   .calendar-backdrop {
     @include rect(100vw, 100vh);
-    @include position(absolute, -10%, 0);
+    @include position(absolute, $all: 0);
     display: none;
     backdrop-filter: blur(0.5px);
     z-index: 1000;

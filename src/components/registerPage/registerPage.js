@@ -1,4 +1,4 @@
-import { db } from "../../config/db.js";
+import { db } from "../../constants/db.js";
 import { registerPageTemplate } from "./registerPageTemplate.js";
 export default class RegisterPage {
   constructor({ renderBody, router, authService, firestoreService, utils }) {

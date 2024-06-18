@@ -1,4 +1,4 @@
-
+import { bus } from "../constants/busEvents.js";
   import {
     getAuth,
     signInWithEmailAndPassword,
@@ -23,7 +23,7 @@
     }
 
     init() {
-      onAuthStateChanged(this.auth, (user) => eventBus.emit('authStateChange', user),
+      onAuthStateChanged(this.auth, (user) => eventBus.emit(bus.AUTH_STATE_CHANGE, user),
       (error) => console.log('authError: ', error))
     }
 

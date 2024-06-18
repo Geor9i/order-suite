@@ -1,4 +1,7 @@
+import { db } from "../constants/db.js";
+import { bus } from '../constants/busEvents.js';
 import { eventBus } from "./eventbus.js";
+import { utils } from "../utils/utilConfig";
 import {
   doc,
   getDoc,
@@ -15,25 +18,57 @@ export default class FirestoreService {
     this.subscriberId = `FirestoreService`;
     this.app = app;
     this.db = getFirestore(app);
+    this.objUtil = utils.objUtil;
+    this.snapshotUnsubscribe = null;
     this.user = null;
+    this.state = null;
     this.init();
   }
 
   init() {
-    eventBus.on('authStateChange', this.subscriberId, (user) => this.user = user);
+    eventBus.on(
+      bus.AUTH_STATE_CHANGE,
+      this.subscriberId,
+      this.onUserChange.bind(this)
+    );
+  }
+  onUserChange(user) {
+    this.user = user;
+    this.snapshotUnsubscribe && this.snapshotUnsubscribe();
+    if (user) {
+      const documentRef = doc(this.db, db.USERS, this.user.uid);
+      this.snapshotUnsubscribe = onSnapshot(
+        documentRef,
+        this._updateState.bind(this)
+      );
+    }
+  }
+
+  _updateState(doc) {
+    if (doc.exists() && this.user) {
+      let newState = doc.data();
+      console.log("data read!");
+      const { globalReferenceMatch } = this.objUtil.compare(
+        newState,
+        this.state
+      );
+      if (!globalReferenceMatch) {
+        this.state = newState;
+        eventBus.emit(bus.USERDATA, newState);
+      }
+    }
   }
 
   async addDoc(collectionName, data) {
     if (this.user) {
       try {
-      
         const documentRef = doc(this.db, collectionName, this.user.uid);
         const result = await setDoc(documentRef, data);
         console.log("Data written to Firestore successfully!");
         return result;
       } catch (err) {
         throw new Error(err);
-      } 
+      }
     }
   }
   async updateDoc(collectionName, data) {
@@ -67,9 +102,14 @@ export default class FirestoreService {
     if (this.user) {
       try {
         let documentRef;
-        debugger
+        debugger;
         if (nestedKeys.length > 0) {
-          documentRef = doc(this.db, collectionName, this.user.uid, ...nestedKeys);
+          documentRef = doc(
+            this.db,
+            collectionName,
+            this.user.uid,
+            ...nestedKeys
+          );
         } else {
           documentRef = doc(this.db, collectionName, this.user.uid);
         }
@@ -139,7 +179,7 @@ export default class FirestoreService {
     if (!this.user) return;
     const documentRef = doc(this.db, collectionName, this.user.uid);
     const unsubscribe = onSnapshot(documentRef, (doc) => {
-      if (doc.exists() && this.auth?.currentUser) {
+      if (doc.exists() && this.user) {
         let newState = doc.data();
         console.log("data read!");
         if (!isEqual(newState, state)) {
@@ -152,16 +192,16 @@ export default class FirestoreService {
   }
 
   async deleteDoc(collectionName) {
-    if (!this.user) return
+    if (!this.user) return;
     try {
       await deleteDoc(doc(this.db, collectionName, this.user.uid));
-    }catch(err) {
+    } catch (err) {
       console.log(err);
     }
   }
 
   async deleteField(collectionName, id) {
-    if (!this.user) return
+    if (!this.user) return;
     const ref = doc(this.db, collectionName, this.user.uid);
     await updateDoc(ref, {
       [id]: deleteField(),
@@ -171,7 +211,7 @@ export default class FirestoreService {
     if (!this.user) return;
     const ref = doc(this.db, collectionName, this.user.uid);
     await updateDoc(ref, {
-      [`${pathSegments.join('.')}`]: deleteField(),
+      [`${pathSegments.join(".")}`]: deleteField(),
     });
   }
   async deletePublicField(publicId) {
