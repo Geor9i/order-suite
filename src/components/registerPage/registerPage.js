@@ -1,5 +1,5 @@
+import { db } from "../../config/db.js";
 import { registerPageTemplate } from "./registerPageTemplate.js";
-
 export default class RegisterPage {
   constructor({ renderBody, router, authService, firestoreService, utils }) {
     this.render = renderBody;
@@ -27,7 +27,7 @@ export default class RegisterPage {
       const { email, password, storeName } = formData;
       try {
         await this.authService.register(email, password);
-        await this.firestoreService.setDoc('users', {storeName}, { merge: true })
+        await this.firestoreService.setDoc(db.USERS, {storeName}, { merge: true })
         this.router.redirect("/");
       } catch (err) {
         console.log(err);

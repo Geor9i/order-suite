@@ -7,12 +7,15 @@ export const userNavTemplate = (dropDown, logoutHandler) => html`
         </section>
         <div id="dropdown__menu" class=${styles['dropdown__menu']}>
             <div class=${styles['dropdown__menu-account-container']}>
-            <a @click=${(e) => {dropDown(e); logoutHandler(e)}} class=${`${styles['menu__selector']} ${styles['selector-logout']}`}>
-                    <p>Logout</p>
+            <a @click=${(e) => {dropDown(e)}} href="/" class=${`${styles['menu__selector']} ${styles['selector-logout']}`}>
+                    <p>Home</p>
                 </a>
             <a @click=${dropDown} href="/account" class=${`${styles['menu__selector']} ${styles['menu__selector__account']}`}>
                     <p>Farnborough KFC</p>
                     <p>Account</p>
+                </a>
+                <a @click=${(e) => {dropDown(e); logoutHandler(e)}} class=${`${styles['menu__selector']} ${styles['selector-logout']}`}>
+                    <p>Logout</p>
                 </a>
             </div>
             <div class=${styles['dropdown__menu-content-container']}>
