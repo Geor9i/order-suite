@@ -1,0 +1,10 @@
+@mixin button($border: none, $outline:none) {
+    outline: $outline;
+    border: $border;
+}
+
+@mixin input ($bRadius: 0, $border: none, $outline: none) {
+    border-radius: $bRadius;
+    border: $border;
+    outline: $outline;
+}

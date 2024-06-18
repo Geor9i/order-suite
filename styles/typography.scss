@@ -1,0 +1,15 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+
+html {
+    font: 16px/1.5 Helvetica;
+}
+
+body, table, input {
+    font: inherit;
+}
+
+@for $i from 6 through 1 {
+    h#{$i} {
+        font-size: 5px * ($i + 1);
+    }
+}

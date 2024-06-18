@@ -1,35 +1,134 @@
+@import '../../../styles/partials/box';
+@import '../../../styles/partials/flex';
+@import '../../../styles/partials/effects';
+@import '../../../styles/partials/input';
 
 /* Make a new Order Screen */
-
 .order-page__section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
     position: relative;
-    width: 100%;
-    height: 100%;
+    @include flex(column, center, center);
+    @include rect(100%, 100%);
+
+    .order-form {
+      @include rect(25%, auto, 500px);
+      @include flex(column);
+      padding: 2em;
+      background-color: rgba(217, 220, 224, 0.76);
+      border: 1px solid rgb(255, 255, 255);
+      margin: 0;
+      border-radius: 13px;
+      @include transition(background-color);
+      .form-group {
+        @include flex(column);
+        width: 100%;
+        
+        .input__order__invoiced {
+          align-self: center;
+          margin: 1rem;
+        }
+        
+        .radio-container {
+          width: 15rem;
+          text-align: center;
+          /* border: 1px solid black; */
+          display: block;
+          margin-bottom: 1rem;
+        }
+        
+        .radio-label {
+          font-size: 1.1rem;
+          font-weight: normal;
+          color: rgb(0, 0, 0);
+        }
+        
+        .radio-button {
+          @include rect(1.5em);
+          margin-right: 1.5em;
+          cursor: pointer;
+          accent-color: rgb(46, 46, 46);
+          outline: none;
+        }
+        
+        .check-box {
+          display: inline-block;
+          @include rect(1.6em);
+          margin: 0;
+          accent-color: rgb(100, 100, 100);
+          cursor: pointer;
+        }
+
+        .received-today__container {
+          display: none;
+          justify-content: space-evenly;
+          width: 70%;
+          label {
+          margin: 0;
+          }
+        }
+        
+        .received-today__container__on {
+          display: flex;
+        }
+        
+        label,
+        select {
+          margin-top: 1.3rem;
+          border: none;
+        }
+        
+        input {
+          @include input(7px);
+          padding: 0.2em;
+          text-align: center;
+          background-color: rgb(255, 255, 255);
+        }
+      }
+
+      #calendar-input-container {
+        position: relative;
+      }
+
+      .date-button {
+        @include position(absolute, 0, -20%);
+        border: none;
+        border-radius: 20%;
+        cursor: pointer;
+        @include transition(color);
+        &:hover {
+          color: green;
+        }
+      }
+    
+      .calendar-container {
+        display: none;
+        position: absolute;
+        margin: auto;
+        @include rect(100px);
+        z-index: 1001;
+    }
+      
+      .create-button {
+        @include rect(10em, 3em);
+        @include button();
+        background-color: rgb(238, 238, 238);
+        border-radius: 13px;
+        border-bottom: 1px solid black;
+        justify-self: center;
+        align-self: center;
+        margin-top: 3rem;
+        grid-column: 1;
+        cursor: pointer;
+        @include transition(background-color);
+        &:hover {
+          background-color: rgb(214, 237, 241);
+        }
+      }
+    }
   }
-  .order-form {
-    display: grid;
-    align-items: center;
-    justify-content: center;
-    padding: 1em;
-    background-color: rgba(190, 190, 190, 0.76);
-    border: 1px solid rgb(255, 255, 255);
-    width: 30%;
-    max-width: 700px;
-    height: 32rem;
-    margin: 0;
-    border-radius: 13px;
-    transition: background-color 0.2s ease;
-  }
-  
-  .order-form:hover {
-    background-color: rgb(215, 215, 215);
-  }
-  
+ 
   .rmf-data-dump {
+    @include rect(15rem, 3rem);
+    @include flex();
     resize: none;
     text-align: center;
     background-color: black;
@@ -37,150 +136,29 @@
     color: white;
     font-weight: bold;
     font-size: 1rem;
-    width: 15rem;
-    height: 3rem;
     border: none;
     outline: none;
     transition: box-shadow 0.3s ease;
-  }
-  
-  .rmf-data-dump::placeholder {
-    color: transparent;
-    text-align: center;
-  }
-  
-  .rmf-data-dump:hover::placeholder {
-    color: rgb(255, 255, 255);
-    opacity: 1;
-  }
-  
-  .rmf-data-dump:hover {
-    cursor: pointer;
-    box-shadow: 0 0 0.4rem 0.5rem rgba(255, 255, 255, 0.158) inset,
-      0 0 1px 2px rgb(255, 255, 255) inset, 0 0 1px 2px rgb(255, 255, 255);
-    transition: box-shadow 0.3s ease;
-  }
-  
-  
-  .rmf-data-dump__disabled {
-    cursor: not-allowed;
-  }
-  
-  .input__order__invoiced {
-    align-self: center;
-    margin: 1rem;
-  }
-  
-  .radio-container {
-    width: 15rem;
-    text-align: center;
-    /* border: 1px solid black; */
-    display: block;
-    margin-bottom: 1rem;
-  }
-  
-  .radio-label {
-    font-size: 1.1rem;
-    font-weight: normal;
-    color: rgb(0, 0, 0);
-  }
-  
-  .radio-button {
-    margin-right: 1.5rem;
-    cursor: pointer;
-    accent-color: rgb(46, 46, 46);
-    width: 1.5rem;
-    height: 1.5rem;
-    outline: none;
-  }
-  
-  .received-today__container {
-    display: none;
-    justify-content: space-evenly;
-    width: 70%;
-  }
-  
-  .received-today__container__on {
-    display: flex;
-  }
-  
-  .received-today__label {
-    margin: 0;
-  }
-  
-  .check-box {
-    display: inline-block;
-    width: 1.2rem;
-    height: 1.2rem;
-    margin: 0;
-    accent-color: rgb(100, 100, 100);
-    cursor: pointer;
-  }
-  
-  label,
-  select {
-    margin-top: 1.3rem;
-    border: none;
-  }
-  
-  input {
-    padding: 0.5em;
-    text-align: center;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
-    background-color: rgba(255, 255, 255, 0.5);
-  }
-  
-  input:focus {
-    outline: none;
-  }
-  
-  .date-button {
-    /* display: inline-block; */
-    width: 1rem;
-    height: 50%;
-    background-color: rgb(156, 156, 156);
-    border: none;
-    border-radius: 20%;
-    cursor: pointer;
+    &::placeholder {
+      color: transparent;
+      text-align: center;
+    }
+    &:hover::placeholder {
+      color: rgb(255, 255, 255);
+      opacity: 1;
+    }
+    &:hover {
+      cursor: pointer;
+      box-shadow: 0 0 0.4rem 0.5rem rgba(255, 255, 255, 0.158) inset,
+        0 0 1px 2px rgb(255, 255, 255) inset, 0 0 1px 2px rgb(255, 255, 255);
+      transition: box-shadow 0.3s ease;
+    }
   }
 
-  .calendar-container {
-    display: none;
-    position: absolute;
-    margin: auto;
-    width: 100px;
-    height: 100px;
-    z-index: 1001;
-}
-  
-  .create-button {
-    background-color: rgb(238, 238, 238);
-    border-radius: 13px;
-    justify-self: center;
-    align-self: center;
-    width: 10rem;
-    height: 3rem;
-    margin-top: 3rem;
-    cursor: pointer;
-  }
-  
-  .create-button:hover {
-    background-color: rgb(238, 238, 238);
-    box-shadow: 1px 2px 0 1px rgb(243, 243, 243) inset,
-      -1px 0px 0 1px rgb(240, 240, 240) inset;
-    transform: translate(2px, 2px);
-  }
-  
   .warning-message {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: column;
-    top: 20%;
-    left: 8%;
-    height: 50%;
-    width: 30%;
+    @include flex(column, flex-start);
+    @include position(absolute, 8%, 2%);
+    @include rect(25%, 15%);
     color: rgb(255, 78, 78);
   }
   
@@ -190,12 +168,9 @@
   }
   
   .calendar-backdrop {
+    @include rect(100vw, 100vh);
+    @include position(absolute, -10%, 0);
     display: none;
-    position: absolute;
-    top: -10%;
-    right: 0;
-    width: 100vw;
-    height: 100vh;
     backdrop-filter: blur(0.5px);
     z-index: 1000;
   }
