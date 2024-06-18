@@ -24,9 +24,10 @@ export default class RegisterPage {
     e.preventDefault();
     const formData = this.formUtil.getFormData(e.currentTarget);
     if (this.formUtil.formValidator(formData, 6, "repeatPassword")) {
-      const { email, password } = formData;
+      const { email, password, storeName } = formData;
       try {
         await this.authService.register(email, password);
+        await this.firestoreService.setDoc('users', {storeName}, { merge: true })
         this.router.redirect("/");
       } catch (err) {
         console.log(err);

@@ -15,42 +15,47 @@ export default class FirestoreService {
     this.subscriberId = `FirestoreService`;
     this.app = app;
     this.db = getFirestore(app);
+    this.user = null;
     this.init();
-    this.uid = null;
   }
 
   init() {
-    eventBus.on('authStateChange', this.subscriberId, (user) => this.uid = user.uid);
+    eventBus.on('authStateChange', this.subscriberId, (user) => this.user = user);
   }
 
   async addDoc(collectionName, data) {
-    try {
-      const documentRef = doc(this.db, collectionName, this.uid);
-      const result = await setDoc(documentRef, data);
-      console.log("Data written to Firestore successfully!");
-      return result;
-    } catch (err) {
-      throw new Error(err);
+    if (this.user) {
+      try {
+      
+        const documentRef = doc(this.db, collectionName, this.user.uid);
+        const result = await setDoc(documentRef, data);
+        console.log("Data written to Firestore successfully!");
+        return result;
+      } catch (err) {
+        throw new Error(err);
+      } 
     }
   }
   async updateDoc(collectionName, data) {
-    try {
-      const documentRef = doc(this.db, collectionName, this.uid);
-      const id = new Date().getTime().toString();
-      await updateDoc(documentRef, { [id]: data });
-      console.log("Data updated in Firestore successfully!");
-      return id;
-    } catch (err) {
-      throw new Error(err);
+    if (this.user) {
+      try {
+        const documentRef = doc(this.db, collectionName, this.user.uid);
+        const id = new Date().getTime().toString();
+        await updateDoc(documentRef, { [id]: data });
+        console.log("Data updated in Firestore successfully!");
+        return id;
+      } catch (err) {
+        throw new Error(err);
+      }
     }
   }
   async updateDocFields(collectionName, data, ...nestedKeys) {
     try {
       let documentRef;
       if (nestedKeys.length > 0) {
-        documentRef = doc(this.db, collectionName, this.uid, ...nestedKeys);
+        documentRef = doc(this.db, collectionName, this.user, ...nestedKeys);
       } else {
-        documentRef = doc(this.db, collectionName, this.uid);
+        documentRef = doc(this.db, collectionName, this.user);
       }
       await updateDoc(documentRef, data);
       console.log("Data fields updated in Firestore successfully!");
@@ -59,17 +64,20 @@ export default class FirestoreService {
     }
   }
   async setDoc(collectionName, data, { merge = false } = {}, ...nestedKeys) {
-    try {
-      let documentRef;
-      if (nestedKeys.length > 0) {
-        documentRef = doc(this.db, collectionName, this.uid, ...nestedKeys);
-      } else {
-        documentRef = doc(this.db, collectionName, this.uid);
+    if (this.user) {
+      try {
+        let documentRef;
+        debugger
+        if (nestedKeys.length > 0) {
+          documentRef = doc(this.db, collectionName, this.user.uid, ...nestedKeys);
+        } else {
+          documentRef = doc(this.db, collectionName, this.user.uid);
+        }
+        await setDoc(documentRef, data, merge ? { merge } : {});
+        console.log("Data written to Firestore successfully!");
+      } catch (err) {
+        throw new Error(err);
       }
-      await setDoc(documentRef, data, merge ? { merge } : {});
-      console.log("Data written to Firestore successfully!");
-    } catch (err) {
-      throw new Error(err);
     }
   }
   async setPublicDoc(collectionName, data, docKey) {
@@ -83,13 +91,16 @@ export default class FirestoreService {
   }
 
   async checkDoc(collectionName) {
-    const documentRef = doc(this.db, collectionName, this.uid);
-    let result = await getDoc(documentRef);
-    return result.exists();
+    if (this.user) {
+      const documentRef = doc(this.db, collectionName, this.user.uid);
+      let result = await getDoc(documentRef);
+      return result.exists();
+    }
   }
 
   async fetchData(collectionKeys, readyData = {}) {
-    const uid = this.uid;
+    if (!this.user) return;
+    const uid = this.user.uid;
     const result = {};
     for (let collection in collectionKeys) {
       if (readyData[collection] && Object.keys(readyData[collection]) > 0) {
@@ -108,7 +119,8 @@ export default class FirestoreService {
     return result;
   }
   async fetchOne(collectionName) {
-    const uid = this.uid;
+    if (!this.user) return;
+    const uid = this.user.uid;
     try {
       const documentRef = doc(this.db, collectionName, uid);
       const snapShot = await getDoc(documentRef);
@@ -124,7 +136,8 @@ export default class FirestoreService {
   }
 
   onSnapShot(collectionName, state, ...setState) {
-    const documentRef = doc(this.db, collectionName, this.uid);
+    if (!this.user) return;
+    const documentRef = doc(this.db, collectionName, this.user.uid);
     const unsubscribe = onSnapshot(documentRef, (doc) => {
       if (doc.exists() && this.auth?.currentUser) {
         let newState = doc.data();
@@ -139,19 +152,24 @@ export default class FirestoreService {
   }
 
   async deleteDoc(collectionName) {
-    await deleteDoc(doc(this.db, collectionName, this.uid));
+    if (!this.user) return
+    try {
+      await deleteDoc(doc(this.db, collectionName, this.user.uid));
+    }catch(err) {
+      console.log(err);
+    }
   }
 
   async deleteField(collectionName, id) {
-    const ref = doc(this.db, collectionName, this.uid);
-
+    if (!this.user) return
+    const ref = doc(this.db, collectionName, this.user.uid);
     await updateDoc(ref, {
       [id]: deleteField(),
     });
   }
   async deleteInnerField(collectionName, ...pathSegments) {
-    const ref = doc(this.db, collectionName, this.uid);
-
+    if (!this.user) return;
+    const ref = doc(this.db, collectionName, this.user.uid);
     await updateDoc(ref, {
       [`${pathSegments.join('.')}`]: deleteField(),
     });

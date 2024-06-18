@@ -10,13 +10,21 @@
     reauthenticateWithCredential,
     EmailAuthProvider,
     deleteUser,
+    onAuthStateChanged
   } from "firebase/auth";
+  import { eventBus } from "./eventbus";
   
   export default class AuthService {
     constructor(app) {
       this.app = app;
       this.auth = getAuth(this.app);
       this.confirmUser = this._confirmUser.bind(this);
+      this.init();
+    }
+
+    init() {
+      onAuthStateChanged(this.auth, (user) => eventBus.emit('authStateChange', user),
+      (error) => console.log('authError: ', error))
     }
 
     get user() {
@@ -78,7 +86,5 @@
         throw err;
       }
     }
-  
-   
-  }
+}
   
