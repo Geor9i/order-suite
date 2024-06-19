@@ -1,6 +1,7 @@
 import { orderFormTemplate } from "./orderFormTemplate.js";
 import styles from './orderForm.module.scss'
-export default class OrderFormComponent {
+import BaseComponent from "../../framework/baseComponent.js";
+export default class OrderFormComponent extends BaseComponent {
   constructor({
     renderBody,
     router,

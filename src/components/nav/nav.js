@@ -3,8 +3,9 @@ import { userNavTemplate } from "./userNavTemplate.js";
 import { eventBus } from '../../services/eventbus.js';
 import { bus } from '../../constants/busEvents.js'
 import styles from "./nav.module.scss";
+import BaseComponent from "../../framework/baseComponent.js";
 
-export default class NavComponent {
+export default class NavComponent extends BaseComponent {
   constructor(renderHandler, router, authService, firestoreService, utils) {
     this.domUtil = utils.domUtil;
     this.renderHandler = renderHandler;

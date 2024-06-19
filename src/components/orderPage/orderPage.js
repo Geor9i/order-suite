@@ -1,6 +1,7 @@
+import BaseComponent from "../../framework/baseComponent.js";
 import { orderPageTemplate } from "./orderPageTemplate.js";
 
-export default class OrderPage {
+export default class OrderPage extends BaseComponent {
   constructor({ renderBody, router, processor, authService, utils }) {
     this.stringUtil = utils.stringUtil;
     this.dateUtil = utils.dateUtil;

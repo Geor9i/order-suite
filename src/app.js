@@ -1,6 +1,7 @@
 import '../styles/site.scss';
 import page from "../node_modules/page/page.mjs";
 import { render } from "../node_modules/lit-html/lit-html.js";
+import ComponentManager from "./framework/componentManager.js";
 import { authService, firestoreService } from './config/firebaseConfig.js';
 
 import Processor from "./processing/processor.js";
@@ -19,8 +20,8 @@ import SalesAnalysis from "./components/salesAnalysisPage/salesAnalysisPage.js";
 import ProductManager from "./components/productManager/productManager.js";
 
 import { storeSettings } from "./storeSettings.js";
-import ComponentManager from "./lib/componentManager.js";
 import { utils } from "./utils/utilConfig.js";
+debugger
 
 const main = document.querySelector("main");
 const nav = document.querySelector("header");

@@ -1,7 +1,7 @@
 import { storeSetupTemplate } from "./StoreSetupTemplate.js";
 import styles from './storeSetupScreen.module.scss';
-
-export default class StoreTemplateScreen {
+import BaseComponent from '../../framework/baseComponent.js';
+export default class StoreTemplateScreen extends BaseComponent {
   constructor({ renderBody, router, authService, utils }) {
     this.render = renderBody;
     this.router = router;

@@ -1,6 +1,7 @@
+import BaseComponent from "../../framework/baseComponent.js";
 import { calendarTemplate } from "./calendarTemplate.js";
 
-export default class Calendar {
+export default class Calendar extends BaseComponent {
   constructor(renderCalender, utils) {
     this.domUtil = utils.domUtil;
     this.dateUtil = utils.dateUtil;

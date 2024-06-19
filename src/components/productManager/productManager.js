@@ -1,7 +1,8 @@
+import BaseComponent from "../../framework/baseComponent";
 import { productManagerTemplate } from "./productManagerTemplate";
 
 
-export default class ProductManager {
+export default class ProductManager extends BaseComponent {
     constructor({ renderBody, router, authService, utils }) {
         this.render = renderBody;
         this.router = router;

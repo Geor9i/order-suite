@@ -17,6 +17,7 @@ export default class ComponentManager {
   }
 
   unmount() {
+    this.currentComponent.destroy();
     this.currentComponent = null;
   }
 }

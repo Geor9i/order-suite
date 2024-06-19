@@ -1,7 +1,8 @@
 import { salesAnalysisPageTemplate } from "./salesAnalysisPageTemplate";
 import styles from "./salesAnalysisPage.module.scss";
+import BaseComponent from "../../framework/baseComponent";
 
-export default class SalesAnalysis {
+export default class SalesAnalysis extends BaseComponent {
   constructor({ renderBody, router, authService, utils, harvester }) {
     this.render = renderBody;
     this.router = router;

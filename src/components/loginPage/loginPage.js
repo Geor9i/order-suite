@@ -1,6 +1,7 @@
+import BaseComponent from "../../framework/baseComponent.js";
 import { loginPageTemplate } from "./loginPageTemplate.js";
 
-export default class LoginPage {
+export default class LoginPage extends BaseComponent {
   constructor({ renderBody, router, authService, utils }) {
     this.render = renderBody;
     this.router = router;

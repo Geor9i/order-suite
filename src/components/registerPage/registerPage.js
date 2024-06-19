@@ -1,6 +1,7 @@
 import { db } from "../../constants/db.js";
+import BaseComponent from "../../framework/baseComponent.js";
 import { registerPageTemplate } from "./registerPageTemplate.js";
-export default class RegisterPage {
+export default class RegisterPage extends BaseComponent {
   constructor({ renderBody, router, authService, firestoreService, utils }) {
     this.render = renderBody;
     this.router = router;
