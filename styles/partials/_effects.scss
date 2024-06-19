@@ -10,21 +10,27 @@
     -moz-box-shadow: $shadow;
 }
 
+
 @mixin gradient($direction, $colors...) {
-    $gradient: '';
+  $gradient: '';
   
-    @each $color in $colors {
-      $color-value: nth($color, 1); // Extract the color
-      $alpha-value: nth($color, 2); // Extract the alpha
-      $rgba-color: rgba($color-value, $alpha-value);
-  
-      // Append the rgba color to the gradient string
-      @if length($gradient) > 0 {
-        $gradient: #{$gradient}, #{$rgba-color};
-      } @else {
-        $gradient: #{$rgba-color};
-      }
+  @each $color in $colors {
+    $colorValue:'';
+    $color-value: nth($color, 1); // Extract the color
+    $alpha-value: if(length($color) > 1, nth($color, 2), 1);
+    $spread-value: if(length($color) > 2, nth($color, 3), null);
+    $colorValue: rgba($color-value, $alpha-value); // Create RGBA color with alpha
+
+    @if $spread-value != null {
+      $colorValue: #{$colorValue}, #{$spread-value};
     }
-  
-    background: linear-gradient($direction, $gradient);
+
+    @if length($gradient) > 0 {
+      $gradient: #{$gradient}, #{$colorValue};
+    } @else {
+      $gradient: #{$colorValue};
+    }
   }
+
+  background: linear-gradient($direction, $gradient);
+}

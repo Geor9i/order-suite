@@ -18,7 +18,7 @@ module.exports = {
     watchFiles: ["*.html"],
     compress: true,
     open: true,
-    hot: false, // Enable HMR
+    hot: true, // Enable HMR
     historyApiFallback: {
       index: "/",
       disableDotRule: true,

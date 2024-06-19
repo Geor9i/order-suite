@@ -31,6 +31,12 @@ export default class NavComponent extends BaseComponent {
     toggleNav(this.authService.user, next);
   }
 
+  destroy() {
+    if (this.eventBusUnsubscribe !== null) {
+      this.eventBusUnsubscribe();
+    }
+  }
+
   _toggleNav(user, next) {
     let template;
     if (user) {
