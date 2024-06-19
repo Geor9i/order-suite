@@ -3,6 +3,7 @@ import styles from './storeSetupScreen.module.scss';
 import BaseComponent from '../../framework/baseComponent.js';
 export default class StoreTemplateScreen extends BaseComponent {
   constructor({ renderBody, router, authService, utils }) {
+    super();
     this.render = renderBody;
     this.router = router;
     this.authService = authService;

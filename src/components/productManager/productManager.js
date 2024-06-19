@@ -4,6 +4,7 @@ import { productManagerTemplate } from "./productManagerTemplate";
 
 export default class ProductManager extends BaseComponent {
     constructor({ renderBody, router, authService, utils }) {
+        super();
         this.render = renderBody;
         this.router = router;
         this.authService = authService;

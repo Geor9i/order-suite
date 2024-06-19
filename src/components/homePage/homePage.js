@@ -5,6 +5,7 @@ import BaseComponent from "../../framework/baseComponent.js";
 
 export default class HomeComponent extends BaseComponent {
   constructor({ renderBody, router, utils }) {
+    super();
     this.renderHandler = renderBody;
     this.router = router;
     this.showView = this._showView.bind(this);

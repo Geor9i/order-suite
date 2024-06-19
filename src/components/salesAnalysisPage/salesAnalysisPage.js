@@ -4,6 +4,7 @@ import BaseComponent from "../../framework/baseComponent";
 
 export default class SalesAnalysis extends BaseComponent {
   constructor({ renderBody, router, authService, utils, harvester }) {
+    super();
     this.render = renderBody;
     this.router = router;
     this.harvester = harvester;

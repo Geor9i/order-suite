@@ -3,6 +3,7 @@ import { calendarTemplate } from "./calendarTemplate.js";
 
 export default class Calendar extends BaseComponent {
   constructor(renderCalender, utils) {
+    super();
     this.domUtil = utils.domUtil;
     this.dateUtil = utils.dateUtil;
     this.stringUtil = utils.stringUtil;

@@ -3,6 +3,7 @@ import BaseComponent from "../../framework/baseComponent.js";
 import { registerPageTemplate } from "./registerPageTemplate.js";
 export default class RegisterPage extends BaseComponent {
   constructor({ renderBody, router, authService, firestoreService, utils }) {
+    super();
     this.render = renderBody;
     this.router = router;
     this.authService = authService;

@@ -3,6 +3,7 @@ import { orderPageTemplate } from "./orderPageTemplate.js";
 
 export default class OrderPage extends BaseComponent {
   constructor({ renderBody, router, processor, authService, utils }) {
+    super();
     this.stringUtil = utils.stringUtil;
     this.dateUtil = utils.dateUtil;
     this.domUtil = utils.domUtil;

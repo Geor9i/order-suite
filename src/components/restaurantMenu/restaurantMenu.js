@@ -3,6 +3,7 @@ import { restaurantMenuTemplate } from "./restaurantMenuTemplate.js";
 
 export default class RestaurantMenu extends BaseComponent {
     constructor({ renderBody, router, authService }) {
+        super();
         this.render = renderBody;
         this.router = router;
         this.authService = authService;

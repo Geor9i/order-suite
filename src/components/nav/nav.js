@@ -7,6 +7,7 @@ import BaseComponent from "../../framework/baseComponent.js";
 
 export default class NavComponent extends BaseComponent {
   constructor(renderHandler, router, authService, firestoreService, utils) {
+    super();
     this.domUtil = utils.domUtil;
     this.renderHandler = renderHandler;
     this.authService = authService;

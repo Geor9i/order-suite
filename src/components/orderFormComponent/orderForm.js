@@ -12,6 +12,7 @@ export default class OrderFormComponent extends BaseComponent {
     authService,
     utils,
   }) {
+    super();
     this.storeSettings = storeSettings;
     this.dateUtil = utils.dateUtil;
     this.formUtil = utils.formUtil;

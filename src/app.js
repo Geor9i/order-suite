@@ -21,7 +21,6 @@ import ProductManager from "./components/productManager/productManager.js";
 
 import { storeSettings } from "./storeSettings.js";
 import { utils } from "./utils/utilConfig.js";
-debugger
 
 const main = document.querySelector("main");
 const nav = document.querySelector("header");
