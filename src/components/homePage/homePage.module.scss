@@ -2,11 +2,54 @@
 @import '../../../styles/partials/box';
 
 .homepage-container {
+  padding: 2em;
   @include flex(column, start);
   @include rect(100vw, 100vh);
   background-color: rgb(219, 219, 219);
 }
 
-.homepage-container p {
-  font-size: 2rem;
+.welcome-title {
+  font-size: 2em;
+}
+
+.progress-container {
+  @include flex(column);
+  padding: 2em 0;
+  width: 100%;
+}
+
+.storename {
+  font-size: 1.2em;
+}
+.progress-title {
+  font-size: 1.5em;
+}
+
+.progress-bar{
+  position: relative;
+  width: 60%;
+  height: 2em;
+  border-radius: 13px;
+  background-color: rgb(231, 231, 231);
+  overflow: hidden;
+}
+
+.progress-bar::after{
+  position: absolute;
+  box-shadow: 0 0 10px rgb(75, 75, 75) inset;
+  content:'';
+  inset: 0;
+}
+.progress {
+  height: 100%;
+  background-color: rgb(210, 252, 148);
+}
+
+.progress-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5em;
+  text-align: center;
 }

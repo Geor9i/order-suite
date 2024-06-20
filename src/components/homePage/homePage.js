@@ -4,9 +4,10 @@ import { bus } from '../../constants/busEvents.js';
 import BaseComponent from "../../framework/baseComponent.js";
 
 export default class HomeComponent extends BaseComponent {
-  constructor({ renderBody, router, utils }) {
+  constructor({ renderBody, router, utils, firestoreService }) {
     super();
     this.renderHandler = renderBody;
+    this.firestoreService = firestoreService;
     this.router = router;
     this.objUtil = utils.objUtil;
     this.showView = this._showView.bind(this);
@@ -16,11 +17,16 @@ export default class HomeComponent extends BaseComponent {
   }
 
   _showView(ctx) {
-    this.renderHandler(homePageTemplate(0));
+    this.userData = this.firestoreService.state;
+    if (!this.userData) {
+      this.renderHandler(homePageTemplate(0));
+    } else {
+      this._displayProfileCompletion(this.userData);
+    }
   }
 
   init() {
-    this.eventBusUnsubscribe = eventBus.on(bus.USERDATA, this.subscriberId, this._displayProfileCompletion.bind(this))
+    this.eventBusUnsubscribe = eventBus.on(bus.USERDATA, this.subscriberId, () => this.showView())
   }
 
   destroy() {
@@ -28,7 +34,6 @@ export default class HomeComponent extends BaseComponent {
   }
 
   _displayProfileCompletion(userData) {
-    console.log('userData: ', userData);
     const { profile, storeSettings, products } = userData;
     const completionFactors = { profile, storeSettings, products };
     const progressReport = {profile: [], storeSettings: [], products: []};
@@ -51,7 +56,6 @@ export default class HomeComponent extends BaseComponent {
         profileAreaCompletion = Math.max(100, profileAreaCompletion);
         completion += profileCompletionsShare * (profileAreaCompletion / 100);
     }
-    console.log(completion);
-    this.showView(completion, progressReport);
+    this.renderHandler(homePageTemplate(completion, progressReport, userData))
   }
 }
