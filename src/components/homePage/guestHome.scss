@@ -1,0 +1,15 @@
+@import '../../../styles/partials/box';
+@import '../../../styles/partials/flex';
+
+.container {
+    padding: 2em;
+    @include flex(column, start, $gap:1em);
+    @include rect(100%);
+}
+.welcome-title {
+    font-size: 2em;
+}
+
+.welcome-banner {
+    font-size: 1.2em;
+}

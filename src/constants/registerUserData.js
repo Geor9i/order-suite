@@ -1,5 +1,5 @@
 export const registerUserData = {
+    storeSettings: null,
     products: null,
-    profile: null,
-    storeSettings: null
+    salesData: null,
 }

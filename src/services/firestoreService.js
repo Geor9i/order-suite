@@ -34,6 +34,7 @@ export default class FirestoreService {
   }
   onUserChange(user) {
     this.user = user;
+    this.state = null;
     this.snapshotUnsubscribe && this.snapshotUnsubscribe();
     if (user) {
       const documentRef = doc(this.db, db.USERS, this.user.uid);

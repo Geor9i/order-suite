@@ -5,21 +5,19 @@
   padding: 2em;
   @include flex(column, start);
   @include rect(100vw, 100vh);
-  background-color: rgb(219, 219, 219);
-}
-
-.welcome-title {
-  font-size: 2em;
+  background-color: rgb(255, 255, 255);
+  position: relative;
 }
 
 .progress-container {
   @include flex(column);
-  padding: 2em 0;
+  position: absolute;
   width: 100%;
+  bottom: 10px;
 }
 
 .storename {
-  font-size: 1.2em;
+  font-size: 2em;
 }
 .progress-title {
   font-size: 1.5em;
@@ -28,7 +26,7 @@
 .progress-bar{
   position: relative;
   width: 60%;
-  height: 2em;
+  height: 1.2em;
   border-radius: 13px;
   background-color: rgb(231, 231, 231);
   overflow: hidden;
@@ -42,7 +40,8 @@
 }
 .progress {
   height: 100%;
-  background-color: rgb(210, 252, 148);
+  background-color: rgb(81, 255, 119);
+  transition: width 1s ease-in;
 }
 
 .progress-value {
@@ -50,6 +49,6 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 1.5em;
+  font-size: 1.2em;
   text-align: center;
 }
