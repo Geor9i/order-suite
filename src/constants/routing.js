@@ -1,6 +1,6 @@
 export const routes = {
-  storeSettings: "restaturant-template",
-  products: "product-manager",
-  salesData: "restaurant-sales",
-  home: '/',
+  STORE_SETTINGS: "restaurant-template",
+  PRODUCTS: "product-manager",
+  SALES_DATA: "restaurant-sales",
+  HOME: '/',
 };

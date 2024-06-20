@@ -1,8 +1,12 @@
 @import "effects";
 
-@mixin rect($width, $heigth: $width, $maxWidth: none, $maxHeight: none, $bRadius: null) {
+@mixin rect($width, $heigth: $width, $maxWidth: none, $maxHeight: none, $bRadius: null, $cube: false) {
   width: $width;
-  height: $heigth;
+  @if $cube == true {
+    aspect-ratio: 1;
+  }@else {
+    height: $heigth;
+  }
   max-width: $maxWidth;
   max-height: $maxHeight;
   border-radius: $bRadius;

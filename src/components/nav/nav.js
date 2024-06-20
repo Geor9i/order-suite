@@ -36,7 +36,7 @@ export default class NavComponent{
   _toggleNav(user, next) {
     let template;
     if (user) {
-      template = userNavTemplate(this.navDropdown, this.logoutHandler, this.firestoreService.state?.storeName);
+      template = userNavTemplate(this.navDropdown, this.logoutHandler, this.firestoreService.state?.STORE_NAME);
     } else {
       template = guestNavTemplate();
     }

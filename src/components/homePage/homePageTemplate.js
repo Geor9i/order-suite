@@ -4,7 +4,7 @@ import styles from './homePage.module.scss'
 export const homePageTemplate = (completion, progressReport, userData) => {
 return html`
 <div class=${styles["homepage-container"]}>
- ${userData?.storeName ? html`<p class=${styles["storename"]}>${userData.storeName}</p>` : null}   
+ ${userData?.STORE_NAME ? html`<p class=${styles["storename"]}>${userData.STORE_NAME}</p>` : null}   
 ${completion < 100 && progressReport ? progressTemplate(completion, progressReport, userData): null}
 </div>
 `};
@@ -12,8 +12,14 @@ ${completion < 100 && progressReport ? progressTemplate(completion, progressRepo
 
 const progressTemplate = (completion, progressReport) => html`
 
-<div class="progress-report">
-
+<div class=${styles["progress-report"]}>
+${Object.keys(progressReport).map(area => {
+    if (progressReport[area].untouched) {
+        return html`<p class=${styles['report-general-notification']}>Please complete ${progressReport[area].title} <a class=${styles['link']} href=${progressReport[area].link}>here</a></p>`
+    } else {
+        return console.log('else');
+    }
+})}
 </div>
 
 <div class=${styles["progress-container"]}>

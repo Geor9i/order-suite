@@ -30,7 +30,7 @@ export default class RegisterPage extends BaseComponent {
       const { email, password, storeName } = formData;
       try {
         await this.authService.register(email, password);
-        await this.firestoreService.setDoc(db.USERS, {...registerUserData, storeName }, { merge: true })
+        await this.firestoreService.setDoc(db.USERS, {...registerUserData, STORE_NAME: storeName }, { merge: true })
         this.router.redirect("/");
       } catch (err) {
         console.log(err);

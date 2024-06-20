@@ -1,5 +1,6 @@
 @import '../../../styles/partials/flex';
 @import '../../../styles/partials/box';
+@import '../../../styles/partials/effects';
 
 .homepage-container {
   padding: 2em;
@@ -7,6 +8,23 @@
   @include rect(100vw, 100vh);
   background-color: rgb(255, 255, 255);
   position: relative;
+}
+
+.progress-report {
+  padding: 2em;
+  @include flex(column, $AI: left, $gap:0.5em);
+}
+
+.report-general-notification {
+  font-size: 1.2em;
+}
+
+.link {
+  color: red;
+  @include transition(color);
+  &:hover {
+    color: blue
+  }
 }
 
 .progress-container {

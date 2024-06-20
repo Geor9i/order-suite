@@ -3,6 +3,7 @@ import { guestHomeTemplate } from './guestHomeTemplate';
 import { eventBus } from '../../services/eventbus.js';
 import { bus } from '../../constants/busEvents.js';
 import { routes } from "../../constants/routing.js";
+import { userDataDetail } from "../../constants/userDataDetail.js";
 import BaseComponent from "../../framework/baseComponent.js";
 export default class HomeComponent extends BaseComponent {
   constructor({ renderBody, router, utils, firestoreService, authService }) {
@@ -40,16 +41,16 @@ export default class HomeComponent extends BaseComponent {
   }
 
   _profileCompletionReport() {
-    const { salesData, storeSettings, products } = this.userData;
-    const completionFactors = { salesData, storeSettings, products };
-    const progressReport = {storeSettings: {}, products: {}, salesData: {}};
+    const completionFactors = {}; 
+    Object.keys(userDataDetail).forEach(key => completionFactors[key] = this.userData[key])
+    const progressReport = { ...userDataDetail };
 
     const profileCompletionsShare = Math.round(1 / Object.keys(completionFactors).length);
     let completion = 0;
     for (let factor in completionFactors) {
       if (completionFactors[factor] === null)  {
-        progressReport[factor] = {untouched: true, route: routes[factor]}
-        break;
+        progressReport[factor] = {...progressReport[factor], untouched: true, link: routes[factor]}
+        continue;
       }
         const profileArea = completionFactors[factor];
         const profileAreaLenght = Object.keys(profileArea).length;
@@ -65,6 +66,7 @@ export default class HomeComponent extends BaseComponent {
         profileAreaCompletion = Math.max(100, profileAreaCompletion);
         completion += profileCompletionsShare * (profileAreaCompletion / 100);
     }
+    console.log(progressReport);
     return { completion, progressReport };
   }
 }
