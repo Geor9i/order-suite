@@ -1,7 +1,16 @@
+@use 'sass:list';
 @import "../global-settings.scss";
 
-@mixin transition($prop...) {
-    transition: $prop $hover-setting;
+@mixin transition($props: (), $setting: $hover-setting) {
+    $transition: '';
+    @each $prop in $props {
+      @if length($transition) > 0 {
+        $transition: #{$transition}, #{$prop} #{$setting};
+      } @else {
+        $transition: #{$prop};
+      }
+    }
+    transition: $transition;
 };
 
 @mixin box-shadow($shadow...) {
@@ -14,23 +23,63 @@
 @mixin gradient($direction, $colors...) {
   $gradient: '';
   
-  @each $color in $colors {
-    $colorValue:'';
-    $color-value: nth($color, 1); // Extract the color
-    $alpha-value: if(length($color) > 1, nth($color, 2), 1);
-    $spread-value: if(length($color) > 2, nth($color, 3), null);
-    $colorValue: rgba($color-value, $alpha-value); // Create RGBA color with alpha
+  @each $entry in $colors {
+    $color-value: nth($entry, 1); // Extract the color
+    $spread-value: if(length($entry) > 1, nth($entry, 2), null);
 
     @if $spread-value != null {
-      $colorValue: #{$colorValue}, #{$spread-value};
+      $color-value: #{$color-value}, #{$spread-value};
     }
 
     @if length($gradient) > 0 {
-      $gradient: #{$gradient}, #{$colorValue};
+      $gradient: #{$gradient}, #{$color-value};
     } @else {
-      $gradient: #{$colorValue};
+      $gradient: #{$color-value};
     }
   }
 
   background: linear-gradient($direction, $gradient);
 }
+
+
+
+@mixin glow($gradient: () ,$border: null, $glow: null) {
+  $gradientValue: '';
+  @each $entry in $gradient {
+    @if length($entry) > 0 {
+      $color-value: nth($entry, 1);
+      $spread-value: if(length($entry) > 1, nth($entry, 2), null);
+  
+      @if $spread-value != null {
+        $color-value: #{$color-value} #{$spread-value};
+      }
+  
+      @if length($gradientValue) > 0 {
+        $gradientValue: #{$gradientValue}, #{$color-value};
+      } @else {
+        $gradientValue: #{$color-value};
+      }
+    }
+  }
+  
+  background: radial-gradient(circle at center, $gradientValue);
+
+  @if $border != null {
+    border: $border
+  }
+
+  $box-shadow: '';
+
+  @each $entry in $glow {
+    @if length($box-shadow) > 0 {
+      $box-shadow: #{$box-shadow}, #{$entry};
+    } @else {
+      $box-shadow: #{$entry};
+    }
+  }
+
+  @if length($box-shadow) > 0 {
+    box-shadow: $box-shadow;
+  }
+}
+

@@ -1,6 +1,6 @@
 @import "effects";
 
-@mixin rect($width, $heigth: $width, $maxWidth: none, $maxHeight: none, $bRadius: 0) {
+@mixin rect($width, $heigth: $width, $maxWidth: none, $maxHeight: none, $bRadius: null) {
   width: $width;
   height: $heigth;
   max-width: $maxWidth;
