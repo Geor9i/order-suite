@@ -3,7 +3,7 @@
     border: $border;
 }
 
-@mixin input ($bRadius: 0, $border: none, $outline: none) {
+@mixin input ($bRadius: null, $border: none, $outline: none) {
     border-radius: $bRadius;
     border: $border;
     outline: $outline;
