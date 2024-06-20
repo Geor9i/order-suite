@@ -13,6 +13,7 @@ export default class ComponentManager {
     );
     const loader = { ...baseLoader, ...loadersObj };
     this.currentComponent = new component(loader);
+    this.currentComponent.init();
     return this.currentComponent.showView();
   }
 
