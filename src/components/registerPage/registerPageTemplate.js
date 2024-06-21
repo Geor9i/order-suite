@@ -21,5 +21,6 @@ export const registerPageTemplate = (submitHandler) => html`
             <input id="repeatPassword" type="password" name="repeatPassword" />
           </div>
           <button class=${styles['submit-btn']}>Register</button>
+          <p class=${styles['login-banner']}>Already have an account? Login <a href="login">here</a></p>
         </form>
       </div>`

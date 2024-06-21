@@ -28,7 +28,7 @@
     $spread-value: if(length($entry) > 1, nth($entry, 2), null);
 
     @if $spread-value != null {
-      $color-value: #{$color-value}, #{$spread-value};
+      $color-value: #{$color-value} #{$spread-value};
     }
 
     @if length($gradient) > 0 {
