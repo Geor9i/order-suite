@@ -13,15 +13,15 @@ export const storeSetupTemplate = (
       <h1>Store Template</h1>
       <p class=${styles["section-title"]}>General Information</p>
       <div class=${styles["store-info-group"]}>
-        <label for="storeName">StoreName</label>
+        <label for="storeName">Store name</label>
         <input type="text" name="storeName" value=${storeName} />
       </div>
       <div class=${styles["store-info-group"]}>
-        <label for="imageUrl">Image Url</label>
+        <label for="imageUrl">Store image url</label>
         <input placeholder="http" type="text" name="imageUrl" />
       </div>
       <div class=${styles["store-info-group"]}>
-        <label for="storeName">Restaurant Type</label>
+        <label for="storeName">Restaurant type</label>
         <select class=${styles["type-select"]}>
           ${Object.keys(restaurantTypes).map(type => html`<option value=${type}>${restaurantTypes[type].name}</option>`)}
         </select>
@@ -53,28 +53,29 @@ const weekdayTemplate = (
    <div class=${styles["weekday-container"]} id="weekday-container-${weekday}">
         <div @click=${toggleDay} class=${styles["weekday-button"]} data-id=${weekday}>${weekday}</div>
             <div class=${styles["opentimes-container"]} id="opentimes-container-${weekday}">
-                    <div class=${styles["time-selector__main-container"]}>
+                    <div class=${styles["time-selectors-container"]}>
                         <div class=${styles["time-selector-group"]}>
-                            <label class=${styles["time-selector-label"]} for="${weekday}-open-selector">open</label>
-                            <select id="${weekday}-open-selector" class=${styles["time-selector"]}>${generateHours()}</select>
+                            <label for="${weekday}-open-selector">open</label>
+                            <select id="${weekday}-open-selector">${generateHours()}</select>
                         </div>
-                        <div>
+                        <div class=${styles["time-selector-group"]}>
                             <label for="${weekday}-close-selector">close</label>
-                            <select id="${weekday}-close-selector" class=${styles["time-selector"]}>${generateHours()}</select>
+                            <select id="${weekday}-close-selector">${generateHours()}</select>
                             </div>
                         </div>
                        
-                    <div class=${styles["delivery-day-input-container"]}>
+                    <div class=${styles["delivery-checkbox-container"]}>
                         <label for="delivery-day-checkbox-${weekday}" >Store Delivery</label>
                         <input id="delivery-day-checkbox-${weekday}" data-id=${weekday} @change=${showDeliveryDetails} type="checkbox"></input>
                     </div>
-                        <div id=${`delivery-day-info-container-${weekday}`} class=${`${styles["delivery-day-info-container"]} ${styles["inactive"]}`}>
-                            <div class=${styles["delivery-day-group"]}>
-                                <label for="arrival-time-${weekday}">ETA</label>
+                        <div id=${`delivery-info-container-${weekday}`}
+                        class=${`${styles["delivery-info-container"]} ${styles["inactive"]}`}>
+                            <div class=${styles["delivery-info-input-group"]}>
+                                <label for="arrival-time-${weekday}">Expected Arrival</label>
                                 <select id="arrival-time-${weekday}">${generateHours()}</select>
                             </div>
-                        <div class=${styles["delivery-day-group"]}>
-                        <label for="cutoff-weekday-${weekday}">Order placement deadline</label>
+                        <div title="Day and time cuttoff for this delivery order" class=${styles["delivery-info-input-group"]}>
+                        <label for="cutoff-weekday-${weekday}">Placement deadline</label>
                             <select id="cutoff-weekday-${weekday}">
                             ${weekdays.map(
                               (day) =>

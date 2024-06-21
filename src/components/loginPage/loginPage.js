@@ -14,7 +14,7 @@ export default class LoginPage extends BaseComponent {
 
   _showView(ctx) {
     if (this.authService.user) {
-      this.router.redirect("/");
+      this.router.redirect(routes.HOME);
       return;
     }
 
@@ -28,7 +28,7 @@ export default class LoginPage extends BaseComponent {
       const { email, password } = formData;
       try {
         await this.authService.login(email, password);
-        this.router.redirect(routes.home);
+        this.router.redirect(routes.HOME);
       } catch (err) {
         console.log(err);
       }

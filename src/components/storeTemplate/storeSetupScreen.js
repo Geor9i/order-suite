@@ -40,7 +40,7 @@ export default class StoreTemplateScreen extends BaseComponent {
   _showDeliveryDetails(e) {
     const weekday = e.currentTarget.dataset.id;
     const detailsContainer = document.getElementById(
-      `delivery-day-info-container-${weekday}`
+      `delivery-info-container-${weekday}`
     );
     this.domUtil.addRemoveClass(detailsContainer, styles['inactive']);
   }

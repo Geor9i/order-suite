@@ -24,6 +24,7 @@
     @include rect(60%, 4em);
     input {
         text-align: left;
+        padding: 0.5em;
         @include rect(100%, 100%);
         @include input(7px);
         &:focus {
