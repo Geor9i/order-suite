@@ -81,6 +81,7 @@
 
 .weekday-container {
     padding: 1.5em 0;
+    position: relative;
     @include rect(100%, 25em, $bRadius: 13px);
     @include flex(column, $JC: flex-start);
     text-align: center;
@@ -164,6 +165,16 @@
     }
 }
 
+.closed-day-container {
+    margin-top: 2em;
+    @include position(absolute, 50%, $left: 50%, $x: -50%, $y: -50%);
+    p {
+        font-size: 1.5em;
+        color: #ff0000;
+        letter-spacing: 4px;
+        transform: scale(1.2, 1.5);
+    }
+}
 
 .delivery-info-container {
     @include flex(column, $gap: 1em);

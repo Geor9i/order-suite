@@ -6,7 +6,8 @@ export const storeSetupTemplate = (
   showDeliveryDetails,
   toggleDay,
   weekdays,
-  storeName
+  storeName,
+  submitHandler
 ) => {
   return html`
     <div class=${styles["main-container"]}>
@@ -14,15 +15,15 @@ export const storeSetupTemplate = (
       <p class=${styles["section-title"]}>General Information</p>
       <div class=${styles["store-info-group"]}>
         <label for="storeName">Store name</label>
-        <input type="text" name="storeName" value=${storeName} />
+        <input type="text" name="storeName" id="storeName" value=${storeName} />
       </div>
       <div class=${styles["store-info-group"]}>
         <label for="imageUrl">Store image url</label>
         <input placeholder="http" type="text" name="imageUrl" />
       </div>
       <div class=${styles["store-info-group"]}>
-        <label for="storeName">Restaurant type</label>
-        <select class=${styles["type-select"]}>
+        <label for="storeType">Restaurant type</label>
+        <select class=${styles["type-select"]} id="storeType" name="storeType">
           ${Object.keys(restaurantTypes).map(type => html`<option value=${type}>${restaurantTypes[type].name}</option>`)}
         </select>
       </div>
@@ -36,7 +37,7 @@ export const storeSetupTemplate = (
         )}
       </div>
       <div class=${styles["store__details-confirm-button__container"]}>
-        <button class=${styles["store__details-confirm-button"]}>
+        <button @click=${submitHandler} class=${styles["store__details-confirm-button"]}>
           Confirm
         </button>
       </div>
@@ -50,42 +51,46 @@ const weekdayTemplate = (
   toggleDay,
   weekdays
 ) => html`
-   <div class=${styles["weekday-container"]} id="weekday-container-${weekday}">
+   <div class=${styles["weekday-container"]} data-id=${weekday} id="weekday-container-${weekday}">
         <div @click=${toggleDay} class=${styles["weekday-button"]} data-id=${weekday}>${weekday}</div>
             <div class=${styles["opentimes-container"]} id="opentimes-container-${weekday}">
                     <div class=${styles["time-selectors-container"]}>
                         <div class=${styles["time-selector-group"]}>
                             <label for="${weekday}-open-selector">open</label>
-                            <select id="${weekday}-open-selector">${generateHours()}</select>
+                            <select name="open" id="${weekday}-open-selector">${generateHours()}</select>
                         </div>
                         <div class=${styles["time-selector-group"]}>
                             <label for="${weekday}-close-selector">close</label>
-                            <select id="${weekday}-close-selector">${generateHours()}</select>
+                            <select name="close" id="${weekday}-close-selector">${generateHours()}</select>
                             </div>
                         </div>
-                       
                     <div class=${styles["delivery-checkbox-container"]}>
                         <label for="delivery-day-checkbox-${weekday}" >Store Delivery</label>
-                        <input id="delivery-day-checkbox-${weekday}" data-id=${weekday} @change=${showDeliveryDetails} type="checkbox"></input>
+                        <input name="hasDelivery" id="delivery-day-checkbox-${weekday}" data-id=${weekday} @change=${showDeliveryDetails} type="checkbox"></input>
                     </div>
+                   
                         <div id=${`delivery-info-container-${weekday}`}
                         class=${`${styles["delivery-info-container"]} ${styles["inactive"]}`}>
                             <div class=${styles["delivery-info-input-group"]}>
                                 <label for="arrival-time-${weekday}">Expected Arrival</label>
-                                <select id="arrival-time-${weekday}">${generateHours()}</select>
+                                <select name="deliveryArrivalTime" id="arrival-time-${weekday}">${generateHours()}</select>
                             </div>
                         <div title="Day and time cuttoff for this delivery order" class=${styles["delivery-info-input-group"]}>
                         <label for="cutoff-weekday-${weekday}">Placement deadline</label>
-                            <select id="cutoff-weekday-${weekday}">
+                            <select name="deliveryCuttoffDay" id="cutoff-weekday-${weekday}">
                             ${weekdays.map(
                               (day) =>
                                 html`<option value=${day}>${day}</option>`
                             )}
                           </select>
-                            <select id="cutoff-weekday-${weekday}" class=${styles["delivery-arrival-cutoff-weekday"]}>${generateHours()}</select>
+                            <select name="deliveryCuttoffTime" id="cutoff-time-${weekday}" class=${styles["delivery-arrival-cutoff-weekday"]}>${generateHours()}</select>
                         </div>
                 </div>
             </div>
+            <div id="closed-day-container-${weekday}" class=${`${styles['closed-day-container']} 
+              ${styles['inactive']}`}>
+                      <p>Closed</p>
+                    </div>
         </div>
 `;
 
