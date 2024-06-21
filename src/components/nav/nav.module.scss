@@ -1,62 +1,16 @@
 @import '../../../styles/partials/flex';
 @import '../../../styles/partials/box';
-
+@import '../../../styles/partials/responsive';
 
 $glow-color: #15efff;
 $selector-color: #ff2259;
 
-
-a {
-    color: rgb(129, 129, 129);
-}
-
-.guest-nav-container{
-    position: absolute;
-    display: grid;
-    grid-template-columns: 45% 10% 30% 1fr;
-    grid-template-areas: ". title . links";
-    align-items: center;
-    justify-items: center;
-    background-color: var(--blacks);
-    color: white;
-    @include rect(100%);
-}
-
-.title{
-    margin: 0;
-    font-size: 2rem;
-    grid-area: title;
-    @include transition((color, text-shadow), ease-in 0.4s)
-}
-.link-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 100%;
-    grid-area: links;
-}
-
-.link {
-    font-size: 1.5rem;
-    @include transition((color, text-shadow))
-
-}
-
-.title:hover, .link:hover {
-    color: rgb(255, 255, 255);
-    text-shadow: 0 0 5px #fff;
-}
-
-/*? USER NAV */
-
 .main__title {
-    width: 100%;
-    height: 100%;
     position: absolute;
     z-index: 1000;
-    font-size: 2.5em;
+    @include rect(100%, 100%);
     @include gradient(135deg, (#200ccf41), (#ffffff88), (#f170343b));
+    font-size: 2.5em;
     border-bottom: 0.1rem solid rgba(0, 0, 0, 0.4);
     text-align: center;
     padding: 0.5rem;
@@ -65,7 +19,7 @@ a {
     cursor: pointer;
     &:hover {
       color: rgb(253, 253, 253);
-      text-shadow: 0px 0px 8px #ffffff, -1px -1px 5px #ffd95b, 1px -1px 0 #b9b9b9,
+      text-shadow: 0px 0px 8px #ffffff, -1px -1px 2px #ffd95b, 1px -1px 5px #ffb4fb,
         -1px 1px 0 #ffffff, 1px 1px 2px #000102, 2px 0px 5px #ffffff,
         -1px -1px 3px #ffd3c6;
     }
@@ -73,18 +27,20 @@ a {
   
   .dropdown__menu {
     position: absolute;
-    margin-top: 5rem;
     z-index: 100;
-    transform: translateY(-60rem);
+    transform: translateY(-100%);
     backdrop-filter: blur(1em);
     transition: transform 0.5s ease;
     @include gradient(135deg, (#ff00001e), (#ec97cb36), (#e4f3fc42), (#69b6e22d));
-    @include rect(100%, 90vh);
+    @include rect(100%, 80vh);
     @include flex(column);
+    @include tablet-screen {
+      
+    }
   }
   
   .dropdown__menu__active {
-    transform: translateY(-5rem);
+    transform: translateY(2.5em);
     transition: transform 0.7s ease;
   }
   .dropdown__menu-account-container {
@@ -98,6 +54,11 @@ a {
     position: relative;
     @include grid(1fr 1fr,50% 1fr);
     @include rect(100%, 75%);
+    @include tablet-screen {
+      padding-top: 0.5em;
+      @include flex(column, $gap: 1em);
+      @include rect(100%, 100%);
+    }
   }
   
   .menu-backdrop {
@@ -111,29 +72,50 @@ a {
     $radius: 50%;
     border-radius: $radius;
     @include flex(column);
-    @include rect(10em);
+    @include rect(10em, $cube: true);
     @include glow($glow: ((0 0 5px 1px #575757 inset), (0 0 5px 1px #f75de300)));
-    font-size: 2rem;
+    font-size: 2em;
     text-align: center;
     color: rgb(0, 0, 0);
     transition: color 0.3s ease, border 0.3s ease,
     box-shadow 0.4s ease, width 0.2s ease, height 0.2s ease;
     cursor: pointer;
     &:hover {
-    @include rect(11em);
+    @include rect(11em, $cube: true);
       border-radius: $radius;
       color: $selector-color;
       @include glow($border: 1px solid rgb(255, 255, 255), $glow: (0 0 30px 1px inset #ffffff,0 0 10px 1px $glow-color));
+    }
+    @include tablet-screen {
+      @include rect(9em, $cube: true);
+      font-size: 1.5em;
+      &:hover {
+        @include rect(10em, $cube: true);
+        }
+    }
+    @include phone-screen {
+      @include rect(8em, $cube: true);
+      font-size: 1.5em;
+      &:hover {
+        @include rect(9em, $cube: true);
+        }
     }
   }
   .menu__selector__account {
     $radius: 13px;
     @include rect(10em, 5em);
-    font-size: 1rem;
+    font-size: 1em;
     border-radius: $radius;
     &:hover {
       @include rect(10em, 5em);
       border-radius: $radius;
+    }
+    @include tablet-screen {
+      @include rect(8em, 4em);
+      font-size: 0.9em;
+      &:hover {
+        @include rect(9em, 5em);
+        }
     }
   }
 

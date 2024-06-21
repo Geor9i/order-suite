@@ -10,7 +10,6 @@ export const userNavTemplate = (dropDown, logoutHandler, STORE_NAME) => html`
                 </a>
             <a @click=${dropDown} href="/" class=${`${styles['menu__selector']} ${styles['menu__selector__account']}`}>
                     <p>${ STORE_NAME }</p>
-                    <p>Account</p>
                 </a>
                 <a @click=${(e) => {dropDown(e); logoutHandler(e)}} class=${`${styles['menu__selector']} ${styles['menu__selector__account']}`}>
                     <p>Logout</p>

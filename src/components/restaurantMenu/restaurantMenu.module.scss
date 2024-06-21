@@ -1,15 +1,21 @@
 @import '../../../styles/partials/flex';
 @import '../../../styles/partials/box';
 @import '../../../styles/partials/effects';
+@import '../../../styles/partials/responsive';
 
 .restaurant-menu {
     padding: 2em;
     @include grid(1fr 1fr 1fr, $gap: 2em);
-    @include rect(100%, 60%);
+    @include rect(100%, 100%);
+    @include tablet-screen {
+        @include flex(column, $gap: 2em);
+    }
 }
 
 .restaurant-selector-btn {
     @include flex(column);
+    flex-wrap: wrap;
+    align-content: center;
     @include rect(60%, $cube: true, $bRadius: 50%);
     box-shadow: 0 0 3em 1px inset rgba(198, 245, 252, 0.2117647059), 0 0 3px 1px inset rgba(29, 229, 255, 0.4588235294);
     transition: width 0.3s ease-in, height 0.3s ease-in, box-shadow 0.3s ease-in, color 0.2s ease-in-out;
@@ -21,10 +27,21 @@
     }
     p {
         font-weight: bold;
-        font-size: 2rem;
-        margin: 0;
+        font-size: 2em;
         transform: scaleX(1) scaleY(1.2);
         letter-spacing: 5px;
         text-align: center;
+    }
+    @include tablet-screen {
+        @include rect(50%, $cube: true);
+        &:hover {
+            width: 60%;
+        }
+    }
+    @include phone-screen {
+        @include flex();
+        p {
+            font-size: 1.2em;
+        }
     }
 }

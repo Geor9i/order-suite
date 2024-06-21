@@ -2,6 +2,7 @@
 @import '../../../styles/partials/box';
 @import '../../../styles/partials/effects';
 @import '../../../styles/partials/input';
+@import '../../../styles/partials/responsive';
 
 
 .main-container {
@@ -11,6 +12,8 @@
     >h1 {
         font-size: 2em;
     }
+    @include tablet-screen{width: 80%}
+    @include phone-screen{width:100%}
 }
 
 .section-title {
@@ -43,10 +46,19 @@
         font-weight: bold;
         font-size: 1.2em;
     }
+    @include tablet-screen{
+        @include flex(column, $gap: 0.2em);
+        @include rect(100%, auto);
+        input { width: 80% };
+    }
+    @include phone-screen{
+        padding: 0 1.5em;
+        input { font-size: 1em; width: 100%; };
+    }
 }
 
 .type-select {
-    flex: 1 1 40%;
+    width: 50%;
     font-size: 1.2em;
     text-align: center;
     @include input(7px);
@@ -61,6 +73,10 @@
         width: 100%;
         color: white;
     }
+    @include tablet-screen {
+        @include flex($gap: 0.5em);
+        flex-wrap: wrap;
+    }
 }
 
 .weekday-container {
@@ -70,6 +86,11 @@
     text-align: center;
     background-color: rgb(73, 73, 73);
     border: 1px solid black;
+    @include tablet-screen {
+        flex: 1 0 40%;
+        min-width: 200px;
+        @include flex(column, $JC: flex-start);
+    }
 }
 
 .weekday-button {
@@ -114,6 +135,8 @@
         background-color: rgb(80, 80, 80);
         color: rgb(255, 255, 255);
     }
+    @include tablet-screen{ width: 40% }
+    @include phone-screen{ width: 100% }
 }
 
 .delivery-checkbox-container {
@@ -126,7 +149,18 @@
         display: inline-block;
     }
     input[type="checkbox"] {
-        @include rect(1.5em);
+        @include rect(1.5em, $cube: true);
+    }
+    @include tablet-screen{
+        padding: 2em 1em;
+        label { font-size: 1.2em }
+        input[type="checkbox"] {
+            @include rect(2em, $cube: true);
+        }
+    }
+    @include phone-screen{
+        padding: 1em 0;
+        label { font-size: 1.2em }
     }
 }
 
@@ -147,7 +181,8 @@
     background-color: rgb(80, 80, 80);
     text-align: center;
     width: 80%;
-}
+    }
+    @include tablet-screen {select {width: 60%}}
 }
 
 .store__details-confirm-button__container {
@@ -163,80 +198,4 @@
 
 .inactive {
     display: none;
-}
-
-
-//? Responsive
-
-@media (max-width: 1200px) {
-
-    .main-container {
-        width: 80%;
-    }
-
-    .store-info-group {
-        gap: 1em;
-        @include rect(80%, auto);
-    }
-    
-    .week-container {
-        @include flex($gap: 0.5em);
-        flex-wrap: wrap;
-    }
-
-    .weekday-container {
-        flex: 1 0 40%;
-        min-width: 200px;
-        @include flex(column, $JC: flex-start);
-    }
-    
-    .time-selector-group {
-        width: 40%;
-    }
-
-    .delivery-checkbox-container {
-        padding: 2em 1em;
-        label {
-            font-size: 1.2em;
-        }
-        input[type="checkbox"] {
-            @include rect(2em);
-        }
-    }
-    
-.delivery-info-container {
-    width: 100%;
-}
-
-
-.delivery-info-input-group {
-    @include flex(column);
-    width: 100%;
-    label {
-        font-size: 1em;
-    }
-    select {
-    width: 60%;
-}
-}
-
-}
-
-
-@media (max-width: 600px) {
-
-    .time-selector-group {
-        width: 100%;
-    }
-
-    
-    .delivery-checkbox-container {
-        padding: 1em 0;
-        label {
-            font-size: 1.2em;
-        }
-        input[type="checkbox"] {
-            @include rect(2em);
-        }
-    }
 }

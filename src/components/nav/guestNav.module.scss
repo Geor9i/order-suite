@@ -1,0 +1,52 @@
+@import '../../../styles/partials/flex';
+@import '../../../styles/partials/box';
+@import '../../../styles/partials/effects';
+@import '../../../styles/partials/responsive';
+
+.guest-nav-container{
+    position: absolute;
+    top: 0;
+    color: white;
+    overflow-x: clip;
+    @include gradient(135deg, #979797, #aaaaaa);
+    @include rect(100%, 100%);
+    @include flex($JC: flex-end);
+    &::after {
+        content: '';
+        @include position(absolute, -20px, -40px, 0, -40px);
+        box-shadow: 0 2px 40px 3px inset #0000009d, 0 1px 5px 0 #000000, 0 1px 10px 0 inset #f293ff;
+    }
+}
+
+.title{
+    font-size: 2em;
+    z-index: 1;
+    @include position(absolute, 50%,$left: 50%, $x: -50%, $y: -50%);
+    @include transition((color, text-shadow));
+    &:hover {
+        color: rgb(255, 255, 255);
+        text-shadow: 0 0 5px #fff;
+    }
+    @include tablet-screen {font-size: 1.5em}
+    @include phone-screen {font-size: 1.2em}
+}
+.link-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    @include rect(30%);
+    a {
+        position: relative;
+        font-size: 1.5rem;
+        @include transition((color, text-shadow));
+        &:hover {
+            color: rgb(255, 255, 255);
+            text-shadow: 0 0 5px #fff;
+        }
+    @include tablet-screen {font-size: 1em}
+    @include phone-screen {font-size: 0.8em}
+    }
+}
+

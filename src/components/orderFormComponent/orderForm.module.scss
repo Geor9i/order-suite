@@ -43,7 +43,7 @@
         }
         
         .radio-button {
-          @include rect(1.5em);
+          @include rect(1.5em, $cube: true);
           margin-right: 1.5em;
           cursor: pointer;
           accent-color: rgb(46, 46, 46);
@@ -52,7 +52,7 @@
         
         .check-box {
           display: inline-block;
-          @include rect(1.6em);
+          @include rect(1.6em, $cube: true);
           margin: 0;
           accent-color: rgb(100, 100, 100);
           cursor: pointer;
@@ -165,7 +165,7 @@
   }
   
   .calendar-backdrop {
-    @include rect(100%);
+    @include rect(100%, 100%);
     @include position(absolute, $all: 0);
     display: none;
     backdrop-filter: blur(0.5px);

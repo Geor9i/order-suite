@@ -5,7 +5,7 @@
 .homepage-container {
   padding: 2em;
   @include flex(column, start);
-  @include rect(100vw, 100vh);
+  @include rect(100%, 100%);
   background-color: rgb(255, 255, 255);
   position: relative;
 }

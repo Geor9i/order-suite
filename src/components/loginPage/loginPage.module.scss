@@ -2,21 +2,27 @@
 @import '../../../styles/partials/flex';
 @import '../../../styles/partials/effects';
 @import '../../../styles/partials/input';
+@import '../../../styles/partials/responsive';
 
 .login-container {
-    padding: 0.8em;
+    padding: 2em;
     @include flex(column, flex-start);
-    @include rect(25%, 30%, $bRadius: 13px);
+    @include rect(30%, $bRadius: 13px);
+    min-height: 50%;
     background-color: rgb(236, 236, 236);
     @include gradient(135deg, #d3d3d369, #8a8a8a59);
-    @include glow($glow:((0 0 1px #ffffff inset), (10px 10px 5px 5px #0000002c)))
+    @include glow($glow:((0 0 1px #ffffff inset), (10px 10px 5px 5px #0000002c)));
+    @include tablet-screen {
+        @include rect(60%);
+    }
+    @include phone-screen {
+        @include rect(80%);
+    }
 }
 
 .login-form {
     @include rect(100%);
-    @include flex($JC: center, $AI: center);
-    flex-wrap: wrap;
-    flex: 1 1;
+    @include flex(column, $gap: 0.5em);
 }
 
 .input-container {
@@ -30,6 +36,9 @@
         &:focus {
             box-shadow: 0 1px 1px #ff5100;
         }
+    }
+    @include phone-screen {
+        @include rect(80%, 4em);
     }
 }
 

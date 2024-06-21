@@ -3,18 +3,25 @@
 @import '../../../styles/partials/flex';
 @import '../../../styles/partials/effects';
 @import '../../../styles/partials/input';
+@import '../../../styles/partials/responsive';
 
 .container {
-    padding: 0.8em;
+    padding: 2em;
     @include flex(column, flex-start);
-    @include rect(30%, 50%, $bRadius: 13px);
-    background-color: rgb(236, 236, 236);
+    min-height: 60%;
+    @include rect(40%, $bRadius: 13px);
     @include gradient(135deg, #d3d3d369, #8a8a8a59);
-    @include glow($glow:((0 0 1px #ffffff inset), (10px 10px 5px 5px #0000002c)))
+    @include glow($glow:((0 0 1px #ffffff inset), (10px 10px 5px 5px #0000002c)));
+    @include tablet-screen {
+        @include rect(60%, 80%);
+    }
+    @include phone-screen {
+        @include rect(80%, 80%);
+    }
 }
 
 .form {
-    @include rect(100%);
+    @include rect(100%, 100%);
     @include flex(column, $gap: 1em);
 }
 
@@ -30,6 +37,12 @@
         &:focus {
             box-shadow: 0 1px 1px #ff5100;
         }
+    }
+    @include tablet-screen {
+        padding: 0 1em
+    }
+    @include phone-screen {
+        padding: 0 0.5em
     }
 }
 
