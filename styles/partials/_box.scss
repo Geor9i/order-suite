@@ -50,8 +50,8 @@
     transform: translateX($x);
   }@else if $y != null and $x == null{
     transform: translateY($y);
-  } @else {
+  } @else if $y != null and $x != null {
     transform: translate($x, $y);
   }
 
-}
+}        
