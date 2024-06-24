@@ -7,8 +7,7 @@ export default class Harvester {
     this.objUtil = utils.objUtil;
   }
   reportHarvest(report) {
-    const rmfPageProductPattern =
-      /(?<productCode>\d{4,})\t(?<product>[\w\s\(\)\-:&+\/"\.]{5,40})\t(?<case>(CASE|BT)[-\s\w\.]{2,10})\t\s(?<quantity>\d{1,2})\s{2}(?<orQ>[-\d.]{4,5})\s{2}(?<productPrice>[-\d.,]{4,10})\D{1,3}((?<previousOrderQuantity>[\d.,]{1,8})\D\((?<previousOrderQuantityDay>\d{2})\D(?<previousOrderQuantityMonth>\w{3})\D(?<previousOrderQuantityYear>\d{4})\)(?<br>[\s*]+)(?<prevWEnding>\d{2}\D\w{3}\D\d{4})\k<br>(?<previousWeeksUsage>[-\d.]{4,6})\k<br>(?<onHand>[-\d.]{4,6})\k<br>(?<currOnHand>[-\d.,]{4,8})|(?<contingency>[*\s]{10}))/g;
+    const rmfPageProductPattern = /(?<productCode>\d{3,7})[-\s]+(?<product>.+?)[\t]+(?<productCase>[-\w\s.]+?)[\s]+(?<order>[\d.]+)[\s-]+(?<orQ>[\d.]+)[-\s]+(?<productPrice>[\d.]+)[-\s]+(?<previousOrderQuantity>[\d.]+)[\s-]+\(?(?<prevOrderDate>[\w\s]*)\)?[-\s*]*(?<prevWEnding>[\w\s]+)[-\s*]+(?<previousWeeksUsage>[\d.]+)[-\s*]+(?<onHand>[\d.]+)[-\s*]+(?<onOrder>[\d.]+)[-\s*]+/g;
 
 
       const unprocessedOrderReportProductPattern = /(?<productCode>\d{3,7})[-\s]+(?<product>[\s\S]{2,50}?)[-\s]+(?<onHand>[\d.]+)[-\s]+(?<order>[\d.]+)[\s-](?<productCase>[-\w\s.]+?)[\s]+(?<price>[\d.]+)[\s-](?<extPrice>[\d.]+)/g;
