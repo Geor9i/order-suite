@@ -13,7 +13,7 @@
     .order-form {
       padding: 1em 0;
       min-height: 60%;
-      @include rect(30%);
+      @include rect(25%);
       @include flex(column, $gap: 0.5em);
       border-radius: 13px;
       background: linear-gradient(135deg, rgb(233, 239, 241) 0%, rgb(235, 229, 233) 40%, rgb(250, 249, 249) 100%);

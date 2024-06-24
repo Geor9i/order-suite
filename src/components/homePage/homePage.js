@@ -48,7 +48,7 @@ export default class HomeComponent extends BaseComponent {
     const profileCompletionsShare = Math.round(1 / Object.keys(completionFactors).length);
     let completion = 0;
     for (let factor in completionFactors) {
-      if (completionFactors[factor] === null)  {
+      if (!completionFactors[factor])  {
         progressReport[factor] = {...progressReport[factor], untouched: true, link: routes[factor]}
         continue;
       }

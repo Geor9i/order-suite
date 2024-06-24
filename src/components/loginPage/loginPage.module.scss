@@ -8,7 +8,7 @@
     padding: 2em;
     @include flex(column, flex-start);
     @include rect(30%, $bRadius: 13px);
-    min-height: 50%;
+    min-height: 40%;
     background-color: rgb(236, 236, 236);
     @include gradient(135deg, #d3d3d369, #8a8a8a59);
     @include glow($glow:((0 0 1px #ffffff inset), (10px 10px 5px 5px #0000002c)));
@@ -21,7 +21,7 @@
 }
 
 .login-form {
-    @include rect(100%);
+    @include rect(100%, 100%);
     @include flex(column, $gap: 0.5em);
 }
 
