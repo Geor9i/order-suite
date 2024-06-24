@@ -1,213 +1,78 @@
-import InventoryProduct from "./inventoryProduct.js";
-
 export default class Harvester {
   constructor(utils) {
     this.dateUtil = utils.dateUtil;
     this.stringUtil = utils.stringUtil;
     this.objUtil = utils.objUtil;
   }
-  reportHarvest(report) {
-    const rmfPageProductPattern = /(?<productCode>\d{3,7})[-\s]+(?<product>.+?)[\t]+(?<productCase>[-\w\s.]+?)[\s]+(?<order>[\d.]+)[\s-]+(?<orQ>[\d.]+)[-\s]+(?<productPrice>[\d.]+)[-\s]+(?<previousOrderQuantity>[\d.]+)[\s-]+\(?(?<prevOrderDate>[\w\s]*)\)?[-\s*]*(?<prevWEnding>[\w\s]+)[-\s*]+(?<previousWeeksUsage>[\d.]+)[-\s*]+(?<onHand>[\d.]+)[-\s*]+(?<onOrder>[\d.]+)[-\s*]+/g;
+  unprocessedOrderHarvest(report) {
+    const rmfUnprocessedConfirmPattern = /MacromatiX/g;
+    const rmfUnprocessedProductPattern = /(?<code>\d{3,7})[-\s]+(?<product>.+?)[\t]+(?<case>[-\w\s.]+?)[\s]+(?<order>[\d.]+)[\s-]+(?<orQ>[\d.]+)[-\s]+(?<price>[\d.]+)[-\s]+(?<lastOrderQuantity>[\d.]+)[\s-]+\(?(?<prevOrderDate>[\w\s]*)\)?[-\s*]*(?<prevWEnding>[\w\s]+)[-\s*]+(?<previousWeeksUsage>[\d.]+)[-\s*]+(?<onHand>[\d.]+)[-\s*]+(?<onOrder>[\d.]+)[-\s*]+/g;
 
+    const unprocessedOrderReportConfirmPattern = /Unprocessed Order/g;
+    const unprocessedOrderReportProductPattern = /(?<code>\d{3,7})[-\s]+(?<product>[\s\S]{2,50}?)[-\s]+(?<onHand>[\d.]+)[-\s]+(?<order>[\d.]+)[\s-](?<case>[-\w\s.]+?)[\s]+(?<price>[\d.]+)[\s-](?<extPrice>[\d.]+)/g;
 
-      const unprocessedOrderReportProductPattern = /(?<productCode>\d{3,7})[-\s]+(?<product>[\s\S]{2,50}?)[-\s]+(?<onHand>[\d.]+)[-\s]+(?<order>[\d.]+)[\s-](?<productCase>[-\w\s.]+?)[\s]+(?<price>[\d.]+)[\s-](?<extPrice>[\d.]+)/g;
-
-    let reportProducts = {};
-
-    // Match products from report
-    let match;
-    while ((match = rmfPageProductPattern.exec(report)) !== null) {
-      if (!reportProducts.hasOwnProperty(match.groups.product)) {
-        //Get Case specifics data
-        // console.log(match.groups.product);
-        let caseRaw = match.groups.case
-          .trim()
-          .toLowerCase()
-          .split("case-")
-          .join("");
-        let numPattern = /[\d.,]+/g;
-        let caseValues = caseRaw
-          .match(numPattern)
-          .map((el) => Number(el.split(",").join("")));
-        caseValues = caseValues.reduce((acc, curr) => (acc *= curr));
-        let unitPattern = /[A-WYZa-wyz]+/g;
-        let units = caseRaw.match(unitPattern);
-
-        if (units && units.find((x) => x === "ml" || x === "g")) {
-          caseValues /= 1000;
-        }
-
-        //Check if product exists in productUsage database!
-        //if it does update its safeQuantity!
-
-        let safeQuantity = 0;
-        let sustainAmount = 0;
-        let quotaReverse = false;
-        let dailyUse = 0;
-        let isBreak = false;
-        // for (let group in productPreference) {
-        //     if (isBreak) {
-        //         break;
-        //     }
-        //     for (let product in productPreference[group]) {
-        //             let splitter = /\W+/;
-        //             let nameMatch = product.split(splitter);
-        //             let matchCheck = nameMatch.filter(el => match.groups.product.includes(el));
-        //             if (matchCheck.length === nameMatch.length) {
-        //                 safeQuantity = productPreference[group][product].safeQuantity;
-        //                 if (productPreference[group][product].hasOwnProperty("sustainAmount")) {
-        //                     sustainAmount = productPreference[group][product].sustainAmount;
-        //                 }
-        //                 if (productPreference[group][product].hasOwnProperty("quotaReverse")) {
-        //                     quotaReverse = productPreference[group][product].quotaReverse
-        //                 }
-        //                 if (productPreference[group][product].hasOwnProperty("dailyUse")) {
-        //                     dailyUse = productPreference[group][product].dailyUse
-        //                 }
-        //                 // delete productPreference[group][product];
-        //                 isBreak = true;
-        //                 break;
-        //             }
-        //     }
-        //     }
-        if (match.groups.contingency === undefined) {
-          reportProducts[match.groups.product] = {
-            orderCase: caseValues,
-            price: Number(match.groups.productPrice),
-            previousOrderQuantity: Number(match.groups.previousOrderQuantity),
-            previousOrderDate: `${match.groups.previousOrderQuantityYear}/${match.groups.previousOrderQuantityMonth}/${match.groups.previousOrderQuantityDay}`,
-            previousWeeksUsage: Math.max(Number(match.groups.previousWeeksUsage), 0),
-            onHand: Math.max(Number(match.groups.onHand), 0),
-          };
-        }
-      }
+    let productMatches;
+    if(report.match(rmfUnprocessedConfirmPattern)) {
+      productMatches = [...report.matchAll(rmfUnprocessedProductPattern)];
+    } else if (report.match(unprocessedOrderReportConfirmPattern)) {
+      productMatches = [...report.matchAll(unprocessedOrderReportProductPattern)];
     }
 
-    return Object.keys(reportProducts).length > 0 ? reportProducts : null;
+    return this.formatMatches(productMatches);
   }
 
   inventoryHarvest(report) {
     // REGEX -----------------------------------------
-    let reportDetailsPattern =
-      /KFC\sUK[\w\s]+:\s[\d]{2}\D{1}[\d]{2}\D{1}[\d]{2,4}[\w\s]+:\s*(?<restaurant>[-\s\w]+)\s[-FromfROM\s]{3,7}(?<dateStart>[\d]{2}\D{1}[\d]{2}\D{1}[\d]{2,4})[\s\w]{2,5}(?<dateEnd>[\d]{2}\D{1}[\d]{2}\D{1}[\d]{2,4})/;
+    let reportDetailsPattern = /Restaurant: (?<storeName>[\s\S]+?)[-\s]+From[-\s]+(?<startDate>[\d\/]+)[-\s]+to[-\s]+(?<endDate>[\w\/]+)/;
 
     let reportCategoryPattern = /\d{1,2}[-]+(?<category>[A-Za-z\s]{2,30})\s[\s\S]+?Total/g;
 
-    let productPattern = /(?<productCode>\d{1,7})[\s]+(?<product>[A-Z][\s\S]{2,50}?)[-\s]+(?<unit>[-.\w]+)[-\s]+(?<beginInventory>[\n\d.,]+)[-\s]+(?<transferIn>[\n\d.,]{4,})[-\s]+(?<transferOut>[\n\d.,]{4,})[-\s]+(?<purchases>[\n\d.,]{4,})[-\s]+(?<endInventory>[\n\d.,]{4,})[-\s]+(?<actual>[\n\d.,]{4,})[-\s]*(?<actualCost>£[\n*\d.,]{4,})[-\s]+(?<theoretical>[\n\d.,]{4,})[-\s]*(?<theoreticalCost>£[\n*\d.,]{4,})[-\s]+(?<variance>[\n\d.,]{4,})[-\s]*(?<varianceCost>£[\n*\d.,]{4,})[-\s]+(?<waste>[\n\d.,]{4,})[-\s]*(?<wasteCost>£[\n*\d.,]{4,})[-\s]+(?<missing>[\n\d.,]{4,})[-\s]*(?<missingCost>£[\n*\d.,]{4,})[-\s]+(?<eff>[\d.,]{4,})/g;
-
-
+    let productPattern = /(?<code>\d{1,7})[\s]+(?<product>[A-Z][\s\S]{2,50}?)[-\s]+(?<unit>[-.\w]+)[-\s]+(?<beginInventory>[\n\d.,]+)[-\s]+(?<transferIn>[\n\d.,]{4,})[-\s]+(?<transferOut>[\n\d.,]{4,})[-\s]+(?<purchases>[\n\d.,]{4,})[-\s]+(?<endInventory>[\n\d.,]{4,})[-\s]+(?<actual>[\n\d.,]{4,})[-\s]*(?<actualCost>£[\n*\d.,]{4,})[-\s]+(?<theoretical>[\n\d.,]{4,})[-\s]*(?<theoreticalCost>£[\n*\d.,]{4,})[-\s]+(?<variance>[\n\d.,]{4,})[-\s]*(?<varianceCost>£[\n*\d.,]{4,})[-\s]+(?<waste>[\n\d.,]{4,})[-\s]*(?<wasteCost>£[\n*\d.,]{4,})[-\s]+(?<missing>[\n\d.,]{4,})[-\s]*(?<missingCost>£[\n*\d.,]{4,})[-\s]+(?<eff>[\d.,]{4,})/g;
     //-----------------------------------------------------REGEX
 
-    let categoryData = {};
-    let categoryMatch;
+    let productData = {};
+    let reportData = {};
+    const categoryMatches = [...report.matchAll(reportCategoryPattern)];
 
-    while ((categoryMatch = reportCategoryPattern.exec(report)) !== null) {
-      let categoryName = categoryMatch.groups.category.trim().toUpperCase();
-        categoryData[categoryName] = categoryMatch[0].trim();
-        InventoryProduct.inventoryRecord[categoryName] = {};
-    }
-
-    // Get report details data (day span and store name)
+    //? Get report details data (day span and store name)
     let reportMatch = report.match(reportDetailsPattern);
     if (reportMatch !== null) {
-      InventoryProduct.storeName = reportMatch.groups.restaurant.trim();
-      InventoryProduct.reportStartDate = this.dateUtil
-        .op(reportMatch.groups.dateStart.trim())
-        .format();
-      InventoryProduct.reportEndtDate = this.dateUtil
-        .op(reportMatch.groups.dateEnd.trim())
-        .format();
-      InventoryProduct.reportDaySpan = this.dateUtil.dateDifference(
-        InventoryProduct.reportStartDate,
-        InventoryProduct.reportEndtDate
-      );
-    }
-    console.log(InventoryProduct);
-
-    //Main product matching
-    let match;
-    while ((match = productPattern.exec(report)) !== null) {
-      let product = match.groups.product.trim();
-      //Find in which category the current product belongs
-      let category = Object.entries(categoryData).find((x) =>
-        x[1].includes(product)
-      )[0];
-      product = this.stringUtil.removeSpecialChars(product);
-      if (!InventoryProduct.inventoryRecord[category].hasOwnProperty(product)) {
-        InventoryProduct.inventoryRecord[category][product] = {};
+      const startDate = this.dateUtil.op(reportMatch.groups.startDate.trim()).format();
+      const endDate = this.dateUtil.op(reportMatch.groups.endDate.trim()).format();
+      reportData = {
+        storeName: reportMatch.groups.storeName.trim(),
+        startDate: startDate,
+        endDate: endDate,
+        daySpan: this.dateUtil.dateDifference( startDate, endDate )
       }
-
-      //Get Delivery case values
-      let orderCase = 0;
-
-      //Check product case specifics and do conversions;
-
-      let productCase = match.groups.case
-        ? match.groups.case.toUpperCase()
-        : match.groups.individual.toUpperCase();
-      //TODO: Handle values where multiplication is given instead of actual case Example SAUCE TERIYAKI
-      let caseValue = match.groups.caseValue;
-      let caseUnit = match.groups.caseUnit
-        ? match.groups.caseUnit.toLowerCase()
-        : match.groups.caseUnit;
-      //Assign value vars
-      let beginInventory = this.stringUtil.stringToNumber(
-        match.groups.beginInventory
-      );
-      let transferIn = this.stringUtil.stringToNumber(match.groups.transferIn);
-      let transferOut = this.stringUtil.stringToNumber(
-        match.groups.transferOut
-      );
-      let purchases = this.stringUtil.stringToNumber(match.groups.purchases);
-      let endInventory = this.stringUtil.stringToNumber(
-        match.groups.endInventory
-      );
-      let actual = this.stringUtil.stringToNumber(match.groups.actual);
-      let actualCost = this.stringUtil.stringToNumber(match.groups.actualCost);
-      let theoretical = this.stringUtil.stringToNumber(
-        match.groups.theoretical
-      );
-      let theoreticalCost = this.stringUtil.stringToNumber(
-        match.groups.theoreticalCost
-      );
-      let variance = this.stringUtil.stringToNumber(match.groups.variance);
-      let varianceCost = this.stringUtil.stringToNumber(
-        match.groups.varianceCost
-      );
-      let waste = this.stringUtil.stringToNumber(match.groups.waste);
-      let wasteCost = this.stringUtil.stringToNumber(match.groups.wasteCost);
-      let missing = this.stringUtil.stringToNumber(match.groups.missing);
-      let missingCost = this.stringUtil.stringToNumber(
-        match.groups.missingCost
-      );
-      let eff = this.stringUtil.stringToNumber(match.groups.eff);
-
-      new InventoryProduct({
-        product,
-        category,
-        beginInventory,
-        transferIn,
-        transferOut,
-        purchases,
-        endInventory,
-        actual,
-        actualCost,
-        theoretical,
-        theoreticalCost,
-        variance,
-        varianceCost,
-        waste,
-        wasteCost,
-        missing,
-        missingCost,
-        eff,
-        productCase,
-        caseValue,
-        caseUnit,
-        orderCase}
-      );
     }
-    return InventoryProduct.inventoryRecord;
+
+    categoryMatches.forEach(categoryMatch => {
+      const categoryName = categoryMatch.groups.category.trim().toUpperCase();
+      const rawData = categoryMatch[0].trim();
+      const productMatches = [...rawData.matchAll(productPattern)];
+      productData[categoryName] = this.formatMatches(productMatches);
+    })
+   
+    return {reportData, productData};
+  }
+
+  purchaseOrderHarvest(report) {
+    const edgeConfirmPattern = /\sEXT. PRICE UNIT PRICE U\/M QTY DESCRIPTION VENDOR CODE/g;
+    const chromeConfirmPattern = /VENDOR CODE DESCRIPTION QTY U\/M UNIT PRICE EXT. PRICE/g;
+
+    const chromePattern = /(?<code>\d{4,7})[-\s]+(?<product>[\s\S]{2,50}?)[-\s]+(?<amount>[\d.]+)[-\s]+(?<case>[-\w.]+)[-\s]+(?<price>[\d.]+)[-\s]+(?<extPrice>[\d.]+)/g;
+    const edgePattern = /(?<code>\d{4,7})[-\s]+(?<product>[\s\S]{2,50}?)[-\s]+(?<extPrice>[\d.]+)[-\s]+(?<case>[-\w.]+)[-\s]+(?<amount>[\d.]+)[-\s]+(\d{4,7})[-\s]+(?<price>[\d.]+)/g;
+    
+    let productMatches;
+    if (report.match(edgeConfirmPattern) !== null) {
+      productMatches = [...report.matchAll(edgePattern)]; 
+    }else if (report.match(chromeConfirmPattern) !== null) {
+      productMatches = [...report.matchAll(chromePattern)]; 
+    }
+    const productData = this.formatMatches(productMatches);
+
+    return productData;
   }
 
   salesSummaryExtractor(report) {
@@ -308,25 +173,20 @@ export default class Harvester {
     return { ...hourlySalesRecord, totals };
   }
 
-  purchaseOrderHarvest(report) {
-    const edgeConfirmPattern = /\sEXT. PRICE UNIT PRICE U\/M QTY DESCRIPTION VENDOR CODE/g;
-    const chromeConfirmPattern = /VENDOR CODE DESCRIPTION QTY U\/M UNIT PRICE EXT. PRICE/g;
 
-    const chromePattern = /((?<productCode>\d{4,7})\s\2|\d{4,7})\s-\s(?<productName>[\w\s\(\)\/.,]+)\s(?<amount>[\d.]+)\s(?<productCase>CASE-[\d\w.]+)\s(?<price>[\d.]+)\s(?<extPrice>[\d.]+)/g;
-    const edgePattern = /(?<productCode>\d{4,7})\s-\s(?<productName>[\w\s\(\)\/.,]+)\s(?<extPrice>[\d.]+)\s(?<productCase>CASE-[\d\w.]+)\s(?<amount>[\d.]+)\s(?<productCode1>\d{4,7})\s(?<price>[\d.]+)/g;
-    
-    let products;
-    if (report.match(edgeConfirmPattern) !== null) {
-      products = report.matchAll(edgePattern); 
-    }else if (report.match(chromeConfirmPattern) !== null) {
-      products = report.matchAll(chromePattern); 
-    }
+  formatMatches(productMatches) {
+    let productData = {};
+    productMatches.forEach(match => {
+      const product = this.stringUtil.removeSpecialChars(match.groups.product.trim());
+      const props = Object.keys(match.groups).reduce((propObj, key) => {
+        if (key === 'product') return propObj;
 
-    for (let product of products) {
-      const { amount, productCase, extPrice, price, productCode, productName } = product.groups;
-      console.log({ amount, productCase, extPrice, price, productCode, productName });
-    }
-
-
+        const str = this.stringUtil.stringToNumber(match.groups[key]);
+        propObj[key] = str;
+        return propObj;
+      }, {})
+      productData[product] = props;
+    })
+    return productData;
   }
 }

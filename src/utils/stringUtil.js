@@ -82,7 +82,11 @@ export default class StringUtil {
   }
 
   stringToNumber(string) {
-    return Number(string.trim().split(",").join("").split("£").join(""));
+    const number = string.split(/[\,\£\$]+/g).join('');
+    if (!isNaN(number)) {
+      return Number(number);
+    }
+    return string;
   }
 
   replaceString(string, textToReplace, replacementText) {

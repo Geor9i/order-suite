@@ -20,7 +20,7 @@ import ProductManager from "./components/productManager/productManager.js";
 
 import { storeSettings } from "./storeSettings.js";
 import { utils } from "./utils/utilConfig.js";
-import { purchaseReport, invReport } from '../inventoryReport.js';
+import { purchaseReport, invReport, unprocessedOrderRMF, unprocessedOrderReport } from '../inventoryReport.js';
 
 if (module.hot) {
   module.hot.accept();
@@ -55,7 +55,8 @@ const funcLoader = {
   storeSettings,
 };
 
-harvester.inventoryHarvest(invReport);
+let result = harvester.unprocessedOrderHarvest(unprocessedOrderReport);
+console.log(result);
 
 page(authService.confirmUser);
 page(navComponent.showView);
