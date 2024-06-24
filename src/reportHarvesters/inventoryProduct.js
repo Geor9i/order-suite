@@ -1,5 +1,5 @@
 export default class InventoryProduct {
-    constructor({name, category, beginInventory, transferIn, transferOut, purchases, endInventory, actual, actualCost, theoretical, theoreticalCost, variance, varianceCost, waste, wasteCost, missing, missingCost, eff, productCase, caseValue, caseUnit, orderCase}) {
+    constructor(props) {
         this.name = name;
         this.beginInventory = beginInventory;
         this.transferIn = transferIn;

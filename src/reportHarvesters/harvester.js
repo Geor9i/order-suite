@@ -93,7 +93,7 @@ export default class Harvester {
 
     let reportCategoryPattern = /\d{1,2}[-]+(?<category>[A-Za-z\s]{2,30})\s[\s\S]+?Total/g;
 
-    let productPattern = /(?<productCode>\d{1,7})\s(?<product>[A-Z]{2}[-.\w\s+\(\)\/&]{2,45})\s((?<individual>[eaEA]{2}|[KGkg]{2}|[pORTIONSPortions]{7,8}|[lL]{1})|(?<case>[PKpk]{2}|[BGbg]{2}|[HDhd]{2}|[-HDhd\s\d]{4,}|[BTLbtl]{2,3}|[CASEcase]{4}|[lL]{1})(?:[-\s]*(?<caseAmount>[\d\w.]+)?))[-\s]+(?<beginInventory>[\n\d.,]+)[-\s]+(?<transferIn>[\n\d.,]{4,})[-\s]+(?<transferOut>[\n\d.,]{4,})[-\s]+(?<purchases>[\n\d.,]{4,})[-\s]+(?<endInventory>[\n\d.,]{4,})[-\s]+(?<actual>[\n\d.,]{4,})[-\s]*(?<actualCost>£[\n*\d.,]{4,})[-\s]+(?<theoretical>[\n\d.,]{4,})[-\s]*(?<theoreticalCost>£[\n*\d.,]{4,})[-\s]+(?<variance>[\n\d.,]{4,})[-\s]*(?<varianceCost>£[\n*\d.,]{4,})[-\s]+(?<waste>[\n\d.,]{4,})[-\s]*(?<wasteCost>£[\n*\d.,]{4,})[-\s]+(?<missing>[\n\d.,]{4,})[-\s]*(?<missingCost>£[\n*\d.,]{4,})[-\s]+(?<eff>[\d.,]{4,})/g;
+    let productPattern = /(?<productCode>\d{1,7})[\s]+(?<product>[A-Z][\s\S]{2,50}?)[-\s]+(?<unit>[-.\w]+)[-\s]+(?<beginInventory>[\n\d.,]+)[-\s]+(?<transferIn>[\n\d.,]{4,})[-\s]+(?<transferOut>[\n\d.,]{4,})[-\s]+(?<purchases>[\n\d.,]{4,})[-\s]+(?<endInventory>[\n\d.,]{4,})[-\s]+(?<actual>[\n\d.,]{4,})[-\s]*(?<actualCost>£[\n*\d.,]{4,})[-\s]+(?<theoretical>[\n\d.,]{4,})[-\s]*(?<theoreticalCost>£[\n*\d.,]{4,})[-\s]+(?<variance>[\n\d.,]{4,})[-\s]*(?<varianceCost>£[\n*\d.,]{4,})[-\s]+(?<waste>[\n\d.,]{4,})[-\s]*(?<wasteCost>£[\n*\d.,]{4,})[-\s]+(?<missing>[\n\d.,]{4,})[-\s]*(?<missingCost>£[\n*\d.,]{4,})[-\s]+(?<eff>[\d.,]{4,})/g;
 
 
     //-----------------------------------------------------REGEX
