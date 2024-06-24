@@ -33,7 +33,7 @@ export const orderFormTemplate = (
             <label id="date-label" for="date-input" >Order Date</label>
             <div id=${styles["calendar-input-container"]}>
                 <input type="text" required="true" id="date-input" name="date" .value=${dateInputFieldStartingDate()}>
-                <div id="date-button" class=${styles["date-button"]} @click=${openCalendar}><i class="fa-solid fa-calendar fa-2x"></i></div>
+                <div id="date-button" @click=${openCalendar}><i class="fa-solid fa-calendar fa-2x"></i></div>
             </div>
         <div id="calendar-container" class=${styles["calendar-container"]}></div>
         </div>

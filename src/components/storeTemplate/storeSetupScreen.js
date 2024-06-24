@@ -1,20 +1,22 @@
 import { storeSetupTemplate } from "./StoreSetupTemplate.js";
 import styles from './storeSetupScreen.module.scss';
 import BaseComponent from '../../framework/baseComponent.js';
+import { db } from "../../constants/db.js";
+import { routes } from "../../constants/routing.js";
 export default class StoreTemplateScreen extends BaseComponent {
-  constructor({ renderBody, router, authService, utils }) {
+  constructor({ renderBody, router, authService, firestoreService, utils }) {
     super();
     this.render = renderBody;
     this.router = router;
     this.authService = authService;
+    this.firestoreService = firestoreService;
     this.stringUtil = utils.stringUtil;
     this.dateUtil = utils.dateUtil;
     this.domUtil = utils.domUtil;
     this.showView = this._showView.bind(this);
-    this.slideOpen = this._slideOpen.bind(this);
     this.toggleDay = this._toggleDay.bind(this);
     this.showDeliveryDetails = this._showDeliveryDetails.bind(this);
-    this.sliderContainers = [];
+    this.submitHandler = this._submitHandler.bind(this);
   }
 
   _showView(ctx) {
@@ -29,61 +31,72 @@ export default class StoreTemplateScreen extends BaseComponent {
 
     this.render(
       storeSetupTemplate(
-        this.slideOpen,
         this.showDeliveryDetails,
         this.toggleDay,
-        weekdays
+        weekdays,
+        this.firestoreService.state.STORE_NAME,
+        this.submitHandler
       )
     );
   }
 
-  _slideOpen(e) {
-    const element = e.currentTarget;
-    const id = element.dataset.id;
-    const container = document.getElementById(id);
-    const isRecorded = this.sliderContainers.some(
-      (element) => element.id === id
-    );
-    if (!isRecorded) {
-      this.sliderContainers.push(container);
-    }
+  async _submitHandler() {
+    const formData = this.getFormData();
+    console.log(formData);
+        try {
+          await this.firestoreService.setDoc(db.USERS, { STORE_SETTINGS: formData }, { merge: true });
+          this.router.redirect(routes.HOME);
+        } catch (err) {
+          console.log(err);
+        }
+  }
 
-    let containerHierarchies = this.domUtil.getElementHierarchy(
-      this.sliderContainers
-    );
-    const selectedHierarchy = containerHierarchies.find((arr) =>
-      arr.find((element) => element.id === id)
-    );
-    const hierarchyHeightArr = selectedHierarchy.map(
-      (el) => el.getBoundingClientRect().height
-    );
-    const startContainerIndex = selectedHierarchy.findIndex(
-      (element) => element.id === id
-    );
-    const selectedContainer = selectedHierarchy[startContainerIndex];
-    let containerHeight = hierarchyHeightArr[startContainerIndex];
-    let toggleOpen = containerHeight <= 0 ? true : false;
-    let cumulativeHeight = this.domUtil.getContentHeight(selectedContainer);
-    selectedContainer.style.height = (toggleOpen ? cumulativeHeight : 0) + "px";
-    for (let i = startContainerIndex - 1; i >= 0; i--) {
-      if (selectedHierarchy[i].contains(selectedContainer)) {
-        const currentParentContainer = selectedHierarchy[i];
-        let currentParentContainerContentHeight = hierarchyHeightArr[i];
-        cumulativeHeight = toggleOpen
-          ? cumulativeHeight + currentParentContainerContentHeight
-          : cumulativeHeight;
-        currentParentContainer.style.height =
-          (toggleOpen
-            ? cumulativeHeight
-            : currentParentContainerContentHeight - cumulativeHeight) + "px";
+  getFormData() {
+    const formContainer = document.querySelector(`.${styles['main-container']}`);
+    const infoInputs = [...formContainer.querySelectorAll(`.${styles['store-info-group']} input`),
+    ...formContainer.querySelectorAll(`.${styles['store-info-group']} select`)]
+    .reduce((acc, element) => {
+      acc[element.name] = element.value;
+      return acc;
+    }, {})
+
+    const weekdayContainers = [...document.querySelectorAll(`.${styles['weekday-container']}`)]
+    .reduce((acc, element) => {
+      const weekday = element.dataset.id.toLowerCase();
+      const isClosed = element.dataset.state ?? null;
+      if (isClosed) {
+        acc[weekday] = {state: 'closed'};
+        return acc;
       }
-    }
+      const dataObj = {};
+      const openTimesSelectors= [...element.querySelectorAll(`.${styles['time-selector-group']}  select`)];
+      openTimesSelectors.forEach(select => dataObj[select.name] = select.value);
+      const deliveryCheckbox = element.querySelector(`.${styles['delivery-checkbox-container']}  input`);
+      const hasDelivery = deliveryCheckbox.checked;
+      dataObj.hasDelivery = hasDelivery;
+      if (!hasDelivery) {
+        acc[weekday] = dataObj;
+        return acc;
+      }
+      const deliveryInfoSelectors = [...element.querySelectorAll(`.${styles['delivery-info-container']} select`)]
+      .reduce((obj, selector) => {
+        obj[selector.name] = selector.value;
+        return obj;
+      }, {});
+      acc[weekday] = {
+        ...dataObj,
+        ...deliveryInfoSelectors
+      }
+      return acc;
+
+    }, {});
+    return {...infoInputs, weekdays: weekdayContainers};
   }
 
   _showDeliveryDetails(e) {
     const weekday = e.currentTarget.dataset.id;
     const detailsContainer = document.getElementById(
-      `delivery-day-info__container-${weekday}`
+      `delivery-info-container-${weekday}`
     );
     this.domUtil.addRemoveClass(detailsContainer, styles['inactive']);
   }
@@ -91,10 +104,15 @@ export default class StoreTemplateScreen extends BaseComponent {
   _toggleDay(e) {
     const element = e.currentTarget;
     const weekday = element.dataset.id;
+    const closedTextContainer = document.getElementById(`closed-day-container-${weekday}`);
     const container = document.getElementById(
-      `store-details__main-container-${weekday}`
+      `opentimes-container-${weekday}`
     );
     this.domUtil.addRemoveClass(element, styles["weekday-button__inactive"]);
+    this.domUtil.addRemoveAttribute(element, 'data-state', 'closed');
     this.domUtil.addRemoveClass(container, styles["inactive"]);
+    this.domUtil.addRemoveClass(closedTextContainer, styles["inactive"]);
   }
 }
+
+// class=${styles[inactive]}

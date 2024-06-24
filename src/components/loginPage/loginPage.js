@@ -1,6 +1,6 @@
 import BaseComponent from "../../framework/baseComponent.js";
 import { loginPageTemplate } from "./loginPageTemplate.js";
-
+import { routes } from "../../constants/routing.js";
 export default class LoginPage extends BaseComponent {
   constructor({ renderBody, router, authService, utils }) {
     super();
@@ -14,7 +14,7 @@ export default class LoginPage extends BaseComponent {
 
   _showView(ctx) {
     if (this.authService.user) {
-      this.router.redirect("/");
+      this.router.redirect(routes.HOME);
       return;
     }
 
@@ -28,7 +28,7 @@ export default class LoginPage extends BaseComponent {
       const { email, password } = formData;
       try {
         await this.authService.login(email, password);
-        this.router.redirect("/");
+        this.router.redirect(routes.HOME);
       } catch (err) {
         console.log(err);
       }

@@ -92,23 +92,20 @@ export default class Harvester {
     let reportDetailsPattern =
       /KFC\sUK[\w\s]+:\s[\d]{2}\D{1}[\d]{2}\D{1}[\d]{2,4}[\w\s]+:\s*(?<restaurant>[-\s\w]+)\s[-FromfROM\s]{3,7}(?<dateStart>[\d]{2}\D{1}[\d]{2}\D{1}[\d]{2,4})[\s\w]{2,5}(?<dateEnd>[\d]{2}\D{1}[\d]{2}\D{1}[\d]{2,4})/;
 
-    let reportCategoryPattern =
-      /[\s\d][^\s]-\s?(?<category>(?<mainC>[A-Z][a-z]{2,12})(?<secondC>\s[A-Z][a-z]{2,12})*)(?<data>[\s\S]+?)(?=\bTotal\b)/g;
-    let productPattern =
-      /(?<productCode>\d{1,7})\s(?<product>[A-Z]{2}[-.\w\s+\(\)\/&]{2,45})\s((?<individual>[eaEA]{2}|[KGkg]{2}|[pORTIONSPortions]{7,8}|[lL]{1})|(?<case>[PKpk]{2}|[BGbg]{2}|[HDhd]{2}|[BTLbtl]{2,3}|[CASEcase]{4}|[lL]{1})[-\s\n]{1,3}(?<caseValue>[\d.,]+|[\d.,]+[xX][\d.,]+)(?<caseUnit>g|KG|kg|L|G)?)\s(?<beginInventory>[-\n\d.,]+)\s(?<transferIn>[-\n\d.,]{4,})\s(?<transferOut>[-\n\d.,]{4,})\s(?<purchases>[-\n\d.,]{4,})\s(?<endInventory>[-\n\d.,]{4,})\s(?<actual>[-\n\d.,]{4,})\s(?<actualCost>[-\n*£\d.,]{4,})\s(?<theoretical>[\n\d.,]{4,})\s(?<theoreticalCost>[-\n*£\d.,]{4,})\s(?<variance>[-\n\d.,]{4,})\s(?<varianceCost>[-\n*£\d.,]{4,})\s(?<waste>[\n\d.,]{4,})\s(?<wasteCost>[-\n*£\d.,]{4,})\s(?<missing>[-\n\d.,]{4,})\s(?<missingCost>[-\n*£\d.,]{4,})\s(?<eff>[-\d.,]{4,})/g;
+    let reportCategoryPattern = /\d{1,2}[-]+(?<category>[A-Za-z\s]{2,30})\s[\s\S]+?Total/g;
+
+    let productPattern = /(?<productCode>\d{1,7})\s(?<product>[A-Z]{2}[-.\w\s+\(\)\/&]{2,45})\s((?<individual>[eaEA]{2}|[KGkg]{2}|[pORTIONSPortions]{7,8}|[lL]{1})|(?<case>[PKpk]{2}|[BGbg]{2}|[HDhd]{2}|[-HDhd\s\d]{4,}|[BTLbtl]{2,3}|[CASEcase]{4}|[lL]{1})(?:[-\s]*(?<caseAmount>[\d\w.]+)?))[-\s]+(?<beginInventory>[\n\d.,]+)[-\s]+(?<transferIn>[\n\d.,]{4,})[-\s]+(?<transferOut>[\n\d.,]{4,})[-\s]+(?<purchases>[\n\d.,]{4,})[-\s]+(?<endInventory>[\n\d.,]{4,})[-\s]+(?<actual>[\n\d.,]{4,})[-\s]*(?<actualCost>£[\n*\d.,]{4,})[-\s]+(?<theoretical>[\n\d.,]{4,})[-\s]*(?<theoreticalCost>£[\n*\d.,]{4,})[-\s]+(?<variance>[\n\d.,]{4,})[-\s]*(?<varianceCost>£[\n*\d.,]{4,})[-\s]+(?<waste>[\n\d.,]{4,})[-\s]*(?<wasteCost>£[\n*\d.,]{4,})[-\s]+(?<missing>[\n\d.,]{4,})[-\s]*(?<missingCost>£[\n*\d.,]{4,})[-\s]+(?<eff>[\d.,]{4,})/g;
+
+
     //-----------------------------------------------------REGEX
 
     let categoryData = {};
     let categoryMatch;
 
     while ((categoryMatch = reportCategoryPattern.exec(report)) !== null) {
-      let exclusions = ["total", "grand"].map((x) => x.toUpperCase());
       let categoryName = categoryMatch.groups.category.trim().toUpperCase();
-
-      if (!exclusions.includes(categoryName)) {
-        categoryData[categoryName] = categoryMatch.groups.data.trim();
+        categoryData[categoryName] = categoryMatch[0].trim();
         InventoryProduct.inventoryRecord[categoryName] = {};
-      }
     }
 
     // Get report details data (day span and store name)
@@ -126,6 +123,7 @@ export default class Harvester {
         InventoryProduct.reportEndtDate
       );
     }
+    console.log(InventoryProduct);
 
     //Main product matching
     let match;
@@ -185,7 +183,7 @@ export default class Harvester {
       );
       let eff = this.stringUtil.stringToNumber(match.groups.eff);
 
-      new InventoryProduct(
+      new InventoryProduct({
         product,
         category,
         beginInventory,
@@ -207,7 +205,7 @@ export default class Harvester {
         productCase,
         caseValue,
         caseUnit,
-        orderCase
+        orderCase}
       );
     }
     return InventoryProduct.inventoryRecord;
@@ -309,5 +307,27 @@ export default class Harvester {
     totals.ticketAverage /= totals.workHours;
 
     return { ...hourlySalesRecord, totals };
+  }
+
+  purchaseOrderHarvest(report) {
+    const edgeConfirmPattern = /\sEXT. PRICE UNIT PRICE U\/M QTY DESCRIPTION VENDOR CODE/g;
+    const chromeConfirmPattern = /VENDOR CODE DESCRIPTION QTY U\/M UNIT PRICE EXT. PRICE/g;
+
+    const chromePattern = /((?<productCode>\d{4,7})\s\2|\d{4,7})\s-\s(?<productName>[\w\s\(\)\/.,]+)\s(?<amount>[\d.]+)\s(?<productCase>CASE-[\d\w.]+)\s(?<price>[\d.]+)\s(?<extPrice>[\d.]+)/g;
+    const edgePattern = /(?<productCode>\d{4,7})\s-\s(?<productName>[\w\s\(\)\/.,]+)\s(?<extPrice>[\d.]+)\s(?<productCase>CASE-[\d\w.]+)\s(?<amount>[\d.]+)\s(?<productCode1>\d{4,7})\s(?<price>[\d.]+)/g;
+    
+    let products;
+    if (report.match(edgeConfirmPattern) !== null) {
+      products = report.matchAll(edgePattern); 
+    }else if (report.match(chromeConfirmPattern) !== null) {
+      products = report.matchAll(chromePattern); 
+    }
+
+    for (let product of products) {
+      const { amount, productCase, extPrice, price, productCode, productName } = product.groups;
+      console.log({ amount, productCase, extPrice, price, productCode, productName });
+    }
+
+
   }
 }

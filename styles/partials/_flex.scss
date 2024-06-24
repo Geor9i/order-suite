@@ -7,7 +7,7 @@
 }
 
 
-@mixin grid($cols: 1fr, $rows: 1fr, $gap: 0, $autoRow: false, $autoCol: false) {
+@mixin grid($cols: 1fr, $rows: 1fr, $gap: 0, $autoRow: false, $autoCol: false, $JI: center, $AI: center) {
     display: grid;
     @if $autoRow == true {
     grid-auto-rows: minmax($rows, 1fr);
@@ -20,4 +20,7 @@
         grid-template-columns: $cols;
     }
     gap: $gap;
+
+    justify-items: $JI;
+    align-items: $AI;
 }

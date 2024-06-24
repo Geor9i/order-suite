@@ -1,28 +1,72 @@
 import { homePageTemplate } from "./homePageTemplate.js";
+import { guestHomeTemplate } from './guestHomeTemplate';
 import { eventBus } from '../../services/eventbus.js';
 import { bus } from '../../constants/busEvents.js';
+import { routes } from "../../constants/routing.js";
+import { userDataDetail } from "../../constants/userDataDetail.js";
 import BaseComponent from "../../framework/baseComponent.js";
-
 export default class HomeComponent extends BaseComponent {
-  constructor({ renderBody, router, utils }) {
+  constructor({ renderBody, router, utils, firestoreService, authService }) {
     super();
     this.renderHandler = renderBody;
+    this.firestoreService = firestoreService;
+    this.authService = authService;
     this.router = router;
+    this.objUtil = utils.objUtil;
     this.showView = this._showView.bind(this);
     this.userData = null;
     this.subscriberId = 'HomeComponent';
-    this.eventBusUnsubscribe = null;
+    this.userDataSubscription = null;
   }
 
   _showView(ctx) {
-    this.renderHandler(homePageTemplate());
+    this.userData = this.firestoreService.state;
+    if (!this.userData) {
+      this.renderHandler(guestHomeTemplate());
+    } else {
+      const { completion, progressReport } = this._profileCompletionReport();
+      this.renderHandler(homePageTemplate(completion, progressReport, this.userData))
+    }
   }
 
-  init() {
-    this.eventBusUnsubscribe = eventBus.on(bus.USERDATA, this.subscriberId, (userData) => {this.userData = userData; console.log('userData: ', userData);})
+    init() {
+    if (this.authService.user) {
+      this.userDataSubscription = eventBus.on(bus.USERDATA, this.subscriberId, () => this.showView())
+    }
+    this.showView();
   }
 
   destroy() {
-    this.eventBusUnsubscribe && this.eventBusUnsubscribe();
+    this.userDataSubscription && this.userDataSubscription();
+  }
+
+  _profileCompletionReport() {
+    const completionFactors = {}; 
+    Object.keys(userDataDetail).forEach(key => completionFactors[key] = this.userData[key])
+    const progressReport = { ...userDataDetail };
+
+    const profileCompletionsShare = Math.round(1 / Object.keys(completionFactors).length);
+    let completion = 0;
+    for (let factor in completionFactors) {
+      if (!completionFactors[factor])  {
+        progressReport[factor] = {...progressReport[factor], untouched: true, link: routes[factor]}
+        continue;
+      }
+        const profileArea = completionFactors[factor];
+        const profileAreaLenght = Object.keys(profileArea).length;
+        let profileAreaCompletion = 0;
+        for (let field in profileArea) {
+          let fieldShare = Math.ceil(1 / profileAreaLenght);
+          if (!this.objUtil.isEmpty(profileArea[field])) {
+            profileAreaCompletion += fieldShare;
+          } else {
+            progressReport[factor].push(field)
+          }
+        }
+        profileAreaCompletion = Math.max(100, profileAreaCompletion);
+        completion += profileCompletionsShare * (profileAreaCompletion / 100);
+    }
+    console.log(progressReport);
+    return { completion, progressReport };
   }
 }

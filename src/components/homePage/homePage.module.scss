@@ -1,13 +1,72 @@
+@import '../../../styles/partials/flex';
+@import '../../../styles/partials/box';
+@import '../../../styles/partials/effects';
+
 .homepage-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  background-color: rgb(219, 219, 219);
-  width: 100vw;
-  height: 100vh;
+  padding: 2em;
+  @include flex(column, start);
+  @include rect(100%, 100%);
+  background-color: rgb(255, 255, 255);
+  position: relative;
 }
 
-.homepage-container p {
-  font-size: 2rem;
+.progress-report {
+  padding: 2em;
+  @include flex(column, $AI: left, $gap:0.5em);
+}
+
+.report-general-notification {
+  font-size: 1.2em;
+}
+
+.link {
+  color: red;
+  @include transition(color);
+  &:hover {
+    color: blue
+  }
+}
+
+.progress-container {
+  @include flex(column);
+  position: absolute;
+  width: 100%;
+  bottom: 10px;
+}
+
+.storename {
+  font-size: 2em;
+}
+.progress-title {
+  font-size: 1.5em;
+}
+
+.progress-bar{
+  position: relative;
+  width: 60%;
+  height: 1.2em;
+  border-radius: 13px;
+  background-color: rgb(231, 231, 231);
+  overflow: hidden;
+}
+
+.progress-bar::after{
+  position: absolute;
+  box-shadow: 0 0 10px rgb(75, 75, 75) inset;
+  content:'';
+  inset: 0;
+}
+.progress {
+  height: 100%;
+  background-color: rgb(81, 255, 119);
+  transition: width 1s ease-in;
+}
+
+.progress-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.2em;
+  text-align: center;
 }

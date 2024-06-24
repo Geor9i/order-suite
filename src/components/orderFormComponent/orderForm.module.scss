@@ -2,31 +2,45 @@
 @import '../../../styles/partials/flex';
 @import '../../../styles/partials/effects';
 @import '../../../styles/partials/input';
+@import '../../../styles/partials/responsive';
 
-/* Make a new Order Screen */
+
 .order-page__section {
     position: relative;
-    @include flex(column, center, center);
+    @include flex(column);
     @include rect(100%, 100%);
-
+}
     .order-form {
-      box-shadow: 25px 15px 10px rgba($color: #000000, $alpha: 0.15);
-      @include rect(25%, auto, 500px);
-      @include flex(column);
-      padding: 2em;
-      background: linear-gradient(135deg, rgb(233, 239, 241) 0%, rgb(235, 229, 233) 40%, rgb(250, 249, 249) 100%);
-      border: 1px solid rgb(255, 255, 255);
-      margin: 0;
+      padding: 1em 0;
+      min-height: 60%;
+      @include rect(25%);
+      @include flex(column, $gap: 0.5em);
       border-radius: 13px;
-      @include transition(background-color);
+      background: linear-gradient(135deg, rgb(233, 239, 241) 0%, rgb(235, 229, 233) 40%, rgb(250, 249, 249) 100%);
+      box-shadow: 25px 15px 10px rgba($color: #000000, $alpha: 0.15);
+      border: 1px solid rgb(255, 255, 255);
+      @include tablet-screen { min-width: 50% };
+      @include phone-screen { min-width: 80% };
+    }
+
       .form-group {
         @include flex(column);
         width: 100%;
         position: relative;
-        
+        @include tablet-screen { width: 80% };
+        @include phone-screen { width: 100% };
+        input[type="text"] {
+          @include input(7px);
+          @include rect(60%);
+          padding: 0.2em;
+          text-align: center;
+          background-color: rgb(255, 255, 255);
+          @include tablet-screen { width: 80% };
+        }
+    }
         .input__order__invoiced {
           align-self: center;
-          margin: 1rem;
+          @include phone-screen { font-size: 1em }
         }
         
         .radio-container {
@@ -43,7 +57,7 @@
         }
         
         .radio-button {
-          @include rect(1.5em);
+          @include rect(1.5em, $cube: true);
           margin-right: 1.5em;
           cursor: pointer;
           accent-color: rgb(46, 46, 46);
@@ -52,7 +66,7 @@
         
         .check-box {
           display: inline-block;
-          @include rect(1.6em);
+          @include rect(1.6em, $cube: true);
           margin: 0;
           accent-color: rgb(100, 100, 100);
           cursor: pointer;
@@ -61,42 +75,33 @@
         .received-today__container {
           display: none;
           justify-content: space-evenly;
-          width: 70%;
-          label {
-          margin: 0;
-          }
+          width: 100%;
         }
         
         .received-today__container__on {
           display: flex;
         }
-        
-        label,
-        select {
-          margin-top: 1.3rem;
-          border: none;
-        }
-        
-        input {
-          @include input(7px);
-          padding: 0.2em;
-          text-align: center;
-          background-color: rgb(255, 255, 255);
-        }
-      }
 
       #calendar-input-container {
         position: relative;
-      }
-
-      .date-button {
-        @include position(absolute, 0, -20%);
-        border: none;
-        border-radius: 20%;
-        cursor: pointer;
-        @include transition(color);
-        &:hover {
-          color: green;
+        min-width: 60%;
+        @include tablet-screen { min-width: 60% };
+        input {
+          width: 100%;
+        }
+        i {
+          @include position(absolute, 0, -20%);
+          @include transition(color);
+          border: none;
+          border-radius: 20%;
+          cursor: pointer;
+          &:hover {
+            color: green;
+          }
+          @include phone-screen {
+             font-size: 1.5em;
+             @include position(absolute, 0, -10%);
+         };
         }
       }
     
@@ -123,8 +128,6 @@
           background-color: rgb(214, 237, 241);
         }
       }
-    }
-  }
  
   .rmf-data-dump {
     @include rect(15rem, 3.5rem);
@@ -150,13 +153,21 @@
         0 0 1px 2px rgb(255, 255, 255) inset, 0 0 1px 2px rgb(255, 255, 255);
       transition: box-shadow 0.3s ease;
     }
+    @include phone-screen {
+      width: 80%;
+    }
   }
 
   .warning-message {
     @include flex(column, flex-start);
-    @include position(absolute, 8%, 2%);
+    @include position(absolute, 50%, $left: 20%, $x: -50%, $y: -50%);
     @include rect(25%, 15%);
     color: rgb(255, 78, 78);
+    
+    @include tablet-screen {
+      @include rect(100%, 10%);
+      @include position(absolute, 5%, $left: 50%, $x: -50%, $y: -50%);
+    }
   }
   
   .warning-list {
@@ -165,7 +176,7 @@
   }
   
   .calendar-backdrop {
-    @include rect(100vw, 100vh);
+    @include rect(100%, 100%);
     @include position(absolute, $all: 0);
     display: none;
     backdrop-filter: blur(0.5px);

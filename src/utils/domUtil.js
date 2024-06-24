@@ -55,6 +55,13 @@ export default class DomUtil {
       element.classList.add(className);
     }
   }
+  addRemoveAttribute(element, attribute, value) {
+    if (element.hasAttribute(attribute)) {
+      element.removeAttribute(attribute);
+    } else {
+      element.setAttribute(attribute, value);
+    }
+  }
 
   deleteChildren(...elements) {
     for (let element of elements) {

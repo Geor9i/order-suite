@@ -3,7 +3,6 @@ import page from "../node_modules/page/page.mjs";
 import { render } from "../node_modules/lit-html/lit-html.js";
 import ComponentManager from "./framework/componentManager.js";
 import { authService, firestoreService } from './config/firebaseConfig.js';
-
 import Processor from "./processing/processor.js";
 import Calendar from "./components/calendar/calendar.js";
 import Harvester from "./reportHarvesters/harvester.js";
@@ -21,6 +20,11 @@ import ProductManager from "./components/productManager/productManager.js";
 
 import { storeSettings } from "./storeSettings.js";
 import { utils } from "./utils/utilConfig.js";
+import { purchaseReport, invReport } from '../inventoryReport.js';
+
+if (module.hot) {
+  module.hot.accept();
+}
 
 const main = document.querySelector("main");
 const nav = document.querySelector("header");
@@ -50,6 +54,8 @@ const funcLoader = {
   processor,
   storeSettings,
 };
+
+harvester.inventoryHarvest(invReport);
 
 page(authService.confirmUser);
 page(navComponent.showView);

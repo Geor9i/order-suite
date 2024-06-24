@@ -1,6 +1,6 @@
 import BaseComponent from "../../framework/baseComponent.js";
 import { restaurantMenuTemplate } from "./restaurantMenuTemplate.js";
-
+import { routes } from '../../constants/routing.js';
 export default class RestaurantMenu extends BaseComponent {
     constructor({ renderBody, router, authService }) {
         super();
@@ -13,7 +13,7 @@ export default class RestaurantMenu extends BaseComponent {
 
     _showView(ctx) {
         if (!this.authService.user) {
-            this.router.redirect("/");
+            this.router.redirect(routes.HOME);
             return;
         }
         this.render(restaurantMenuTemplate(this.menuButtonHandler));
