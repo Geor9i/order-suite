@@ -5,6 +5,7 @@ import FormUtil from "./formUtil.js";
 import DomUtil from "./domUtil.js";
 import ObjectUtil from "./objectUtil.js";
 import MathUtil from "./mathUtil.js";
+import UnitConverter from "./unitConverter.js";
 
 export const utils = {
     dateUtil: new DateUtil(),
@@ -14,4 +15,5 @@ export const utils = {
     domUtil: new DomUtil(),
     objUtil: new ObjectUtil(),
     mathUtil: new MathUtil(),
+    unitConverter: new UnitConverter(),
   };
