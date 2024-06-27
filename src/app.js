@@ -55,8 +55,10 @@ const funcLoader = {
   storeSettings,
 };
 
-let result = harvester.unprocessedOrderHarvest(unprocessedOrderReport);
-console.log(result);
+const { productData: inventoryProducts } = harvester.inventoryHarvest(invReport);
+const { productData: orderProducts } = harvester.purchaseOrderHarvest(purchaseReport);
+const matched = harvester.inventoryPairs(inventoryProducts, orderProducts);
+console.log(matched);
 
 page(authService.confirmUser);
 page(navComponent.showView);

@@ -18,7 +18,7 @@ export default class UnitConverter {
             } else {
                 packSize = str
             }
-            const multPattern = /(?<multiplier>\d)+x(?<unitValue>\d[\w]+)/;
+            const multPattern = /(?<multiplier>\d+)x(?<unitValue>\d[\w.]+)/;
 
             let multiplier = 1;
             let match;
@@ -37,21 +37,20 @@ export default class UnitConverter {
         }
     }
 
-    convertToUnitCost(props) {
-        const workProps = {...props};
-        const costPairs = this.getCostPairs(workProps);
+    addUnitPrice(props) {
+        const costPairs = this.getCostPairs(props);
         //? Find the value of a single report item
         let reportUnitPrice = 0;
         for (let costPair of costPairs) {
             const [valueKey, costKey] = costPair;
-            if (workProps[valueKey] > 0 && workProps[costKey] > 0) {
-                reportUnitPrice = workProps[costKey] / workProps[valueKey];
+            if (props[valueKey] > 0 && props[costKey] > 0) {
+                reportUnitPrice = props[costKey] / props[valueKey];
                 break;
             }
         }
-        const unitValue = (workProps['case'] || workProps['unit']).value;
+        const unitValue = (props['case'] || props['unit']).value;
         const unitPrice = reportUnitPrice / unitValue;
-        return {...workProps, unitPrice, reportUnitPrice};
+        return {...props, unitPrice, reportUnitPrice};
     }
 
     getCostPairs(props) {

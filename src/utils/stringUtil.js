@@ -82,7 +82,8 @@ export default class StringUtil {
   }
 
   stringToNumber(string) {
-    const number = string.split(/[\,\£\$]+/g).join('');
+    if (!string) return null;
+    const number = string.trim().split(/[\,\£\$]+/g).join('');
     if (!isNaN(number)) {
       return Number(number);
     }
@@ -169,4 +170,72 @@ export default class StringUtil {
       .map((el) => el.toLowerCase())
       .join("");
   }
+
+  
+  matchWords(wordArr, matchWordArr) {
+    const matchedIndexes = new Set();
+    const potentialPairs = [];
+    const [shorterWordArr, longerWordArr] = [wordArr, matchWordArr].sort((a, b) => a.length - b.length);
+    let breakLoop = false;
+    const shortWordUsedIndexes = new Set();
+    for (let i = 0; i < longerWordArr.length; i++) {
+      if (breakLoop) break;
+      const wordA = longerWordArr[i];
+      for (let j = 0;j < shorterWordArr.length; j++) {
+        if (shortWordUsedIndexes.has(j)) continue;
+        const wordB = shorterWordArr[j];
+        if (wordA === wordB) {
+          matchedIndexes.add(i);
+          shortWordUsedIndexes.add(j);
+          if (shortWordUsedIndexes.size === shorterWordArr.length) {
+            breakLoop = true;
+          }
+          break;
+        } else {
+          potentialPairs.push({shortArrIndex: j, longArrIndex: i})
+        }
+      }
+    }
+    
+    //? Match potential pairs
+    const scoredPairs = {};
+    let score = 0;
+    for (let pair of potentialPairs) {
+      const {shortArrIndex, longArrIndex} = pair;
+      if(shortWordUsedIndexes.has(shortArrIndex)) continue;
+      const score = this.wordSimmilarityScore(shorterWordArr[shortArrIndex], longerWordArr[longArrIndex]);
+      if (score <= 0) continue;
+      if (!scoredPairs[longArrIndex]) {
+        scoredPairs[longArrIndex] = [];
+      } 
+      scoredPairs[longArrIndex].push({shortArrIndex, score});
+    }
+    for (let longArrWordIndex in scoredPairs) {
+      const topMatch = scoredPairs[longArrWordIndex].sort((a, b) => b.score - a.score)[0];
+      score += topMatch.score;
+    }
+    const unmatchedWords = longerWordArr.filter((_, i) => !matchedIndexes.has(i));
+    const matchedWords = [...matchedIndexes].map(index => longerWordArr[index]);
+    return [matchedWords, unmatchedWords, score];
+  }
+
+  wordSimmilarityScore(wordA, wordB) {
+    //? Remove plurals
+    let score = 0;
+    const removePlurals = (word) => {
+       if (word.endsWith('s') && word.length > 1) {
+        return word.slice(0, word.length - 1)
+      }
+      return word
+    }
+    wordA = removePlurals(wordA.toLowerCase());
+    wordB = removePlurals(wordB.toLowerCase());
+   
+    let [shorterWord, longerWord] = [wordA, wordB].sort((a, b) => a.length - b.length);
+    if (longerWord.includes(shorterWord)) {
+      score = (shorterWord.length * 10) - (longerWord.length - shorterWord.length);
+    }
+    return score;
+      
+    } 
 }
