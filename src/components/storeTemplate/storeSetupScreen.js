@@ -4,12 +4,12 @@ import BaseComponent from '../../framework/baseComponent.js';
 import { db } from "../../constants/db.js";
 import { routes } from "../../constants/routing.js";
 export default class StoreTemplateScreen extends BaseComponent {
-  constructor({ renderBody, router, authService, firestoreService, utils }) {
+  constructor({ renderBody, router, services, utils }) {
     super();
     this.render = renderBody;
     this.router = router;
-    this.authService = authService;
-    this.firestoreService = firestoreService;
+    this.authService = services.authService;
+    this.firestoreService = services.firestoreService;
     this.stringUtil = utils.stringUtil;
     this.dateUtil = utils.dateUtil;
     this.domUtil = utils.domUtil;

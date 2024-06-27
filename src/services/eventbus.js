@@ -1,4 +1,4 @@
-class EventBus {
+export class EventBus {
     constructor() {
         this.events = {};
     }
@@ -31,5 +31,3 @@ class EventBus {
         }
     }
 }
-
-export const eventBus = new EventBus();

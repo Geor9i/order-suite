@@ -2,7 +2,6 @@ import '../styles/site.scss';
 import page from "../node_modules/page/page.mjs";
 import { render } from "../node_modules/lit-html/lit-html.js";
 import ComponentManager from "./framework/componentManager.js";
-import { authService, firestoreService } from './config/firebaseConfig.js';
 import Processor from "./processing/processor.js";
 import Calendar from "./components/calendar/calendar.js";
 import Harvester from "./reportHarvesters/harvester.js";
@@ -21,8 +20,7 @@ import ProductManager from "./components/productManager/productManager.js";
 import { storeSettings } from "./storeSettings.js";
 import { utils } from "./utils/utilConfig.js";
 import { purchaseReport, invReport, unprocessedOrderRMF, unprocessedOrderReport } from '../inventoryReport.js';
-import { JSEventBusService } from './services/jseventBus.js';
-import { JSEventManagerService } from './services/jsEventManager.js';
+import ServiceProvider from './services/serviceProvider.js';
 
 if (module.hot) {
   module.hot.accept();
@@ -41,19 +39,18 @@ const renderBody = (template) => render(template, main);
 const renderCalender = (template, parent) => render(template, parent);
 
 // services
-const jseventBus = new JSEventBusService();
-const jsEventManagerService = new JSEventManagerService(jseventBus);
+const services = new ServiceProvider();
 
 //Product Processor
 const processor = new Processor(storeSettings, utils);
 const harvester = new Harvester(utils);
 const CM = new ComponentManager();
 //Components
-const navComponent = new NavComponent(renderNav, router, authService, firestoreService, utils);
+const navComponent = new NavComponent(renderNav, router, services, utils);
 const calendarComponent = new Calendar(renderCalender, utils);
 
 //Loaders
-const baseLoader = { renderBody, router, authService, firestoreService, utils };
+const baseLoader = { renderBody, router, utils, services };
 const funcLoader = {
   calendarComponent,
   harvester,
@@ -61,12 +58,12 @@ const funcLoader = {
   storeSettings,
 };
 
-const { productData: inventoryProducts } = harvester.inventoryHarvest(invReport);
-const { productData: orderProducts } = harvester.purchaseOrderHarvest(purchaseReport);
-const matched = harvester.inventoryPairs(inventoryProducts, orderProducts);
-console.log(matched);
+// const { productData: inventoryProducts } = harvester.inventoryHarvest(invReport);
+// const { productData: orderProducts } = harvester.purchaseOrderHarvest(purchaseReport);
+// const matched = harvester.inventoryPairs(inventoryProducts, orderProducts);
+// console.log(matched);
 
-page(authService.confirmUser);
+page(services.authService.confirmUser);
 page(navComponent.showView);
 page("/index.html", "/");
 page("/", () => CM.mount(HomeComponent, baseLoader));

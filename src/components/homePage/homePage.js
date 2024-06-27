@@ -1,16 +1,16 @@
 import { homePageTemplate } from "./homePageTemplate.js";
 import { guestHomeTemplate } from './guestHomeTemplate';
-import { eventBus } from '../../services/eventbus.js';
 import { bus } from '../../constants/busEvents.js';
 import { routes } from "../../constants/routing.js";
 import { userDataDetail } from "../../constants/userDataDetail.js";
 import BaseComponent from "../../framework/baseComponent.js";
 export default class HomeComponent extends BaseComponent {
-  constructor({ renderBody, router, utils, firestoreService, authService }) {
+  constructor({ renderBody, router, utils, services }) {
     super();
+    this.eventBus = services.eventBus;
     this.renderHandler = renderBody;
-    this.firestoreService = firestoreService;
-    this.authService = authService;
+    this.firestoreService = services.firestoreService;
+    this.authService = services.authService;
     this.router = router;
     this.objUtil = utils.objUtil;
     this.showView = this._showView.bind(this);
@@ -31,7 +31,7 @@ export default class HomeComponent extends BaseComponent {
 
     init() {
     if (this.authService.user) {
-      this.userDataSubscription = eventBus.on(bus.USERDATA, this.subscriberId, () => this.showView())
+      this.userDataSubscription = this.eventBus.on(bus.USERDATA, this.subscriberId, () => this.showView())
     }
     this.showView();
   }

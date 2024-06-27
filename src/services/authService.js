@@ -12,10 +12,10 @@ import { bus } from "../constants/busEvents.js";
     deleteUser,
     onAuthStateChanged
   } from "firebase/auth";
-  import { eventBus } from "./eventbus";
   
   export default class AuthService {
-    constructor(app) {
+    constructor(app, eventBus) {
+      this.eventBus = eventBus;
       this.app = app;
       this.auth = getAuth(this.app);
       this.confirmUser = this._confirmUser.bind(this);
@@ -23,7 +23,7 @@ import { bus } from "../constants/busEvents.js";
     }
 
     init() {
-      onAuthStateChanged(this.auth, (user) => eventBus.emit(bus.AUTH_STATE_CHANGE, user),
+      onAuthStateChanged(this.auth, (user) => this.eventBus.emit(bus.AUTH_STATE_CHANGE, user),
       (error) => console.log('authError: ', error))
     }
 

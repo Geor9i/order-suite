@@ -2,11 +2,11 @@ import BaseComponent from "../../framework/baseComponent.js";
 import { loginPageTemplate } from "./loginPageTemplate.js";
 import { routes } from "../../constants/routing.js";
 export default class LoginPage extends BaseComponent {
-  constructor({ renderBody, router, authService, utils }) {
+  constructor({ renderBody, router, services, utils }) {
     super();
     this.render = renderBody;
     this.router = router;
-    this.authService = authService;
+    this.authService = services.authService;
     this.formUtil = utils.formUtil;
     this.showView = this._showView.bind(this);
     this.submitHandler = this._submitHandler.bind(this);

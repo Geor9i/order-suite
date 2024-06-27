@@ -3,12 +3,12 @@ import styles from "./salesAnalysisPage.module.scss";
 import BaseComponent from "../../framework/baseComponent";
 
 export default class SalesAnalysis extends BaseComponent {
-  constructor({ renderBody, router, authService, utils, harvester }) {
+  constructor({ renderBody, router, services, utils, harvester }) {
     super();
     this.render = renderBody;
     this.router = router;
     this.harvester = harvester;
-    this.authService = authService;
+    this.authService = services.authService;
     this.stringUtil = utils.stringUtil;
     this.timeUtil = utils.timeUtil;
     this.dateUtil = utils.dateUtil;

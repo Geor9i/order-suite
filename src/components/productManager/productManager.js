@@ -3,18 +3,26 @@ import { productManagerTemplate } from "./productManagerTemplate";
 
 
 export default class ProductManager extends BaseComponent {
-    constructor({ renderBody, router, authService, utils }) {
+    constructor({ renderBody, router, services, utils }) {
         super();
         this.render = renderBody;
         this.router = router;
-        this.authService = authService;
+        this.authService = services.authService;
         this.stringUtil = utils.stringUtil;
         this.timeUtil = utils.timeUtil;
         this.dateUtil = utils.dateUtil;
         this.domUtil = utils.domUtil;
         this.showView = this._showView.bind(this);
+        this.jsEvenUnsubscribeArr = [];
     }
 
+    init() {
+        
+    }
+
+    destroy() {
+        this.jsEvenUnsubscribeArr.forEach(unsubscribe => unsubscribe())
+    }
 
     getRestaurantData() {
         return {

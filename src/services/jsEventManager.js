@@ -1,4 +1,3 @@
-import { JSEventBusService } from "./jseventBus.js";
 import { eventTypes } from "../constants/events.js";
 
 export class JSEventManagerService {
@@ -6,7 +5,7 @@ export class JSEventManagerService {
         this.jsEventBus = jsEventBus;
         this.eventTypes = eventTypes;
         this.hasInitilized = false;
-        this.defaultHost = document.body.querySelector('app-root');
+        this.defaultHost = document.querySelector('.wrapper');
         this.maxParentCounter = 50;
         this._init();
     }
@@ -20,7 +19,7 @@ export class JSEventManagerService {
         if (eventHost) {
           const eventRef = eventHost.addEventListener(type, (e) => {
             const { parents, children } = this.getRelatives(e);
-            this.jSEventBus.publish({ e, parents, children });
+            this.jsEventBus.publish({ e, parents, children });
           });
         }
       });

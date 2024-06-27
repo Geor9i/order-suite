@@ -8,7 +8,8 @@ export const productManagerTemplate = () => html`
     <div class=${styles['product-manager-container']}>
 
     <div class=${styles['system-product-manager']}>
-        
+        <header>Inventory</header>
+
     </div>
 
     </div>

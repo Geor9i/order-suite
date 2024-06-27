@@ -2,14 +2,14 @@ import BaseComponent from "../../framework/baseComponent.js";
 import { orderPageTemplate } from "./orderPageTemplate.js";
 
 export default class OrderPage extends BaseComponent {
-  constructor({ renderBody, router, processor, authService, utils }) {
+  constructor({ renderBody, router, processor, services, utils }) {
     super();
     this.stringUtil = utils.stringUtil;
     this.dateUtil = utils.dateUtil;
     this.domUtil = utils.domUtil;
     this.renderHandler = renderBody;
     this.router = router;
-    this.authService = authService;
+    this.authService = services.authService;
     this.processor = processor;
     this.valueButtonClick = this._valueButtonClick.bind(this);
     this.searchHandler = this._searchHandler.bind(this);

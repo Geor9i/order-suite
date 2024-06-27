@@ -9,7 +9,7 @@ export default class OrderFormComponent extends BaseComponent {
     harvester,
     processor,
     storeSettings,
-    authService,
+    services,
     utils,
   }) {
     super();
@@ -20,7 +20,7 @@ export default class OrderFormComponent extends BaseComponent {
     this.stringUtil = utils.stringUtil;
     this.renderHandler = renderBody;
     this.router = router;
-    this.authService = authService;
+    this.authService = services.authService;
     this.calendarComponent = calendarComponent;
     this.harvester = harvester;
     this.processor = processor;

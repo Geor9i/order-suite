@@ -2,11 +2,11 @@ import BaseComponent from "../../framework/baseComponent.js";
 import { restaurantMenuTemplate } from "./restaurantMenuTemplate.js";
 import { routes } from '../../constants/routing.js';
 export default class RestaurantMenu extends BaseComponent {
-    constructor({ renderBody, router, authService }) {
+    constructor({ renderBody, router, services }) {
         super();
         this.render = renderBody;
         this.router = router;
-        this.authService = authService;
+        this.authService = services.authService;
         this.showView = this._showView.bind(this);
         this.menuButtonHandler = this._menuButtonHandler.bind(this);
     }

@@ -20,8 +20,11 @@
 .system-product-manager {
     max-width: 300px;
     @include rect(30vw, 80%, $bRadius: 13px);
-    @include flex(column);
+    @include flex(column, flex-start);
     @include gradient(135deg, (#c7c7c765, 20%), (#acb7bd42, 30%), (#c5c9cc4f, 60%), (#acb3bd5d, 100%));
     border: 2px solid rgb(214, 144, 255);
     box-shadow: 5px 2px 10px 2px #00000063;
+    header {
+        @include rect(100%, 2em);
+    }
 }

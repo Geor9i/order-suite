@@ -1,6 +1,5 @@
 import { db } from "../constants/db.js";
 import { bus } from '../constants/busEvents.js';
-import { eventBus } from "./eventbus.js";
 import { utils } from "../utils/utilConfig";
 import {
   doc,
@@ -14,7 +13,8 @@ import {
 } from "firebase/firestore";
 
 export default class FirestoreService {
-  constructor(app) {
+  constructor(app, eventBus) {
+    this.eventBus = eventBus;
     this.subscriberId = `FirestoreService`;
     this.app = app;
     this.db = getFirestore(app);
@@ -26,7 +26,7 @@ export default class FirestoreService {
   }
 
   init() {
-    eventBus.on(
+    this.eventBus.on(
       bus.AUTH_STATE_CHANGE,
       this.subscriberId,
       this.onUserChange.bind(this)
@@ -55,7 +55,7 @@ export default class FirestoreService {
       );
       if (!globalReferenceMatch) {
         this.state = newState;
-        eventBus.emit(bus.USERDATA, newState);
+        this.eventBus.emit(bus.USERDATA, newState);
       }
     }
   }
