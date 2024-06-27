@@ -21,6 +21,8 @@ import ProductManager from "./components/productManager/productManager.js";
 import { storeSettings } from "./storeSettings.js";
 import { utils } from "./utils/utilConfig.js";
 import { purchaseReport, invReport, unprocessedOrderRMF, unprocessedOrderReport } from '../inventoryReport.js';
+import { JSEventBusService } from './services/jseventBus.js';
+import { JSEventManagerService } from './services/jsEventManager.js';
 
 if (module.hot) {
   module.hot.accept();
@@ -37,6 +39,10 @@ const router = {
 const renderNav = (template) => render(template, nav);
 const renderBody = (template) => render(template, main);
 const renderCalender = (template, parent) => render(template, parent);
+
+// services
+const jseventBus = new JSEventBusService();
+const jsEventManagerService = new JSEventManagerService(jseventBus);
 
 //Product Processor
 const processor = new Processor(storeSettings, utils);

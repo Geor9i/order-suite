@@ -13,52 +13,8 @@ export default class ProductManager extends BaseComponent {
         this.dateUtil = utils.dateUtil;
         this.domUtil = utils.domUtil;
         this.showView = this._showView.bind(this);
-        this.slideOpen = this._slideOpen.bind(this);
-        this.sliderContainers = [];
     }
 
-    _slideOpen(e) {
-        const element = e.currentTarget;
-        const id = element.dataset.id;
-        const container = document.getElementById(id);
-        const isRecorded = this.sliderContainers.some(
-            (element) => element.id === id
-        );
-        if (!isRecorded) {
-            this.sliderContainers.push(container);
-        }
-
-        let containerHierarchies = this.domUtil.getElementHierarchy(
-            this.sliderContainers
-        );
-        const selectedHierarchy = containerHierarchies.find((arr) =>
-            arr.find((element) => element.id === id)
-        );
-        const hierarchyHeightArr = selectedHierarchy.map(
-            (el) => el.getBoundingClientRect().height
-        );
-        const startContainerIndex = selectedHierarchy.findIndex(
-            (element) => element.id === id
-        );
-        const selectedContainer = selectedHierarchy[startContainerIndex];
-        let containerHeight = hierarchyHeightArr[startContainerIndex];
-        let toggleOpen = containerHeight <= 0 ? true : false;
-        let cumulativeHeight = this.domUtil.getContentHeight(selectedContainer);
-        selectedContainer.style.height = (toggleOpen ? cumulativeHeight : 0) + "px";
-        for (let i = startContainerIndex - 1; i >= 0; i--) {
-            if (selectedHierarchy[i].contains(selectedContainer)) {
-                const currentParentContainer = selectedHierarchy[i];
-                let currentParentContainerContentHeight = hierarchyHeightArr[i];
-                cumulativeHeight = toggleOpen
-                    ? cumulativeHeight + currentParentContainerContentHeight
-                    : cumulativeHeight;
-                currentParentContainer.style.height =
-                    (toggleOpen
-                        ? cumulativeHeight
-                        : currentParentContainerContentHeight - cumulativeHeight) + "px";
-            }
-        }
-    }
 
     getRestaurantData() {
         return {
@@ -184,7 +140,32 @@ export default class ProductManager extends BaseComponent {
         }
         const { records, products, rules } = this.getIventoryData();
         this.render(
-            productManagerTemplate(this.slideOpen, records, products, rules)
+            productManagerTemplate(records, products, rules)
         );
     }
+
+    
+  dragStart(event) {
+    const e = event;
+    if (e.target !== this.sheet.nativeElement) return;
+
+    this.isDraggin = true;
+    const { clientX, clientY } = e;
+    const { rect } = this.eventUtil.elementData(this.sheet.nativeElement);
+    this.dragOffsetX = clientX - rect.left;
+    this.dragOffsetY = clientY - rect.top;
+  }
+
+  dragOver(event) {
+    if (this.isDraggin) {
+      let e = event;
+      const { clientX, clientY } = this.eventUtil.eventData(e);
+      this.resumeStyles['left'] = clientX - this.dragOffsetX + 'px';
+      this.resumeStyles['top'] = clientY - this.dragOffsetY + 'px';
+    }
+  }
+
+  dragEnd(e) {
+    this.isDraggin = false;
+  }
 }
