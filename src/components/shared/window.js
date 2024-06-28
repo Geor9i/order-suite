@@ -88,14 +88,12 @@ export default class Window {
           const { clientX, clientY } = e;
           const offsetX = clientX - this.dragOffsetX
           const offsetY = clientY - this.dragOffsetY
-          console.log({offsetX, offsetY, rect: this.parentRect});
-          this.window.style.top = `${offsetY}px`;
-        //   if (offsetY > 0 && offsetY < this.parentRect.right) {
-        //     }
-            console.log(offsetX - this.windowRect.height);
-            this.window.style.left = `${offsetX}px`;
-        //     if (offsetX > 0 && offsetX - this.windowRect.height < this.parentRect.bottom) {
-        //   }
+          if (offsetY > 0 && offsetY < this.parentRect.height - this.windowRect.height) {
+              this.window.style.top = `${offsetY}px`;
+            }
+            if (offsetX > 0 && offsetX < this.parentRect.width - this.windowRect.width) {
+                this.window.style.left = `${offsetX}px`;
+          }
       }
     
       dragEnd(e) {

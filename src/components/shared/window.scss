@@ -6,7 +6,7 @@ $edge-thickness: 4px;
 
 .window {
     position: absolute;
-    @include rect(30vw, 40vw, $bRadius: 7px);
+    @include rect(35vw, 30vw, $bRadius: 7px);
     @include flex(column);
     @include gradient(135deg, (#c7c7c765, 20%), (#acb7bd42, 30%), (#c5c9cc4f, 60%), (#acb3bd5d, 100%));
     border: 2px solid rgb(214, 144, 255);
