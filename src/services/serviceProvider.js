@@ -10,7 +10,7 @@ export default class ServiceProvider {
         this.eventBus = new EventBus();
         this.authService = new AuthService(app, this.eventBus);
         this.firestoreService = new FirestoreService(app, this.eventBus);
-        this.jsEventBusService = new JSEventBusService();
-        this.jsEventManagerService = new JSEventManagerService(this.jsEventBusService);
+        this.jsEventBus = new JSEventBusService();
+        this.jsEventManagerService = new JSEventManagerService(this.jsEventBus);
     }
 }

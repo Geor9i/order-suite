@@ -6,6 +6,7 @@ import DomUtil from "./domUtil.js";
 import ObjectUtil from "./objectUtil.js";
 import MathUtil from "./mathUtil.js";
 import UnitConverter from "./unitConverter.js";
+import EventUtil from "./eventUtil.js";
 
 export const utils = {
     dateUtil: new DateUtil(),
@@ -15,5 +16,6 @@ export const utils = {
     domUtil: new DomUtil(),
     objUtil: new ObjectUtil(),
     mathUtil: new MathUtil(),
+    eventUtil: new EventUtil(),
     unitConverter: new UnitConverter(),
   };

@@ -7,8 +7,10 @@ export const productManagerTemplate = () => html`
 <section class=${styles['container']}>
     <div class=${styles['product-manager-container']}>
 
-    <div class=${styles['system-product-manager']}>
-        <header>Inventory</header>
+    <div draggable="true" class=${`${styles['system-product-manager']} ${styles['draggable']}`}>
+        <header>
+            <p>Inventory</p>
+        </header>
 
     </div>
 

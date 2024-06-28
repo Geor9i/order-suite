@@ -1,4 +1,4 @@
-import { eventTypes } from "../constants/events.js";
+import { eventTypes } from "../config/events.js";
 
 export class JSEventManagerService {
     constructor(jsEventBus) {

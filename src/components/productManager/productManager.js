@@ -1,27 +1,35 @@
 import BaseComponent from "../../framework/baseComponent";
 import { productManagerTemplate } from "./productManagerTemplate";
+import styles from './productManager.module.scss';
 
 
 export default class ProductManager extends BaseComponent {
     constructor({ renderBody, router, services, utils }) {
         super();
+        this.jsEventBus = services.jsEventBus;
+        this.jsEventBusSubscriberId = 'ProductManager';
         this.render = renderBody;
         this.router = router;
         this.authService = services.authService;
-        this.stringUtil = utils.stringUtil;
+        this.eventUtil = utils.eventUtil;
         this.timeUtil = utils.timeUtil;
         this.dateUtil = utils.dateUtil;
         this.domUtil = utils.domUtil;
         this.showView = this._showView.bind(this);
         this.jsEvenUnsubscribeArr = [];
+        this.isDraggin = false;
+        this.dragElement = null;
     }
 
     init() {
-        
+        const subscription1 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'dragstart', this.dragStart.bind(this), {target: `.${styles['draggable']}`});
+        const subscription2 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'dragover', this.dragOver.bind(this));
+        const subscription3 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'dragend', this.dragEnd.bind(this));
+        this.jsEvenUnsubscribeArr.push(subscription1, subscription2, subscription3);
     }
 
     destroy() {
-        this.jsEvenUnsubscribeArr.forEach(unsubscribe => unsubscribe())
+        this.jsEvenUnsubscribeArr.forEach(unsubscribe => unsubscribe());
     }
 
     getRestaurantData() {
@@ -153,27 +161,26 @@ export default class ProductManager extends BaseComponent {
     }
 
     
-  dragStart(event) {
-    const e = event;
-    if (e.target !== this.sheet.nativeElement) return;
-
+  dragStart(e) {
+    console.log(e);
     this.isDraggin = true;
     const { clientX, clientY } = e;
-    const { rect } = this.eventUtil.elementData(this.sheet.nativeElement);
+    const { rect } = this.eventUtil.elementData(e.target);
+    this.dragElement = e.target;
     this.dragOffsetX = clientX - rect.left;
     this.dragOffsetY = clientY - rect.top;
   }
 
-  dragOver(event) {
+  dragOver(e) {
     if (this.isDraggin) {
-      let e = event;
       const { clientX, clientY } = this.eventUtil.eventData(e);
-      this.resumeStyles['left'] = clientX - this.dragOffsetX + 'px';
-      this.resumeStyles['top'] = clientY - this.dragOffsetY + 'px';
+      this.dragElement.style.left = clientX - this.dragOffsetX + 'px';
+      this.dragElement.style.top = clientY - this.dragOffsetY + 'px';
     }
   }
 
   dragEnd(e) {
     this.isDraggin = false;
+    this.dragElement = null;
   }
 }
