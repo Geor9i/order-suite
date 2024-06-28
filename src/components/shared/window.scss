@@ -1,0 +1,80 @@
+@import '../../../styles/partials/responsive';
+@import '../../../styles/partials/box';
+@import '../../../styles/partials/flex';
+
+$edge-thickness: 4px;
+
+.window {
+    position: absolute;
+    @include rect(30vw, 40vw, $bRadius: 7px);
+    @include flex(column);
+    @include gradient(135deg, (#c7c7c765, 20%), (#acb7bd42, 30%), (#c5c9cc4f, 60%), (#acb3bd5d, 100%));
+    border: 2px solid rgb(214, 144, 255);
+    cursor: grab;
+}
+
+.vertex {
+    position: absolute;
+    @include rect(2em, 2em);
+    padding: 3px;
+    border-width: 0 4px 4px 0;
+}
+
+.top-left { 
+    top: 0;
+    left: 0;
+    cursor: nwse-resize;
+    transform: rotate(135deg);
+    -webkit-transform: rotate(180deg);
+}
+.top-right { 
+    top: 0;
+    right: 0;
+    cursor: nesw-resize;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-90deg);
+}
+.bottom-left { 
+    bottom: 0;
+    left: 0;
+    cursor: nesw-resize;
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(90deg);
+}
+.bottom-right { 
+    bottom: 0;
+    right: 0;
+    cursor: nwse-resize;
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-0deg);
+}
+
+.edge {
+    position: absolute;
+    // border-width: 0 4px 0 0;
+}
+
+.left { 
+    @include rect($edge-thickness, 100%);
+    top: 0;
+    left: 0;
+    cursor: ew-resize;
+}
+.top { 
+    @include rect(100%, $edge-thickness);
+    top: 0;
+    right: 0;
+    cursor: ns-resize;
+}
+.bottom { 
+    @include rect(100%, $edge-thickness);
+    bottom: 0;
+    left: 0;
+    cursor: ns-resize;
+}
+.right { 
+    @include rect($edge-thickness, 100%);
+    bottom: 0;
+    right: 0;
+    cursor: ew-resize;
+}

@@ -3,7 +3,7 @@ import styles from './homePage.module.scss'
 
 export const homePageTemplate = (completion, progressReport, userData) => {
 return html`
-<div class=${styles["homepage-container"]}>
+<div class=${styles["container"]}>
  ${userData?.STORE_NAME ? html`<p class=${styles["storename"]}>${userData.STORE_NAME}</p>` : null}   
 ${completion < 100 && progressReport ? progressTemplate(completion, progressReport, userData): null}
 </div>

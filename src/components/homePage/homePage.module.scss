@@ -2,7 +2,7 @@
 @import '../../../styles/partials/box';
 @import '../../../styles/partials/effects';
 
-.homepage-container {
+.container {
   padding: 2em;
   @include flex(column, start);
   @include rect(100%, 100%);

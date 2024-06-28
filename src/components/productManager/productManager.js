@@ -19,7 +19,6 @@ export default class ProductManager extends BaseComponent {
         this.jsEvenUnsubscribeArr = [];
         this.isDraggin = false;
         this.dragElement = null;
-        this.eventContainer = null;
     }
 
     init() {
@@ -164,10 +163,10 @@ export default class ProductManager extends BaseComponent {
 
     
   dragStart(e) {
-    this.eventContainer = document.querySelector(`.${styles['product-manager-container']}`);
+    const container = document.querySelector(`.${styles['product-manager-container']}`);
     this.isDraggin = true;
     const { clientX, clientY } = e;
-    const { rect: containerRect } = this.eventUtil.elementData(this.eventContainer);
+    const { rect: containerRect } = this.eventUtil.elementData(container);
     const { rect } = this.eventUtil.elementData(e.target);
     this.dragElement = e.target;
     this.dragOffsetX = clientX + containerRect.left - rect.left;
