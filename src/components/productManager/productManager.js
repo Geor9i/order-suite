@@ -19,11 +19,13 @@ export default class ProductManager extends BaseComponent {
         this.jsEvenUnsubscribeArr = [];
         this.isDraggin = false;
         this.dragElement = null;
+        this.eventContainer = null;
     }
 
     init() {
+        // this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mousemove', (e) => console.log({x: e.clientX, y: e.clientY}))
         const subscription1 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'dragstart', this.dragStart.bind(this), {target: `.${styles['draggable']}`});
-        const subscription2 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'dragover', this.dragOver.bind(this));
+        const subscription2 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'dragover', this.dragOver.bind(this), { target: `.${styles['product-manager-container']}`});
         const subscription3 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'dragend', this.dragEnd.bind(this));
         this.jsEvenUnsubscribeArr.push(subscription1, subscription2, subscription3);
     }
@@ -162,18 +164,19 @@ export default class ProductManager extends BaseComponent {
 
     
   dragStart(e) {
-    console.log(e);
+    this.eventContainer = document.querySelector(`.${styles['product-manager-container']}`);
     this.isDraggin = true;
     const { clientX, clientY } = e;
+    const { rect: containerRect } = this.eventUtil.elementData(this.eventContainer);
     const { rect } = this.eventUtil.elementData(e.target);
     this.dragElement = e.target;
-    this.dragOffsetX = clientX - rect.left;
-    this.dragOffsetY = clientY - rect.top;
+    this.dragOffsetX = clientX + containerRect.left - rect.left;
+    this.dragOffsetY = clientY + containerRect.top - rect.top;
   }
 
   dragOver(e) {
     if (this.isDraggin) {
-      const { clientX, clientY } = this.eventUtil.eventData(e);
+      const { clientX, clientY } = e;
       this.dragElement.style.left = clientX - this.dragOffsetX + 'px';
       this.dragElement.style.top = clientY - this.dragOffsetY + 'px';
     }

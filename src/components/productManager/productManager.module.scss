@@ -13,6 +13,7 @@ $window-border-radius: 7px;
 
 .product-manager-container {
     position: relative;
+    overflow: hidden;
     @include rect(100%, 100%);
     @include flex();
     @include gradient(135deg, (#8c909765, 20%), (#71838d42, 30%), (#6b7c864f, 60%), (#5664775d, 100%));
