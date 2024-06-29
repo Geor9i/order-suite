@@ -1,6 +1,8 @@
 import { serviceProvider } from "../../services/serviceProvider.js";
 import styles from './window.scss';
 import { utils } from "../../utils/utilConfig.js";
+import { render } from "lit-html";
+import { windowTemplate } from "./windowTemplate.js";
 
 export default class Window {
     constructor(parent) {
@@ -35,7 +37,6 @@ export default class Window {
 
     buildWindow() {
         const window = document.createElement('div');
-        this.window = window;
         window.classList.add(styles['window']);
         const fragment = document.createDocumentFragment();
         const edges = ['top', 'right', 'bottom', 'left'];
@@ -54,6 +55,8 @@ export default class Window {
         })
         window.appendChild(fragment);
         this.parent.appendChild(window);
+        // render(windowTemplate(), window);
+        this.window = window;
     }
 
     dragStart(e) {
@@ -61,6 +64,9 @@ export default class Window {
         const { clientX, clientY } = e;
         const { rect } = this.eventUtil.elementData(e.target);
         this.parentRect = this.eventUtil.elementData(this.parent).rect;
+        console.log(e.target);
+        console.log(this.window);
+        console.log(this.window == e.target);
         if (e.target !== this.window) {
             this.anchorName = Object.keys(this.anchors).find(name => this.anchors[name] === e.target);
             this.anchor = e.target;
