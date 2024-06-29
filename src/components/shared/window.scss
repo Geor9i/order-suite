@@ -4,17 +4,23 @@
 
 $edge-thickness: 4px;
 $window-border-radius: 7px;
+
+.draggable {
+    cursor: grab;
+}
+
 .window {
     position: absolute;
     @include rect(35vw, 30vw, $bRadius: 7px);
-    @include flex(column);
-    @include gradient(135deg, (#c7c7c765, 20%), (#acb7bd42, 30%), (#c5c9cc4f, 60%), (#acb3bd5d, 100%));
+    @include flex(column, flex-start);
+    @include gradient(135deg, (#e6e6e6, 20%), (#dbdbdb, 100%));
     border: 2px solid rgb(214, 144, 255);
     cursor: grab;
     header {
         color: #e2e2e2;
+        padding: 0 2em;
         @include rect(100%, 2.2em);
-        @include flex();
+        @include grid(1fr 15%);
         @include gradient(135deg, (#4b4b4b, 20%), (#464545, 60%), (#575757, 100%));
         border-top-left-radius: $window-border-radius;
         border-top-right-radius: $window-border-radius;
@@ -25,9 +31,43 @@ $window-border-radius: 7px;
     }
 }
 
+.controls {
+    @include flex($gap: 0.5em);
+}
+
+.control-btn {
+
+    position: relative;
+    @include rect(1.9em, 1.9em, $bRadius: 50%);
+    background-color: rgb(255, 255, 255);
+    font-size: 0.9em;
+    text-align: center;
+    color: #000;
+    border: 1px solid black;
+    cursor: pointer;
+    i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+.close {
+    &:hover {
+        background-color: red;
+        color: #fff;
+    }
+}
+.maximize, .minimize {
+    &:hover {
+        background-color: rgb(201, 201, 201);
+    }
+}
+
+
 .vertex {
     position: absolute;
-    @include rect(2em, 2em);
+    @include rect(1em, 1em);
     padding: 3px;
     border-width: 0 4px 4px 0;
 }

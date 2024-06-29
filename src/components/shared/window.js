@@ -5,7 +5,8 @@ import { render } from "lit-html";
 import { windowTemplate } from "./windowTemplate.js";
 
 export default class Window {
-    constructor(parent) {
+    constructor(parent, title) {
+        this.title = title;
         this.jsEventBusSubscriberId = `${Math.random() * 1000000}`;
         this.parent = parent;
         this.eventUtil = utils.eventUtil;
@@ -14,9 +15,11 @@ export default class Window {
         this.isDraggin = false;
         this.anchor = null;
         this.anchorName = null;
-        this.anchors = {};
+        this.anchors = ['top', 'right', 'bottom', 'left', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
         this.window = null;
         this.parentRect = null;
+        this.windowState = {};
+        this.isMaximized = false;
     }
 
     init() {
@@ -27,7 +30,7 @@ export default class Window {
     }
     destroy() {
         this.jsEvenUnsubscribeArr.forEach(unsubscribe => unsubscribe());
-        this.anchors?.window.remove();
+        this.window.remove();
     }
 
     showView() {
@@ -37,39 +40,52 @@ export default class Window {
 
     buildWindow() {
         const window = document.createElement('div');
-        window.classList.add(styles['window']);
-        const fragment = document.createDocumentFragment();
-        const edges = ['top', 'right', 'bottom', 'left'];
-        edges.map(name => {
-            const edge = document.createElement('div');
-            this.anchors[name] = edge;
-            edge.classList.add(styles['edge'], styles[name]);
-            fragment.appendChild(edge);
-        })
-        const vertex = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
-        vertex.map(name => {
-            const vertex = document.createElement('div');
-            this.anchors[name] = vertex;
-            vertex.classList.add(styles['vertex'], styles[name]);
-            fragment.appendChild(vertex);
-        })
-        window.appendChild(fragment);
+        window.classList.add(styles['window'], styles['draggable']);
         this.parent.appendChild(window);
-        // render(windowTemplate(), window);
+        const close = this.closeWindow.bind(this);
+        const maximize = this.maximizeWindow.bind(this);
+        const controls = {close, maximize, state: this.isMaximized}
+        render(windowTemplate(this.title, controls), window);
         this.window = window;
     }
 
+    closeWindow() {
+        this.destroy()
+    };
+    maximizeWindow() {
+        const button = document.querySelector(`.${styles['maximize']}`);
+        const i = button.querySelector('i');
+        if (this.isMaximized) {
+            this.window.style.top = `${this.windowState.top}px`;
+            this.window.style.left = `${this.windowState.left}px`;
+            this.window.style.height = `${this.windowState.height}px`;
+            this.window.style.width = `${this.windowState.width}px`;
+            this.isMaximized = false;
+            i.className = 'fa-solid fa-up-right-and-down-left-from-center';
+        } else {
+            this.windowState = this.eventUtil.elementData(this.window).rect;
+            const { rect } = this.eventUtil.elementData(this.parent);
+            this.window.style.top = `${0}px`;
+            this.window.style.left = `${0}px`;
+            this.window.style.height = `${rect.height}px`;
+            this.window.style.width = `${rect.width}px`;
+            this.isMaximized = true;
+            i.className = 'fa-solid fa-down-left-and-up-right-to-center';
+        }
+    };
+
     dragStart(e) {
+        let draggable = e.target;
+        if (!e.target.classList.contains(styles['draggable'])) {
+            draggable = this.window;
+        }
         this.isDraggin = true;
         const { clientX, clientY } = e;
-        const { rect } = this.eventUtil.elementData(e.target);
+        const { rect } = this.eventUtil.elementData(draggable);
         this.parentRect = this.eventUtil.elementData(this.parent).rect;
-        console.log(e.target);
-        console.log(this.window);
-        console.log(this.window == e.target);
-        if (e.target !== this.window) {
-            this.anchorName = Object.keys(this.anchors).find(name => this.anchors[name] === e.target);
-            this.anchor = e.target;
+        if (e.target.classList.contains(styles['edge']) || e.target.classList.contains(styles['vertex'])) {
+            this.anchor = draggable;
+            this.anchorName = draggable.dataset.id;
         }
         const { rect: windowRect } = this.eventUtil.elementData(this.window);
         this.windowRect = windowRect;

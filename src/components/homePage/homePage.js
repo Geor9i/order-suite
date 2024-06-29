@@ -33,7 +33,7 @@ export default class HomeComponent extends BaseComponent {
       this.renderHandler(homePageTemplate(completion, progressReport, this.userData))
     }
     this.container = document.querySelector(`.${styles['container']}`) || document.querySelector(`.${stylesGuest['container']}`);
-    const window = new Window(this.container);
+    const window = new Window(this.container, 'inventory');
     window.showView()
   }
 
