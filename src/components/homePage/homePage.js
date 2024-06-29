@@ -6,7 +6,7 @@ import { userDataDetail } from "../../constants/userDataDetail.js";
 import BaseComponent from "../../framework/baseComponent.js";
 import styles from './homePage.module.scss';
 import stylesGuest from './guestHome.scss';
-import Window from "../shared/window.js";
+
 export default class HomeComponent extends BaseComponent {
   constructor({ renderBody, router, utils, services }) {
     super();
@@ -33,8 +33,6 @@ export default class HomeComponent extends BaseComponent {
       this.renderHandler(homePageTemplate(completion, progressReport, this.userData))
     }
     this.container = document.querySelector(`.${styles['container']}`) || document.querySelector(`.${stylesGuest['container']}`);
-    const window = new Window(this.container, 'inventory');
-    window.showView()
   }
 
     init() {

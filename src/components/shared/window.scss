@@ -4,6 +4,7 @@
 
 $edge-thickness: 4px;
 $window-border-radius: 7px;
+$border-color: #fdc8ff;
 
 .draggable {
     cursor: grab;
@@ -14,7 +15,7 @@ $window-border-radius: 7px;
     @include rect(35vw, 30vw, $bRadius: 7px);
     @include flex(column, flex-start);
     @include gradient(135deg, (#e6e6e6, 20%), (#dbdbdb, 100%));
-    border: 2px solid rgb(214, 144, 255);
+    border: 2px solid $border-color;
     cursor: grab;
     header {
         color: #e2e2e2;
@@ -43,7 +44,7 @@ $window-border-radius: 7px;
     font-size: 0.9em;
     text-align: center;
     color: #000;
-    border: 1px solid black;
+    border: 1px solid $border-color;
     cursor: pointer;
     i {
         position: absolute;
@@ -129,4 +130,9 @@ $window-border-radius: 7px;
     bottom: 0;
     right: 0;
     cursor: ew-resize;
+}
+
+.content {
+    @include flex(column);
+    @include rect(100%, 100%);
 }

@@ -7,42 +7,20 @@
 $window-border-radius: 7px;
 
 .container {
-    @include rect(100%, 100%);
-    @include flex(column);
-}
-
-.product-manager-container {
     position: relative;
-    overflow: hidden;
     @include rect(100%, 100%);
     @include flex();
     @include gradient(135deg, (#8c909765, 20%), (#71838d42, 30%), (#6b7c864f, 60%), (#5664775d, 100%));
     backdrop-filter: blur(10px);
 }
 
-.system-product-manager {
-    max-width: 300px;
-    @include rect(30vw, 80%, $bRadius: $window-border-radius);
-    @include flex(column, flex-start);
-    @include gradient(135deg, (#c7c7c765, 20%), (#acb7bd42, 30%), (#c5c9cc4f, 60%), (#acb3bd5d, 100%));
-    border: 2px solid rgb(214, 144, 255);
-    box-shadow: 5px 2px 10px 2px #00000063;
-    header {
-        color: #e2e2e2;
-        @include rect(100%, 2.2em);
-        @include flex();
-        @include gradient(135deg, (#4b4b4b, 20%), (#464545, 60%), (#575757, 100%));
-        border-top-left-radius: $window-border-radius;
-        border-top-right-radius: $window-border-radius;
-        p {
-            font-size: 1em;
-            text-align: center;
-        }
-    }
-}
-
-.draggable {
+.side-bar {
     position: absolute;
-    background-color: red;
-    cursor: grab;
+    top: 50%;
+    left: 2px;
+    @include rect(3vw, 50%, $bRadius: 7px);
+    transform: translate(0, -50%);
+    background-color: rgb(223, 223, 223);
+    border: 2px solid gray;
+    z-index: 1;
 }

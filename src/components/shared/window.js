@@ -20,6 +20,11 @@ export default class Window {
         this.parentRect = null;
         this.windowState = {};
         this.isMaximized = false;
+        this.create();
+        return {
+            window: this.window,
+            content: this.window.querySelector(`.${styles['content']}`)
+        }
     }
 
     init() {
@@ -33,7 +38,7 @@ export default class Window {
         this.window.remove();
     }
 
-    showView() {
+    create() {
         this.buildWindow();
         this.init();
     }
