@@ -5,12 +5,13 @@
 @import '../../../styles/partials/responsive';
 
 $window-border-radius: 7px;
+$icon-glow: #df67f7;
 
 .container {
     position: relative;
     @include rect(100%, 100%);
     @include flex();
-    @include gradient(135deg, (#8c909765, 20%), (#71838d42, 30%), (#6b7c864f, 60%), (#5664775d, 100%));
+    @include gradient(135deg, (#59627265, 20%), (#2d475542, 30%), (#384a554f, 60%), (#1a222e5d, 100%));
     backdrop-filter: blur(10px);
 }
 
@@ -18,9 +19,97 @@ $window-border-radius: 7px;
     position: absolute;
     top: 50%;
     left: 2px;
-    @include rect(3vw, 50%, $bRadius: 7px);
+    @include flex(column, flex-start, $gap: 1em);
+    @include rect(3vw, 70%, $bRadius: 7px);
     transform: translate(0, -50%);
-    background-color: rgb(223, 223, 223);
-    border: 2px solid gray;
+    background-color: rgb(58, 60, 70);
+    z-index: 10;
+}
+
+.side-bar-hidden {
+    transform: translate(-100%, -50%);
+}
+
+.side-bar-backdrop {
+    position: absolute;
+    @include rect(3vw, 70%, $bRadius: 7px);
+    transform: translate(0, -50%);
+    top: 50%;
+    left: 0;
+    background-color: red;
     z-index: 1;
+}
+
+.side-bar-backdrop-inactive {
+    transform: translate(-200%, -50%);
+}
+
+.bar-btn {
+    cursor: pointer;
+    @include rect(100%, $bRadius: 7px, $cube: true);
+    @include flex();
+    @include transition(background-color);
+    &:hover {
+        background-color: rgb(223, 223, 223);
+    }
+    .bar-icon {
+        @include rect(80%, $cube: true, $bRadius: 50%);
+        @include flex();
+        position: relative;
+        @include transition((zoom, transform));
+        p {
+            color: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.5em;
+        }
+    }
+    &:hover .bar-icon {
+        box-shadow: 0 0 13px inset #1b7591, 0 0 4px 2px #97e7ff;
+        background-color: rgb(70, 70, 70);
+    }
+    &:hover .bar-icon p {
+        color: $icon-glow;
+        zoom: 1.2;
+    }
+}
+
+.hide-arrow{
+    position: relative;
+    border-bottom: 2px solid #fff;
+    .bar-icon {
+        color: #fff;
+        @include rect(60%, $cube: true, $bRadius: 50%);
+    }
+    i {
+        z-index: 1;
+        font-size: 1.7em;
+    }
+    &:hover .bar-icon i{
+        transition: transform 2s;
+        transform: translateX(-50%)
+    }
+}
+.hide-arrow::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: $icon-glow;
+    transform: translate(-50%, -50%);
+    content: '\f0d9';
+    font-family: "Font Awesome 5 Free";
+    font-size: 1em;
+    @include transition(text-shadow);   
+}
+.hide-arrow:hover::after {
+    text-shadow: 0 0 2px #fff, 0 0 10px $icon-glow;
+    font-size: 2.2em;
+}
+
+.inactive {
+    display: none;
 }

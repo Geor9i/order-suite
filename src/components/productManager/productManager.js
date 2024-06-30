@@ -9,6 +9,7 @@ export default class ProductManager extends BaseComponent {
         super();
         this.jsEventBus = services.jsEventBus;
         this.jsEventBusSubscriberId = 'ProductManager';
+        this.jsEventUnsubscribeArr = [];
         this.render = renderBody;
         this.router = router;
         this.authService = services.authService;
@@ -19,12 +20,34 @@ export default class ProductManager extends BaseComponent {
         this.showView = this._showView.bind(this);
         this.isDraggin = false;
         this.dragElement = null;
+        this.sidebarPeeking = false;
+        this.sidebar = null;
+        this.sidebarBackdrop = null;
     }
 
     init() {
+        const unsubscribe1 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mouseover', this.sidebarPeek.bind(this), {target: [`.${styles['side-bar-backdrop']}`, `.${styles['side-bar']}`]})
+        this.jsEventUnsubscribeArr.push(unsubscribe1);
+    }
+
+    sidebarPeek(e) {
+        this.sideBar = this.sidebar || document.querySelector(`.${styles['side-bar']}`);
+        this.sidebarBackdrop = this.sidebarBackdrop || document.querySelector(`.${styles['side-bar-backdrop']}`);
+        if (e.target === this.sideBar && this.sidebarPeeking) {
+            this.sideBar.classList.add(styles['side-bar-hidden']);
+            this.sidebarBackdrop.classList.remove(styles['side-bar-backdrop-inactive']);
+            this.sidebarPeeking = false;
+        } else if (e.target === this.sidebarBackdrop && !this.sidebarPeeking) {
+            this.sideBar.classList.remove(styles['side-bar-hidden']);
+            this.sidebarBackdrop.classList.add(styles['side-bar-backdrop-inactive']);
+            this.sidebarPeeking = true;
+        }
+        console.log(this.sidebarPeeking);
+       
     }
 
     destroy() {
+        this.jsEventUnsubscribeArr.forEach(unsubscribe => unsubscribe());
     }
 
     getRestaurantData() {
@@ -47,11 +70,20 @@ export default class ProductManager extends BaseComponent {
             this.router.redirect("/");
             return;
         }
-        this.render(productManagerTemplate());
+        const functions = {
+            toggleSidebar: this.toggleSidebar.bind(this)
+        }
+        this.render(productManagerTemplate(functions));
         const windowContainer = document.querySelector(`.${styles['container']}`)
         const {window, content} = new Window(windowContainer, 'inventory');
         console.log({window, content});
+        
         render(inventoryProductsTemplate(), content)
+    }
+
+    toggleSidebar() {
+        const sideBar = document.querySelector(`.${styles['side-bar']}`);
+        this.domUtil.addRemoveClass(sideBar, styles['side-bar-hidden']);
     }
 
 }
