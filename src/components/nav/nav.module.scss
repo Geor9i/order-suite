@@ -10,6 +10,7 @@ $selector-color: #ff2259;
     z-index: 1000;
     @include rect(100%, 100%);
     @include gradient(135deg, (#200ccf41), (#ffffff88), (#f170343b));
+    @include flex();
     font-size: 2.5em;
     border-bottom: 0.1rem solid rgba(0, 0, 0, 0.4);
     text-align: center;
