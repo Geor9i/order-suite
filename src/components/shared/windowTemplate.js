@@ -2,11 +2,10 @@ import { html } from "lit-html";
 import styles from './window.scss';
 
 export const windowTemplate = (title = '', controls) => html`
-${console.log(controls.state)}
     <header>
         <p>${title}</p>
         <div class=${styles['controls']}>
-            <div @click=${controls.minimize} class=${`${styles['control-btn']} ${styles['minimize']}`}>
+            <div @click=${() => controls.minimize()} class=${`${styles['control-btn']} ${styles['minimize']}`}>
                 <i class="fa-solid fa-window-minimize"></i>
             </div>
             <div @click=${controls.maximize} class=${`${styles['control-btn']} ${styles['maximize']}`}>

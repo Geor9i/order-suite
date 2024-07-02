@@ -6,7 +6,8 @@
 
 $window-border-radius: 7px;
 $icon-glow: #df67f7;
-$side-bar-width: 3vw;
+$active-icon-glow: #67daf7;
+$side-bar-width: 4vw;
 $side-bar-height: 70%;
 
 .container {
@@ -72,6 +73,18 @@ $side-bar-height: 70%;
         color: $icon-glow;
         zoom: 1.2;
     }
+}
+
+.bar-button-active {
+    background-color: rgb(119, 119, 119);
+    border: 1px solid $active-icon-glow;
+    box-shadow: 0 0 5px $active-icon-glow, 0 0 10px inset $active-icon-glow;
+}
+.bar-button-minimized { 
+    background-color: gray;
+    border: none;
+    box-shadow: none;
+    border-bottom: 3px solid $active-icon-glow;
 }
 
 .base-arrow {

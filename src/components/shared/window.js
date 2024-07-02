@@ -21,19 +21,17 @@ export default class Window {
         this.windowState = {};
         this.isMaximized = false;
         this.events = {};
-        this.minimizeLocation = {x: 535, y: 893};
+        this.minimizeTransition = null;
         this.create();
-        return {
-            window: this.window,
-            content: this.window.querySelector(`.${styles['content']}`)
-        }
+        this.contentContainer = this.window.querySelector(`.${styles['content']}`);
     }
 
     init() {
         const subscription1 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mousedown', this.dragStart.bind(this), {target: this.window});
         const subscription2 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mousemove', this.dragOver.bind(this));
         const subscription3 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mouseup', this.dragEnd.bind(this));
-        this.jsEvenUnsubscribeArr.push(subscription1, subscription2, subscription3);
+        const subscription4 = this.on('maximizeWindow', 'window', this.minimizeWindow.bind(this, true));
+        this.jsEvenUnsubscribeArr.push(subscription1, subscription2, subscription3, subscription4);
     }
     destroy() {
         this.jsEvenUnsubscribeArr.forEach(unsubscribe => unsubscribe());
@@ -60,6 +58,7 @@ export default class Window {
 
     closeWindow() {
         this.destroy()
+        this.emit('closeWindow');
     };
     maximizeWindow() {
         const button = document.querySelector(`.${styles['maximize']}`);
@@ -82,19 +81,20 @@ export default class Window {
             i.className = 'fa-solid fa-down-left-and-up-right-to-center';
         }
     };
-    minimizeWindow() {
-            const { rect: windowRect } = this.eventUtil.elementData(this.window);
+    minimizeWindow(open = false) {
+            !open && this.emit('minimizeTarget');
+            const windowRect = this.eventUtil.elementData(this.window).rect;
             const { rect: parentRect } = this.eventUtil.elementData(this.parent);
-            this.windowState = windowRect;
-            const startOpacity = 1;
+         
+            const startOpacity = open ? 0 : 1;
             const startX = windowRect.left - parentRect.left;
             const startY = windowRect.top - parentRect.top;
             const startWidth = windowRect.width;
             const startHeight = windowRect.height;
-            const endWidth = 300;
-            const endHeight = 300;
-            const endX = this.minimizeLocation.x;
-            const endY = this.minimizeLocation.y;
+            const endWidth = open ? this.windowState.width : Math.max(this.minimizeTransition.width, 200);
+            const endHeight = open ? this.windowState.height : Math.max(this.minimizeTransition.height, 200);;
+            const endX = open ? this.windowState.left : this.minimizeTransition.left;
+            const endY = open ? this.windowState.top : this.minimizeTransition.top;
             const duration = 300; 
             const startTime = performance.now();
       
@@ -110,7 +110,7 @@ export default class Window {
               const currentY = startY + (endY - startY) * easedProgress;
               const currentWidth = startWidth + (endWidth - startWidth) * easedProgress;
               const currentHeight = startHeight + (endHeight - startHeight) * easedProgress;
-              const currentOpacity = startOpacity * (1 - easedProgress);
+              const currentOpacity = open ? startOpacity + easedProgress : startOpacity * (1 - easedProgress);
               this.window.style.left = `${currentX}px`;
               this.window.style.top = `${currentY}px`;
               this.window.style.width = `${currentWidth}px`;
@@ -120,7 +120,8 @@ export default class Window {
               if (progress < 1) {
                 requestAnimationFrame(animate);
               } else {
-                this.emit('windowMinimized');
+                this.windowState = windowRect;
+                !open && this.emit('windowMinimized');
               }
             }
             requestAnimationFrame(animate);

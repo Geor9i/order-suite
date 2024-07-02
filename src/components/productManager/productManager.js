@@ -10,6 +10,7 @@ export default class ProductManager extends BaseComponent {
         this.jsEventBus = services.jsEventBus;
         this.jsEventBusSubscriberId = 'ProductManager';
         this.jsEventUnsubscribeArr = [];
+        this.windows = {};
         this.render = renderBody;
         this.router = router;
         this.authService = services.authService;
@@ -70,14 +71,14 @@ export default class ProductManager extends BaseComponent {
             return;
         }
         const functions = {
-            toggleSidebar: this.toggleSidebar.bind(this)
+            toggleSidebar: this.toggleSidebar.bind(this),
+            toggleWindow: this.toggleWindow.bind(this)
         }
         this.render(productManagerTemplate(functions));
-        const windowContainer = document.querySelector(`.${styles['container']}`)
-        const {window, content} = new Window(windowContainer, 'inventory');
-        console.log({window, content});
-        
-        render(inventoryProductsTemplate(), content)
+        // const windowContainer = document.querySelector(`.${styles['container']}`)
+        // const {window, content} = new Window(windowContainer, 'inventory');
+        // console.log({window, content});
+        // render(inventoryProductsTemplate(), content)
     }
 
     toggleSidebar() {
@@ -102,5 +103,58 @@ export default class ProductManager extends BaseComponent {
             this.sideBarHidden = false;
         }
     }
+
+    toggleWindow(e) {
+        const windowContainer = document.querySelector(`.${styles['container']}`)
+        const button = e.currentTarget;
+        const { name, state } = button.dataset;
+        const subscriberId = name.split(' ').join('_');
+        console.log(state);
+        if (state === 'closed') {
+            button.dataset.state = 'active';
+            button.classList.add(styles['bar-button-active']);
+            const window = new Window(windowContainer, name);
+            const unsubscribe = window.on('minimizeTarget', subscriberId, () => {
+                const {rect} = this.eventUtil.elementData(button);
+                const {rect: parentRect} = this.eventUtil.elementData(windowContainer);
+                window.minimizeTransition = {
+                    ...rect,
+                    left: rect.left - parentRect.left,
+                    top: rect.top - parentRect.top
+                }
+            })
+            const unsubscribe1 = window.on('windowMinimized', subscriberId, () => {
+                button.classList.add(styles['bar-button-minimized']);
+                button.dataset.state = 'minimized';
+            })
+            const unsubscribe2 = window.on('closeWindow', subscriberId, () => {
+                button.classList.remove(styles['bar-button-minimized'], styles['bar-button-active']);
+                button.dataset.state = 'closed';
+                this.windows[subscriberId].subscriptions.forEach(unsubscribe => unsubscribe());
+                this.windows[subscriberId] = null;
+            })
+            this.windows[subscriberId] = {
+                window,
+                subscriptions: [unsubscribe, unsubscribe1, unsubscribe2]};
+        } else if (state === 'minimized') {
+            this.windows[subscriberId].window.emit('maximizeWindow');
+            button.classList.remove(styles['bar-button-minimized']);
+            button.dataset.state = 'active';
+        }else if (state === 'active') {
+            const {rect} = this.eventUtil.elementData(button);
+            const {rect: parentRect} = this.eventUtil.elementData(windowContainer);
+            this.windows[subscriberId].window.minimizeTransition = {
+                ...rect,
+                left: rect.left - parentRect.left,
+                top: rect.top - parentRect.top
+            }
+            this.windows[subscriberId].window.minimizeWindow();
+            button.classList.add(styles['bar-button-minimized']);
+            button.dataset.state = 'minimized';
+
+        }
+    }
+
+
 
 }

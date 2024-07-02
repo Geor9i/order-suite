@@ -12,7 +12,7 @@ export const productManagerTemplate = (func) => html`
     </div>
     </div>
    ${barButtons.map(entry => html`
-     <div title=${entry.description} class=${styles['bar-btn']}>
+     <div @click=${func.toggleWindow} data-name=${entry.description} data-state="closed" title=${entry.description} class=${styles['bar-btn']}>
         <div class=${styles['bar-icon']}>
             <p>${entry.name}</p>
         </div>
