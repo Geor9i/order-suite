@@ -20,6 +20,8 @@ export default class Window {
         this.parentRect = null;
         this.windowState = {};
         this.isMaximized = false;
+        this.events = {};
+        this.minimizeLocation = {x: 535, y: 893};
         this.create();
         return {
             window: this.window,
@@ -47,9 +49,11 @@ export default class Window {
         const window = document.createElement('div');
         window.classList.add(styles['window'], styles['draggable']);
         this.parent.appendChild(window);
-        const close = this.closeWindow.bind(this);
-        const maximize = this.maximizeWindow.bind(this);
-        const controls = {close, maximize, state: this.isMaximized}
+        const controls = {
+            close: this.closeWindow.bind(this),
+            maximize: this.maximizeWindow.bind(this),
+            minimize: this.minimizeWindow.bind(this)
+        }
         render(windowTemplate(this.title, controls), window);
         this.window = window;
     }
@@ -78,6 +82,41 @@ export default class Window {
             i.className = 'fa-solid fa-down-left-and-up-right-to-center';
         }
     };
+    minimizeWindow() {
+            const { rect: windowRect } = this.eventUtil.elementData(this.window);
+            const startX = windowRect.left;
+            const startY = windowRect.top;
+            const startWidth = windowRect.width;
+            const startHeight = windowRect.height;
+            const endX = this.minimizeLocation.x;
+            const endY = this.minimizeLocation.y;
+            const duration = 10000; 
+            const startTime = performance.now();
+      
+            function easeInOutQuad(t) {
+              return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+            }
+      
+            const animate = (time) => {
+              const elapsedTime = time - startTime;
+              const progress = Math.min(elapsedTime / duration, 1);
+              const easedProgress = easeInOutQuad(progress);
+      
+              const currentX = startX + (endX - startX) * easedProgress;
+              const currentY = startY + (endY - startY) * easedProgress;
+              const currentWidth = startWidth * (1 - easedProgress);
+              const currentHeight = startHeight * (1 - easedProgress);
+      
+              this.window.style.transform = `translate(${currentX}px, ${currentY}px)`;
+              this.window.style.width = `${currentWidth}px`;
+              this.window.style.height = `${currentHeight}px`;
+      
+              if (progress < 1) {
+                requestAnimationFrame(animate);
+              }
+            }
+            requestAnimationFrame(animate);
+}
 
     dragStart(e) {
         let draggable = e.target;
@@ -212,5 +251,32 @@ export default class Window {
         };
 
         resizeFunctions[this.anchorName](e);
+    }
+    
+    on(eventType, subscriberId, callback) {
+        if(this.events.hasOwnProperty(eventType)) {
+            if (this.events[eventType].hasOwnProperty(subscriberId)) {
+                this.events[eventType][subscriberId].push({callback});
+            }else {
+                this.events[eventType][subscriberId] = [{callback}];
+            }
+        } else {
+            this.events[eventType] = {
+                [subscriberId]: [{callback}]
+            };
+        }
+        
+        const subscribtionIndex = this.events[eventType][subscriberId].length - 1;
+        return () => {
+            this.events[eventType][subscriberId].splice(subscribtionIndex, 1);
+        }
+    }
+
+    emit(eventType, data = null) {
+        if (this.events.hasOwnProperty(eventType)) {
+            Object.keys(this.events[eventType]).forEach(subscriberId  => {
+                this.events[eventType][subscriberId].forEach(subscription => subscription.callback(data));
+            })
+        }
     }
 }
