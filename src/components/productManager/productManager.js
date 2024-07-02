@@ -21,28 +21,27 @@ export default class ProductManager extends BaseComponent {
         this.isDraggin = false;
         this.dragElement = null;
         this.sidebarPeeking = false;
+        this.sidebarBackdropInitialHover = false;
+        this.sideBarHidden = false;
         this.sidebar = null;
         this.sidebarBackdrop = null;
     }
 
     init() {
-        const unsubscribe1 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mouseover', this.sidebarPeek.bind(this), {target: [`.${styles['side-bar-backdrop']}`, `.${styles['side-bar']}`]})
-        this.jsEventUnsubscribeArr.push(unsubscribe1);
     }
 
     sidebarPeek(e) {
         this.sideBar = this.sidebar || document.querySelector(`.${styles['side-bar']}`);
         this.sidebarBackdrop = this.sidebarBackdrop || document.querySelector(`.${styles['side-bar-backdrop']}`);
-        if (e.target === this.sideBar && this.sidebarPeeking) {
-            this.sideBar.classList.add(styles['side-bar-hidden']);
-            this.sidebarBackdrop.classList.remove(styles['side-bar-backdrop-inactive']);
-            this.sidebarPeeking = false;
-        } else if (e.target === this.sidebarBackdrop && !this.sidebarPeeking) {
-            this.sideBar.classList.remove(styles['side-bar-hidden']);
-            this.sidebarBackdrop.classList.add(styles['side-bar-backdrop-inactive']);
-            this.sidebarPeeking = true;
+        if (this.sidebarBackdropInitialHover && e.type === 'mouseout' && e.target === this.sidebarBackdrop) {
+            this.sidebarBackdropInitialHover = false;
+            return;
         }
-        console.log(this.sidebarPeeking);
+        if (!this.sidebarBackdropInitialHover && e.type === 'mouseover') {
+            this.sideBar.classList.remove(styles['side-bar-hidden']);
+        } else if (!this.sidebarBackdropInitialHover && e.type === 'mouseout') {
+            this.sideBar.classList.add(styles['side-bar-hidden']);
+        }
        
     }
 
@@ -82,8 +81,26 @@ export default class ProductManager extends BaseComponent {
     }
 
     toggleSidebar() {
-        const sideBar = document.querySelector(`.${styles['side-bar']}`);
-        this.domUtil.addRemoveClass(sideBar, styles['side-bar-hidden']);
+        this.sideBar = this.sidebar || document.querySelector(`.${styles['side-bar']}`);
+        const arrowButton = document.getElementById('toggle-bar');
+        const arrowElement = arrowButton.querySelector(`i`);
+        arrowElement.className = this.sideBarHidden ? 'fa-solid fa-caret-left' : 'fa-solid fa-caret-right';
+
+        if (!this.sideBarHidden) {
+            const unsubscribe1 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mouseover', this.sidebarPeek.bind(this), {target: [`.${styles['side-bar-backdrop']}`, `.${styles['side-bar']}`]});
+            const unsubscribe2 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mouseout', this.sidebarPeek.bind(this), {target: [`.${styles['side-bar-backdrop']}`, `.${styles['side-bar']}`]});
+            this.jsEventUnsubscribeArr.push(unsubscribe1, unsubscribe2);
+            this.sidebarBackdropInitialHover = true;
+            this.sideBar.classList.add(styles['side-bar-hidden']);
+            arrowButton.className = `${styles['bar-btn']} ${styles['show-arrow']}`;
+            this.sideBarHidden = true;
+        } else {
+            this.jsEventUnsubscribeArr.forEach(unsubscribe => unsubscribe());
+            this.sidebarBackdropInitialHover = false;
+            this.sideBar.classList.remove(styles['side-bar-hidden']);
+            arrowButton.className = `${styles['bar-btn']} ${styles['hide-arrow']}`;
+            this.sideBarHidden = false;
+        }
     }
 
 }

@@ -6,7 +6,7 @@ export const productManagerTemplate = (func) => html`
 
 <div class=${styles['side-bar-backdrop']}></div>
 <div class=${styles['side-bar']}>
-<div @click=${func.toggleSidebar} title="hide sidebar" class=${`${styles['bar-btn']} ${styles['hide-arrow']}`}>
+<div @click=${func.toggleSidebar} title="hide sidebar" id="toggle-bar" class=${`${styles['bar-btn']} ${styles['hide-arrow']}`}>
     <div class=${styles['bar-icon']}>
         <i class="fa-solid fa-caret-left fa-2x"></i>
     </div>

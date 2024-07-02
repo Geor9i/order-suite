@@ -84,13 +84,18 @@ export default class Window {
     };
     minimizeWindow() {
             const { rect: windowRect } = this.eventUtil.elementData(this.window);
-            const startX = windowRect.left;
-            const startY = windowRect.top;
+            const { rect: parentRect } = this.eventUtil.elementData(this.parent);
+            this.windowState = windowRect;
+            const startOpacity = 1;
+            const startX = windowRect.left - parentRect.left;
+            const startY = windowRect.top - parentRect.top;
             const startWidth = windowRect.width;
             const startHeight = windowRect.height;
+            const endWidth = 300;
+            const endHeight = 300;
             const endX = this.minimizeLocation.x;
             const endY = this.minimizeLocation.y;
-            const duration = 10000; 
+            const duration = 300; 
             const startTime = performance.now();
       
             function easeInOutQuad(t) {
@@ -101,18 +106,21 @@ export default class Window {
               const elapsedTime = time - startTime;
               const progress = Math.min(elapsedTime / duration, 1);
               const easedProgress = easeInOutQuad(progress);
-      
               const currentX = startX + (endX - startX) * easedProgress;
               const currentY = startY + (endY - startY) * easedProgress;
-              const currentWidth = startWidth * (1 - easedProgress);
-              const currentHeight = startHeight * (1 - easedProgress);
-      
-              this.window.style.transform = `translate(${currentX}px, ${currentY}px)`;
+              const currentWidth = startWidth + (endWidth - startWidth) * easedProgress;
+              const currentHeight = startHeight + (endHeight - startHeight) * easedProgress;
+              const currentOpacity = startOpacity * (1 - easedProgress);
+              this.window.style.left = `${currentX}px`;
+              this.window.style.top = `${currentY}px`;
               this.window.style.width = `${currentWidth}px`;
               this.window.style.height = `${currentHeight}px`;
+              this.window.style.opacity = `${currentOpacity}`;
       
               if (progress < 1) {
                 requestAnimationFrame(animate);
+              } else {
+                this.emit('windowMinimized');
               }
             }
             requestAnimationFrame(animate);

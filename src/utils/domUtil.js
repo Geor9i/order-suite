@@ -51,8 +51,10 @@ export default class DomUtil {
   addRemoveClass(element, className) {
     if (element.classList.contains(className)) {
       element.classList.remove(className);
+      return 'remove';
     } else {
       element.classList.add(className);
+      return 'add';
     }
   }
   addRemoveAttribute(element, attribute, value) {
@@ -107,6 +109,25 @@ export default class DomUtil {
       .join("")}`;
 
     return color;
+  }
+
+  getRelatives(element, searchParent = null, maxParentCounter = 10) {
+    const parents = [];
+    if (element) {
+      const children = element.children ? Array.from(element.children) : [];
+      let counter = maxParentCounter;
+      let currentElement = element;
+      while (currentElement && currentElement.parentElement && counter > 0) {
+        currentElement = currentElement.parentElement;
+        parents.push(currentElement);
+        counter--;
+        if (searchParent && currentElement === searchParent) {
+          break;
+        }
+      }
+      return { parents, children };
+    }
+    return { parents: [], children: [] };
   }
 
   // Function to convert HSL to RGB
