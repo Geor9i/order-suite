@@ -6,8 +6,9 @@ import { windowTemplate } from "./windowTemplate.js";
 
 export default class Window {
     constructor(parent, title) {
+        this._isActive = false;
         this.title = title;
-        this.jsEventBusSubscriberId = `${Math.random() * 1000000}`;
+        this.jsEventBusSubscriberId = `Window_${Math.random() * 1000000}`;
         this.parent = parent;
         this.eventUtil = utils.eventUtil;
         this.jsEventBus = serviceProvider.jsEventBus;
@@ -15,7 +16,6 @@ export default class Window {
         this.isDraggin = false;
         this.anchor = null;
         this.anchorName = null;
-        this.anchors = ['top', 'right', 'bottom', 'left', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
         this.window = null;
         this.parentRect = null;
         this.windowState = {};
@@ -30,7 +30,8 @@ export default class Window {
         const subscription1 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mousedown', this.dragStart.bind(this), {target: this.window});
         const subscription2 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mousemove', this.dragOver.bind(this));
         const subscription3 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mouseup', this.dragEnd.bind(this));
-        const subscription4 = this.on('maximizeWindow', 'window', this.minimizeWindow.bind(this, true));
+        const subscription4 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'click', this.setActive.bind(this));
+        const subscription5 = this.on('maximizeWindow', 'window', this.minimizeWindow.bind(this, true));
         this.jsEvenUnsubscribeArr.push(subscription1, subscription2, subscription3, subscription4);
     }
     destroy() {
@@ -41,6 +42,14 @@ export default class Window {
     create() {
         this.buildWindow();
         this.init();
+    }
+
+    setActive(e) {
+        if (this.window.contains(e.target)) {
+            this.window.style.zIndex = '10';
+        } else {
+            this.window.style.zIndex = '1';
+        }
     }
 
     buildWindow() {
