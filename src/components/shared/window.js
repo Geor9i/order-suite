@@ -16,41 +16,33 @@ export default class Window {
         this.isDraggin = false;
         this.anchor = null;
         this.anchorName = null;
-        this.window = null;
+        this.element = null;
         this.parentRect = null;
         this.windowState = {};
         this.isMaximized = false;
         this.events = {};
         this.minimizeTransition = null;
         this.create();
-        this.contentContainer = this.window.querySelector(`.${styles['content']}`);
+        this.contentContainer = this.element.querySelector(`.${styles['content']}`);
     }
 
     init() {
-        const subscription1 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mousedown', this.dragStart.bind(this), {target: this.window});
+        const subscription1 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mousedown', this.dragStart.bind(this), {target: this.element});
         const subscription2 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mousemove', this.dragOver.bind(this));
         const subscription3 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mouseup', this.dragEnd.bind(this));
-        const subscription4 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'click', this.setActive.bind(this));
-        const subscription5 = this.on('maximizeWindow', 'window', this.minimizeWindow.bind(this, true));
+        const subscription4 = this.on('maximizeWindow', 'window', this.minimizeWindow.bind(this, true));
         this.jsEvenUnsubscribeArr.push(subscription1, subscription2, subscription3, subscription4);
     }
     destroy() {
         this.jsEvenUnsubscribeArr.forEach(unsubscribe => unsubscribe());
-        this.window.remove();
+        this.element.remove();
     }
 
     create() {
         this.buildWindow();
         this.init();
     }
-
-    setActive(e) {
-        if (this.window.contains(e.target)) {
-            this.window.style.zIndex = '10';
-        } else {
-            this.window.style.zIndex = '1';
-        }
-    }
+    setActive(active = true) {this.element.style.zIndex = active ?'10' : '1'}
 
     buildWindow() {
         const window = document.createElement('div');
@@ -62,7 +54,7 @@ export default class Window {
             minimize: this.minimizeWindow.bind(this)
         }
         render(windowTemplate(this.title, controls), window);
-        this.window = window;
+        this.element = window;
     }
 
     closeWindow() {
@@ -73,26 +65,26 @@ export default class Window {
         const button = document.querySelector(`.${styles['maximize']}`);
         const i = button.querySelector('i');
         if (this.isMaximized) {
-            this.window.style.top = `${this.windowState.top}px`;
-            this.window.style.left = `${this.windowState.left}px`;
-            this.window.style.height = `${this.windowState.height}px`;
-            this.window.style.width = `${this.windowState.width}px`;
+            this.element.style.top = `${this.windowState.top}px`;
+            this.element.style.left = `${this.windowState.left}px`;
+            this.element.style.height = `${this.windowState.height}px`;
+            this.element.style.width = `${this.windowState.width}px`;
             this.isMaximized = false;
             i.className = 'fa-solid fa-up-right-and-down-left-from-center';
         } else {
-            this.windowState = this.eventUtil.elementData(this.window).rect;
+            this.windowState = this.eventUtil.elementData(this.element).rect;
             const { rect } = this.eventUtil.elementData(this.parent);
-            this.window.style.top = `${0}px`;
-            this.window.style.left = `${0}px`;
-            this.window.style.height = `${rect.height}px`;
-            this.window.style.width = `${rect.width}px`;
+            this.element.style.top = `${0}px`;
+            this.element.style.left = `${0}px`;
+            this.element.style.height = `${rect.height}px`;
+            this.element.style.width = `${rect.width}px`;
             this.isMaximized = true;
             i.className = 'fa-solid fa-down-left-and-up-right-to-center';
         }
     };
     minimizeWindow(open = false) {
             !open && this.emit('minimizeTarget');
-            const windowRect = this.eventUtil.elementData(this.window).rect;
+            const windowRect = this.eventUtil.elementData(this.element).rect;
             const { rect: parentRect } = this.eventUtil.elementData(this.parent);
          
             const startOpacity = open ? 0 : 1;
@@ -120,11 +112,11 @@ export default class Window {
               const currentWidth = startWidth + (endWidth - startWidth) * easedProgress;
               const currentHeight = startHeight + (endHeight - startHeight) * easedProgress;
               const currentOpacity = open ? startOpacity + easedProgress : startOpacity * (1 - easedProgress);
-              this.window.style.left = `${currentX}px`;
-              this.window.style.top = `${currentY}px`;
-              this.window.style.width = `${currentWidth}px`;
-              this.window.style.height = `${currentHeight}px`;
-              this.window.style.opacity = `${currentOpacity}`;
+              this.element.style.left = `${currentX}px`;
+              this.element.style.top = `${currentY}px`;
+              this.element.style.width = `${currentWidth}px`;
+              this.element.style.height = `${currentHeight}px`;
+              this.element.style.opacity = `${currentOpacity}`;
       
               if (progress < 1) {
                 requestAnimationFrame(animate);
@@ -143,7 +135,7 @@ export default class Window {
     dragStart(e) {
         let draggable = e.target;
         if (!e.target.classList.contains(styles['draggable'])) {
-            draggable = this.window;
+            draggable = this.element;
         }
         this.isDraggin = true;
         const { clientX, clientY } = e;
@@ -153,7 +145,7 @@ export default class Window {
             this.anchor = draggable;
             this.anchorName = draggable.dataset.id;
         }
-        const { rect: windowRect } = this.eventUtil.elementData(this.window);
+        const { rect: windowRect } = this.eventUtil.elementData(this.element);
         this.windowRect = windowRect;
         this.oldLeft = windowRect.left;
         this.oldTop = windowRect.top;
@@ -177,10 +169,10 @@ export default class Window {
           const offsetX = clientX - this.dragOffsetX
           const offsetY = clientY - this.dragOffsetY
             if (offsetY > 0 && offsetY < this.parentRect.height - this.windowRect.height) {
-              this.window.style.top = `${offsetY}px`;
+              this.element.style.top = `${offsetY}px`;
             }
             if (offsetX > 0 && offsetX < this.parentRect.width - this.windowRect.width) {
-                this.window.style.left = `${offsetX}px`;
+                this.element.style.left = `${offsetX}px`;
             }
       }
     
@@ -202,72 +194,72 @@ export default class Window {
             'top-left': () => {
                 const newWidth = this.oldWidth - (clientX - this.oldMouseX);
                 if (newWidth > minSize && newWidth > this.parentRect.left) {
-                    this.window.style.width = `${newWidth}px`;
-                    this.window.style.left = `${newLeft}px`;
+                    this.element.style.width = `${newWidth}px`;
+                    this.element.style.left = `${newLeft}px`;
                 }
                 const newHeight = this.oldHeight - (clientY - this.oldMouseY);
                 if (newHeight > minSize && newTop > 0) {
-                    this.window.style.height = `${newHeight}px`;
-                    this.window.style.top = `${newTop}px`;
+                    this.element.style.height = `${newHeight}px`;
+                    this.element.style.top = `${newTop}px`;
                 }
             },
             'top-right': () => {
                 const newWidth = this.oldWidth + (clientX - this.oldMouseX);
                 if (newWidth > minSize && newWidth < this.parentRect.right) {
-                    this.window.style.width = `${newWidth}px`;
+                    this.element.style.width = `${newWidth}px`;
                 }
                 const newHeight = this.oldHeight - (clientY - this.oldMouseY);
                 if (newHeight > minSize && newTop > 0) {
-                    this.window.style.height = `${newHeight}px`;
-                    this.window.style.top = `${newTop}px`;
+                    this.element.style.height = `${newHeight}px`;
+                    this.element.style.top = `${newTop}px`;
                 }
             },
             'bottom-left': () => {
                 const newHeight = this.oldHeight + (clientY - this.oldMouseY);
                 if (newHeight > minSize && newHeight < this.parentRect.bottom) {
-                    this.window.style.height = `${newHeight}px`;
+                    this.element.style.height = `${newHeight}px`;
                 }
                 const newWidth = this.oldWidth - (clientX - this.oldMouseX);
                 if (newWidth > minSize && newHeight < this.parentRect.bottom) {
-                    this.window.style.width = `${newWidth}px`;
-                    this.window.style.left = `${newLeft}px`;
+                    this.element.style.width = `${newWidth}px`;
+                    this.element.style.left = `${newLeft}px`;
                 }
             },
             'bottom-right': () => {
                 const newWidth = this.oldWidth + (clientX - this.oldMouseX);
                 if (newWidth > minSize && newWidth < this.parentRect.right) {
-                    this.window.style.width = `${newWidth}px`;
+                    this.element.style.width = `${newWidth}px`;
                 }
                 const newHeight = this.oldHeight + (clientY - this.oldMouseY);
                 if (newHeight > minSize && newHeight < this.parentRect.bottom) {
-                    this.window.style.height = `${newHeight}px`;
+                    this.element.style.height = `${newHeight}px`;
                 }
             },
             'top': () => {
                 const newHeight = this.oldHeight - (clientY - this.oldMouseY);
                 console.log(this.parentRect.top);
                 if (newHeight > minSize && newTop > 0) {
-                    this.window.style.height = `${newHeight}px`;
-                    this.window.style.top = `${newTop}px`;
+                    this.element.style.height = `${newHeight}px`;
+                    this.element.style.top = `${newTop}px`;
                 }
             },
             'bottom': () => {
                 const newHeight = this.oldHeight + (clientY - this.oldMouseY);
                 if (newHeight > minSize && newHeight < this.parentRect.bottom) {
-                    this.window.style.height = `${newHeight}px`;
+                    this.element.style.height = `${newHeight}px`;
                 }
             },
             'left': () => {
                 const newWidth = this.oldWidth - (clientX - this.oldMouseX);
                 if (newWidth > minSize && newWidth > this.parentRect.left) {
-                    this.window.style.width = `${newWidth}px`;
-                    this.window.style.left = `${newLeft}px`;
+                    this.element.style.width = `${newWidth}px`;
+                    this.element.style.left = `${newLeft}px`;
                 }
             },
             'right': () => {
                 const newWidth = this.oldWidth + (clientX - this.oldMouseX);
                 if (newWidth > minSize && newWidth < this.parentRect.right) {
-                    this.window.style.width = `${newWidth}px`;
+                    this.element.style.width = `${newWidth}px`;
                 }
             }
         };

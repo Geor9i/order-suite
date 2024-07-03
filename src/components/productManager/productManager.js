@@ -1,6 +1,7 @@
 import BaseComponent from "../../framework/baseComponent";
 import { productManagerTemplate } from "./productManagerTemplate";
 import styles from './productManager.module.scss';
+import w_styles from '../shared/window.scss';
 import Window from '../shared/window.js';
 import { inventoryProductsTemplate } from "./inventoryProductsTemplate.js";
 import { render } from "lit-html";
@@ -31,6 +32,24 @@ export default class ProductManager extends BaseComponent {
     init() {
         const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, (data => this.userData = data));
         this.eventBusUnsubscribeArr.push(unsubscribe);
+        this.jsEventBus.subscribe(this.subscriberId, 'click', this.activateWindow.bind(this), {target:[`.${w_styles['window']}`, `.${styles['bar-btn']}`]});
+    }
+
+    activateWindow(e) {
+        const buffer = [];
+        let activeIndex = null;
+        Object.keys(this.windows).forEach(windowKey => {
+            if (!this.windows[windowKey]) return;
+            const window = this.windows[windowKey].window;
+            const button = this.windows[windowKey].button;
+            buffer.push(window)
+            if (window.element.contains(e.target) || ( button.contains(e.target) && button.dataset.state !== 'minimized')) {
+                activeIndex = buffer.length - 1;
+            }
+        })
+        if (activeIndex !== null) {
+            buffer.forEach((window, i) => i === activeIndex ? window.setActive() : window.setActive(false))
+        }
     }
 
     sidebarPeek(e) {
@@ -99,7 +118,6 @@ export default class ProductManager extends BaseComponent {
         const button = e.currentTarget;
         const { name, state } = button.dataset;
         const subscriberId = name.split(' ').join('_');
-        console.log(state);
         if (state === 'closed') {
             button.dataset.state = 'active';
             button.classList.add(styles['bar-button-active']);
@@ -125,6 +143,7 @@ export default class ProductManager extends BaseComponent {
             })
             this.windows[subscriberId] = {
                 window,
+                button,
                 subscriptions: [unsubscribe, unsubscribe1, unsubscribe2]};
         } else if (state === 'minimized') {
             this.windows[subscriberId].window.emit('maximizeWindow');
@@ -141,7 +160,6 @@ export default class ProductManager extends BaseComponent {
             this.windows[subscriberId].window.minimizeWindow();
             button.classList.add(styles['bar-button-minimized']);
             button.dataset.state = 'minimized';
-
         }
     }
 
