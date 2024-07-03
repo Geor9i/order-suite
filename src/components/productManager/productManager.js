@@ -3,8 +3,6 @@ import { productManagerTemplate } from "./productManagerTemplate";
 import styles from './productManager.module.scss';
 import w_styles from '../shared/window/window.scss';
 import Window from '../shared/window/window.js';
-import { inventoryProductsTemplate } from "./inventoryProductsTemplate.js";
-import { render } from "lit-html";
 import { bus } from "../../constants/busEvents.js";
 import { userDataDetail } from "../../constants/userDataDetail.js";
 import { barButtons } from "./constants/productManagerBarButtons.js";
@@ -121,7 +119,7 @@ export default class ProductManager extends BaseComponent {
             button.classList.add(styles['bar-button-active']);
             const config = barButtons.find(entry => entry.description === description);
             const window = new Window(windowContainer, description);
-            window.boot(config.class);
+            config?.class && window.boot(config.class, this.userData[userDataDetail.PRODUCTS]);
             const unsubscribe = window.on('minimizeTarget', subscriberId, () => {
                 const {rect} = this.eventUtil.elementData(button);
                 const {rect: parentRect} = this.eventUtil.elementData(windowContainer);
