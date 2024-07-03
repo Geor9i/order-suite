@@ -34,7 +34,7 @@ export default class StoreTemplateScreen extends BaseComponent {
         this.showDeliveryDetails,
         this.toggleDay,
         weekdays,
-        this.firestoreService.state.STORE_NAME,
+        this.firestoreService.userData.STORE_NAME,
         this.submitHandler
       )
     );

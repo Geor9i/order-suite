@@ -120,7 +120,11 @@ export default class Window {
               if (progress < 1) {
                 requestAnimationFrame(animate);
               } else {
-                this.windowState = windowRect;
+                this.windowState = {
+                    ...windowRect,
+                    left: startX,
+                    top: startY
+                };
                 !open && this.emit('windowMinimized');
               }
             }
@@ -163,12 +167,12 @@ export default class Window {
           const { clientX, clientY } = e;
           const offsetX = clientX - this.dragOffsetX
           const offsetY = clientY - this.dragOffsetY
-          if (offsetY > 0 && offsetY < this.parentRect.height - this.windowRect.height) {
+            if (offsetY > 0 && offsetY < this.parentRect.height - this.windowRect.height) {
               this.window.style.top = `${offsetY}px`;
             }
             if (offsetX > 0 && offsetX < this.parentRect.width - this.windowRect.width) {
                 this.window.style.left = `${offsetX}px`;
-          }
+            }
       }
     
       dragEnd(e) {

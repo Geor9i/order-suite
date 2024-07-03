@@ -9,7 +9,9 @@ import { bus } from "../../constants/busEvents.js";
 export default class ProductManager extends BaseComponent {
     constructor({ renderBody, router, services, utils }) {
         super();
-        this.userData = null;
+        this.authService = services.authService;
+        this.firestoreService = services.firestoreService;
+        this.userData = this.firestoreService.userData;
         this.subscriberId = 'ProductManager';
         this.eventBus = services.eventBus;
         this.jsEventBus = services.jsEventBus;
@@ -18,19 +20,12 @@ export default class ProductManager extends BaseComponent {
         this.windows = {};
         this.render = renderBody;
         this.router = router;
-        this.authService = services.authService;
         this.eventUtil = utils.eventUtil;
-        this.timeUtil = utils.timeUtil;
         this.dateUtil = utils.dateUtil;
         this.domUtil = utils.domUtil;
         this.showView = this._showView.bind(this);
-        this.isDraggin = false;
-        this.dragElement = null;
-        this.sidebarPeeking = false;
         this.sidebarBackdropInitialHover = false;
         this.sideBarHidden = false;
-        this.sidebar = null;
-        this.sidebarBackdrop = null;
     }
 
     init() {
@@ -39,16 +34,16 @@ export default class ProductManager extends BaseComponent {
     }
 
     sidebarPeek(e) {
-        this.sideBar = this.sidebar || document.querySelector(`.${styles['side-bar']}`);
-        this.sidebarBackdrop = this.sidebarBackdrop || document.querySelector(`.${styles['side-bar-backdrop']}`);
-        if (this.sidebarBackdropInitialHover && e.type === 'mouseout' && e.target === this.sidebarBackdrop) {
+        const sideBar = document.querySelector(`.${styles['side-bar']}`);
+        const sidebarBackdrop = document.querySelector(`.${styles['side-bar-backdrop']}`);
+        if (this.sidebarBackdropInitialHover && e.type === 'mouseout' && e.target === sidebarBackdrop) {
             this.sidebarBackdropInitialHover = false;
             return;
         }
         if (!this.sidebarBackdropInitialHover && e.type === 'mouseover') {
-            this.sideBar.classList.remove(styles['side-bar-hidden']);
+            sideBar.classList.remove(styles['side-bar-hidden']);
         } else if (!this.sidebarBackdropInitialHover && e.type === 'mouseout') {
-            this.sideBar.classList.add(styles['side-bar-hidden']);
+            sideBar.classList.add(styles['side-bar-hidden']);
         }
        
     }
@@ -77,7 +72,7 @@ export default class ProductManager extends BaseComponent {
     }
 
     toggleSidebar() {
-        this.sideBar = this.sidebar || document.querySelector(`.${styles['side-bar']}`);
+        const sideBar = document.querySelector(`.${styles['side-bar']}`);
         const arrowButton = document.getElementById('toggle-bar');
         const arrowElement = arrowButton.querySelector(`i`);
         arrowElement.className = this.sideBarHidden ? 'fa-solid fa-caret-left' : 'fa-solid fa-caret-right';
@@ -87,13 +82,13 @@ export default class ProductManager extends BaseComponent {
             const unsubscribe2 = this.jsEventBus.subscribe(this.subscriberId, 'mouseout', this.sidebarPeek.bind(this), {target: [`.${styles['side-bar-backdrop']}`, `.${styles['side-bar']}`]});
             this.jsEventUnsubscribeArr.push(unsubscribe1, unsubscribe2);
             this.sidebarBackdropInitialHover = true;
-            this.sideBar.classList.add(styles['side-bar-hidden']);
+            sideBar.classList.add(styles['side-bar-hidden']);
             arrowButton.className = `${styles['bar-btn']} ${styles['show-arrow']}`;
             this.sideBarHidden = true;
         } else {
             this.jsEventUnsubscribeArr.forEach(unsubscribe => unsubscribe());
             this.sidebarBackdropInitialHover = false;
-            this.sideBar.classList.remove(styles['side-bar-hidden']);
+            sideBar.classList.remove(styles['side-bar-hidden']);
             arrowButton.className = `${styles['bar-btn']} ${styles['hide-arrow']}`;
             this.sideBarHidden = false;
         }

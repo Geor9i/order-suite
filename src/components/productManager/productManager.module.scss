@@ -11,6 +11,7 @@ $side-bar-width: 4vw;
 $side-bar-height: 70%;
 
 .container {
+    overflow: hidden;
     position: relative;
     @include rect(100%, 100%);
     @include flex();

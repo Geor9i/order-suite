@@ -21,7 +21,7 @@ export default class FirestoreService {
     this.objUtil = utils.objUtil;
     this.snapshotUnsubscribe = null;
     this.user = null;
-    this.state = null;
+    this.userData = null;
     this.init();
   }
 
@@ -34,7 +34,7 @@ export default class FirestoreService {
   }
   onUserChange(user) {
     this.user = user;
-    this.state = null;
+    this.userData = null;
     this.snapshotUnsubscribe && this.snapshotUnsubscribe();
     if (user) {
       const documentRef = doc(this.db, db.USERS, this.user.uid);
@@ -48,10 +48,10 @@ export default class FirestoreService {
       console.log("data read!");
       const { globalReferenceMatch } = this.objUtil.compare(
         newState,
-        this.state
+        this.userData
       );
       if (!globalReferenceMatch) {
-        this.state = newState;
+        this.userData = newState;
         this.eventBus.emit(bus.USERDATA, newState);
       }
     }

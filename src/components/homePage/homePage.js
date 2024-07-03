@@ -25,7 +25,7 @@ export default class HomeComponent extends BaseComponent {
   }
 
   _showView(ctx) {
-    this.userData = this.firestoreService.state;
+    this.userData = this.firestoreService.userData;
     if (!this.userData) {
       this.renderHandler(guestHomeTemplate());
     } else {
