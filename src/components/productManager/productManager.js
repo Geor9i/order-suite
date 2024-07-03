@@ -1,12 +1,13 @@
 import BaseComponent from "../../framework/baseComponent";
 import { productManagerTemplate } from "./productManagerTemplate";
 import styles from './productManager.module.scss';
-import w_styles from '../shared/window.scss';
-import Window from '../shared/window.js';
+import w_styles from '../shared/window/window.scss';
+import Window from '../shared/window/window.js';
 import { inventoryProductsTemplate } from "./inventoryProductsTemplate.js";
 import { render } from "lit-html";
 import { bus } from "../../constants/busEvents.js";
-
+import { userDataDetail } from "../../constants/userDataDetail.js";
+import { barButtons } from "./constants/productManagerBarButtons.js";
 export default class ProductManager extends BaseComponent {
     constructor({ renderBody, router, services, utils }) {
         super();
@@ -27,15 +28,16 @@ export default class ProductManager extends BaseComponent {
         this.showView = this._showView.bind(this);
         this.sidebarBackdropInitialHover = false;
         this.sideBarHidden = false;
+        console.log(this.userData);
     }
 
     init() {
         const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, (data => this.userData = data));
         this.eventBusUnsubscribeArr.push(unsubscribe);
-        this.jsEventBus.subscribe(this.subscriberId, 'click', this.activateWindow.bind(this), {target:[`.${w_styles['window']}`, `.${styles['bar-btn']}`]});
+        this.jsEventBus.subscribe(this.subscriberId, 'click', this.setActiveWindow.bind(this), {target:[`.${w_styles['window']}`, `.${styles['bar-btn']}`]});
     }
 
-    activateWindow(e) {
+    setActiveWindow(e) {
         const buffer = [];
         let activeIndex = null;
         Object.keys(this.windows).forEach(windowKey => {
@@ -84,10 +86,6 @@ export default class ProductManager extends BaseComponent {
             toggleWindow: this.toggleWindow.bind(this)
         }
         this.render(productManagerTemplate(functions));
-        // const windowContainer = document.querySelector(`.${styles['container']}`)
-        // const {window, content} = new Window(windowContainer, 'inventory');
-        // console.log({window, content});
-        // render(inventoryProductsTemplate(), content)
     }
 
     toggleSidebar() {
@@ -116,12 +114,14 @@ export default class ProductManager extends BaseComponent {
     toggleWindow(e) {
         const windowContainer = document.querySelector(`.${styles['container']}`)
         const button = e.currentTarget;
-        const { name, state } = button.dataset;
-        const subscriberId = name.split(' ').join('_');
+        const { description, state } = button.dataset;
+        const subscriberId = description.split(' ').join('_');
         if (state === 'closed') {
             button.dataset.state = 'active';
             button.classList.add(styles['bar-button-active']);
-            const window = new Window(windowContainer, name);
+            const config = barButtons.find(entry => entry.description === description);
+            const window = new Window(windowContainer, description);
+            window.boot(config.class);
             const unsubscribe = window.on('minimizeTarget', subscriberId, () => {
                 const {rect} = this.eventUtil.elementData(button);
                 const {rect: parentRect} = this.eventUtil.elementData(windowContainer);

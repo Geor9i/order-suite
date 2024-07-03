@@ -1,1 +1,0 @@
-export const barButtons = [{name: 'I', description: 'Inventory Items'}, {name: 'DI', description: 'Data Imports'}, {name: 'R', description: 'Product RuleBook'}];

@@ -1,6 +1,6 @@
 import { html } from 'lit-html';
 import styles from './productManager.module.scss'
-import { barButtons } from '../../constants/productManagerBarButtons.js';
+import { barButtons } from './constants/productManagerBarButtons.js';
 
 export const productManagerTemplate = (func) => html`
 
@@ -12,7 +12,7 @@ export const productManagerTemplate = (func) => html`
     </div>
     </div>
    ${barButtons.map(entry => html`
-     <div @click=${func.toggleWindow} data-name=${entry.description} data-state="closed" title=${entry.description} class=${styles['bar-btn']}>
+     <div @click=${func.toggleWindow} data-description=${entry.description} data-state="closed" title=${entry.description} class=${styles['bar-btn']}>
         <div class=${styles['bar-icon']}>
             <p>${entry.name}</p>
         </div>

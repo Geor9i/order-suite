@@ -1,6 +1,6 @@
-import { serviceProvider } from "../../services/serviceProvider.js";
+import { serviceProvider } from "../../../services/serviceProvider.js";
 import styles from './window.scss';
-import { utils } from "../../utils/utilConfig.js";
+import { utils } from "../../../utils/utilConfig.js";
 import { render } from "lit-html";
 import { windowTemplate } from "./windowTemplate.js";
 
@@ -22,6 +22,7 @@ export default class Window {
         this.isMaximized = false;
         this.events = {};
         this.minimizeTransition = null;
+        this.program = null;
         this.create();
         this.contentContainer = this.element.querySelector(`.${styles['content']}`);
     }
@@ -36,6 +37,11 @@ export default class Window {
     destroy() {
         this.jsEvenUnsubscribeArr.forEach(unsubscribe => unsubscribe());
         this.element.remove();
+    }
+
+    boot(Program) {
+        this.program = new Program();
+        this.program.render(this.contentContainer);
     }
 
     create() {
@@ -58,6 +64,7 @@ export default class Window {
     }
 
     closeWindow() {
+        this.program && this.program.close();
         this.destroy()
         this.emit('closeWindow');
     };
