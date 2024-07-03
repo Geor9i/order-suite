@@ -4,11 +4,16 @@ import styles from './productManager.module.scss';
 import Window from '../shared/window.js';
 import { inventoryProductsTemplate } from "./inventoryProductsTemplate.js";
 import { render } from "lit-html";
+import { bus } from "../../constants/busEvents.js";
+
 export default class ProductManager extends BaseComponent {
     constructor({ renderBody, router, services, utils }) {
         super();
+        this.userData = null;
+        this.subscriberId = 'ProductManager';
+        this.eventBus = services.eventBus;
         this.jsEventBus = services.jsEventBus;
-        this.jsEventBusSubscriberId = 'ProductManager';
+        this.eventBusUnsubscribeArr = [];
         this.jsEventUnsubscribeArr = [];
         this.windows = {};
         this.render = renderBody;
@@ -29,6 +34,8 @@ export default class ProductManager extends BaseComponent {
     }
 
     init() {
+        const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, (data => this.userData = data));
+        this.eventBusUnsubscribeArr.push(unsubscribe);
     }
 
     sidebarPeek(e) {
@@ -47,21 +54,9 @@ export default class ProductManager extends BaseComponent {
     }
 
     destroy() {
+        this.eventBusUnsubscribeArr.forEach(unsubscribe => unsubscribe());
         this.jsEventUnsubscribeArr.forEach(unsubscribe => unsubscribe());
-    }
-
-    getRestaurantData() {
-        return {
-            openTimes: {
-                monday: { startTime: "11:00", endTime: "23:00" },
-                tuesday: { startTime: "11:00", endTime: "23:00" },
-                wednesday: { startTime: "11:00", endTime: "23:00" },
-                thursday: { startTime: "11:00", endTime: "23:00" },
-                friday: { startTime: "11:00", endTime: "23:00" },
-                saturday: { startTime: "11:00", endTime: "23:00" },
-                sunday: { startTime: "11:00", endTime: "23:00" },
-            },
-        };
+        Object.keys(this.windows).forEach(windowId => this.windows[windowId].subscriptions.forEach(unsubscribe => unsubscribe()));
     }
 
 
@@ -88,8 +83,8 @@ export default class ProductManager extends BaseComponent {
         arrowElement.className = this.sideBarHidden ? 'fa-solid fa-caret-left' : 'fa-solid fa-caret-right';
 
         if (!this.sideBarHidden) {
-            const unsubscribe1 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mouseover', this.sidebarPeek.bind(this), {target: [`.${styles['side-bar-backdrop']}`, `.${styles['side-bar']}`]});
-            const unsubscribe2 = this.jsEventBus.subscribe(this.jsEventBusSubscriberId, 'mouseout', this.sidebarPeek.bind(this), {target: [`.${styles['side-bar-backdrop']}`, `.${styles['side-bar']}`]});
+            const unsubscribe1 = this.jsEventBus.subscribe(this.subscriberId, 'mouseover', this.sidebarPeek.bind(this), {target: [`.${styles['side-bar-backdrop']}`, `.${styles['side-bar']}`]});
+            const unsubscribe2 = this.jsEventBus.subscribe(this.subscriberId, 'mouseout', this.sidebarPeek.bind(this), {target: [`.${styles['side-bar-backdrop']}`, `.${styles['side-bar']}`]});
             this.jsEventUnsubscribeArr.push(unsubscribe1, unsubscribe2);
             this.sidebarBackdropInitialHover = true;
             this.sideBar.classList.add(styles['side-bar-hidden']);

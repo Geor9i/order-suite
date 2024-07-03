@@ -140,6 +140,7 @@ $border-color: #67daf7;
 }
 
 .content {
-    @include flex(column);
+    padding: 1em;
+    @include flex();
     @include rect(100%, 100%);
 }

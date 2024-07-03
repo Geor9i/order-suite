@@ -1,0 +1,23 @@
+@import '../../../../styles/partials/box';
+@import '../../../../styles/partials/flex';
+@import '../../../../styles/partials/effects';
+@import '../../../../styles/partials/input';
+@import '../../../../styles/partials/responsive';
+
+.container {
+    @include flex();
+    @include box(100%, 100%);
+    border: 1px solid black
+}
+
+.category-container {
+    @include flex();
+    flex: 1 1, 20%;
+    background-color: blue;
+}
+
+.product-container {
+    @include flex();
+    flex: 1 1;
+    background-color: red;
+}

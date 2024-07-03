@@ -38,10 +38,7 @@ export default class FirestoreService {
     this.snapshotUnsubscribe && this.snapshotUnsubscribe();
     if (user) {
       const documentRef = doc(this.db, db.USERS, this.user.uid);
-      this.snapshotUnsubscribe = onSnapshot(
-        documentRef,
-        this._updateState.bind(this)
-      );
+      this.snapshotUnsubscribe = onSnapshot(documentRef, this._updateState.bind(this));
     }
   }
 
