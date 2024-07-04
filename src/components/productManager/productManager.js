@@ -6,6 +6,7 @@ import Window from '../shared/window/window.js';
 import { bus } from "../../constants/busEvents.js";
 import { userDataDetail } from "../../constants/userDataDetail.js";
 import { barButtons } from "./constants/productManagerBarButtons.js";
+
 export default class ProductManager extends BaseComponent {
     constructor({ renderBody, router, services, utils }) {
         super();

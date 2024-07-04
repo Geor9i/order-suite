@@ -1,0 +1,74 @@
+@import '../../../../styles/partials/responsive';
+@import '../../../../styles/partials/box';
+@import '../../../../styles/partials/flex';
+
+$edge-thickness: 4px;
+$modal-border-radius: 7px;
+$border-color: #e9312b;
+
+
+.modal {
+    position: absolute;
+    z-index: 101;
+    @include rect(60%, 40%, $bRadius: 7px);
+    max-width: 300px;
+    max-height: 200px;
+    @include flex(column, flex-start);
+    @include gradient(135deg, (#e6e6e6, 20%), (#dbdbdb, 100%));
+    border: 2px solid $border-color;
+    box-shadow: 0 0 30px #0000004f;
+    cursor: grab;
+    header {
+        color: #e2e2e2;
+        padding: 0 1.5em;
+        @include rect(100%, 1.5em);
+        @include grid(1fr 3em);
+        @include gradient(135deg, (#4b4b4b, 20%), (#464545, 60%), (#575757, 100%));
+        border-radius: 3px;
+        border-top-left-radius: $modal-border-radius;
+        border-top-right-radius: $modal-border-radius;
+        p {
+            font-size: 1em;
+            text-align: center;
+        }
+    }
+}
+
+.controls {
+    @include flex();
+}
+
+.control-btn {
+    position: relative;
+    @include rect(1em, 1em, $bRadius: 50%);
+    background-color: rgb(255, 255, 255);
+    text-align: center;
+    color: #000;
+    border: 1px solid $border-color;
+    cursor: pointer;
+    i {
+        font-size: 0.8em;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -45%);
+    }
+}
+.close {
+    &:hover {
+        background-color: red;
+        color: #fff;
+    }
+}
+
+.content {
+    padding: 1em;
+    @include flex($gap: 1em);
+    @include rect(100%, 100%);
+}
+
+.modal-backdrop {
+    position: absolute;
+    z-index: 100;
+    inset: 0;
+}
