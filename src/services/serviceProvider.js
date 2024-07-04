@@ -4,7 +4,8 @@ import FirestoreService from "./firestoreService.js";
 import { JSEventManagerService } from "./jsEventManager.js";
 import { JSEventBusService } from "./jseventBus.js";
 import { app } from '../config/firebaseConfig.js';
-import Harvester from "../reportHarvesters/harvester.js";
+import Harvester from "./harvester.js";
+import ErrorRelay from "./errorRelay.js";
 
 class ServiceProvider {
     constructor() {
@@ -14,6 +15,7 @@ class ServiceProvider {
         this.jsEventBus = new JSEventBusService();
         this.jsEventManagerService = new JSEventManagerService(this.jsEventBus);
         this.harvester = new Harvester();
+        this.errorRelay = new ErrorRelay();
     }
 }
 

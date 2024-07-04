@@ -1,27 +1,30 @@
+import { render } from "lit-html";
 import { serviceProvider } from "../../../services/serviceProvider.js";
 import Modal from "../../shared/modal/modal.js";
 import Program from "../../shared/program/program.js";
 import { inventoryItemsTemplate } from "./inventoryItemsTemplate.js";
 
 export default class InventoryItems extends Program {
-    constructor() {
+    constructor(programConfig) {
         super();
+        this.programConfig = programConfig;
         this.template = inventoryItemsTemplate;
-        const harvester = serviceProvider.harvester;
+        this.harvester = serviceProvider.harvester;
+        this.errorRelay = serviceProvider.errorRelay;
     }
 
     boot(windowContentElement) {
         const { products } = this.programConfig;
-        if (products === null) {
-            const buttons = [{ title: 'Import from Clipboard', callback: () => {
-                navigator.clipboard
-                .readText()
-                .then(report => this.harvester.inventoryHarvest(report))
-                .then(result => this.validateReport(result))
-                .then(products => {render(this.template(products), windowContentElement)})
-                .catch(err => console.log(err))
+        if (!products) {
+            const buttons = [{ title: 'Import from Clipboard', confirmMessage: 'confirmed', callback: () => {
+                new Promise((resolve) => {
+                    navigator.clipboard.readText()
+                    .then(text => this.harvester.inventoryHarvest(text))
+                    .then(result => resolve(result))
+                    .catch(err => this.errorRelay.send(err))
+                })
             }}];
-            const modal = new Modal(windowContentElement, 'Please import all products from your inventory activity!', {buttons})
+            new Modal(windowContentElement, 'Inventory Warning', 'Please Import Your Inventory Activity' , {buttons, noClose: true})
         } else {
             render(this.template(products), windowContentElement);
         }

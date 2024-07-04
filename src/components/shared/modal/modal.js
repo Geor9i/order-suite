@@ -5,8 +5,8 @@ import { utils } from "../../../utils/utilConfig.js";
 import { modalTemplate } from "./modalTemplate.js";
 
 export default class Modal {
-    constructor(parent, title, options) {
-        this.title = title;
+    constructor(parent, title, message, options) {
+        this.message = message;
         this.jsEventBusSubscriberId = `Modal_${Math.random() * 1000000}`;
         this.parent = parent;
         this.eventUtil = utils.eventUtil;
@@ -15,7 +15,7 @@ export default class Modal {
         this.element = null;
         this.events = {};
         this.program = null;
-        this.create(options);
+        this.create(title, message, options);
         this.contentContainer = this.element.querySelector(`.${styles['content']}`);
     }
 
@@ -24,12 +24,12 @@ export default class Modal {
     destroy() {
         this.element.remove();
     }
-    create() {
-        this.buildModal();
+    create(title, message, options) {
+        this.buildModal(title, message, options);
         this.init();
     }
 
-    buildModal(options) {
+    buildModal(title, message, options) {
         const modal = document.createElement('div');
         modal.classList.add(styles['modal']);
         this.parent.appendChild(modal);
@@ -42,12 +42,16 @@ export default class Modal {
             confirm: this.confirmModal.bind(this),
             close: this.closeModal.bind(this),
         }
-        render(modalTemplate(this.title, controls, options), modal);
+        render(modalTemplate(title, message, controls, options), modal);
         this.element = modal;
     }
-    confirmModal(buttonOptions) {
-        buttonOptions?.callback && buttonOptions.callback()
-        this.emit('confirmModal', keyword);
+    async confirmModal(buttonOptions) {
+        if (buttonOptions?.callback) {
+            const isConfirmed = await buttonOptions.callback();
+            if (isConfirmed) {
+                this.emit('confirmModal', buttonOptions.confirmMessage);
+            }
+        }
     }
 
     closeModal() {

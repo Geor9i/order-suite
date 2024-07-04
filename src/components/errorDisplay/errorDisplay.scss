@@ -1,0 +1,23 @@
+@import '../../../styles/partials/box';
+@import '../../../styles/partials/flex';
+@import '../../../styles/partials/responsive';
+@import '../../../styles/partials/effects';
+
+.error-container {
+    position: absolute;
+    z-index: 1001;
+    @include rect(30vw, 20vh, 200px, $bRadius: 13px);
+    @include flex(column, $gap: 1em);
+    box-shadow: 0 0 20px inset #000;
+}
+
+.error-backdrop {
+    position: absolute;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+.error {
+    @include flex();
+    @include rect(100%, 3em)
+}

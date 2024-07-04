@@ -5,6 +5,7 @@
 $edge-thickness: 4px;
 $modal-border-radius: 7px;
 $border-color: #e9312b;
+$active-btn-border-color: #2b9de9;
 
 
 .modal {
@@ -17,12 +18,10 @@ $border-color: #e9312b;
     @include gradient(135deg, (#e6e6e6, 20%), (#dbdbdb, 100%));
     border: 2px solid $border-color;
     box-shadow: 0 0 30px #0000004f;
-    cursor: grab;
-    header {
+    .modal-header {
         color: #e2e2e2;
-        padding: 0 1.5em;
         @include rect(100%, 1.5em);
-        @include grid(1fr 3em);
+        @include grid(1fr 2em);
         @include gradient(135deg, (#4b4b4b, 20%), (#464545, 60%), (#575757, 100%));
         border-radius: 3px;
         border-top-left-radius: $modal-border-radius;
@@ -63,8 +62,29 @@ $border-color: #e9312b;
 
 .content {
     padding: 1em;
-    @include flex($gap: 1em);
+    @include flex(column, $gap: 1em);
     @include rect(100%, 100%);
+}
+
+.message {
+    font-size: 1em;
+    text-align: center
+}
+
+.btn-container {
+    @include rect(100%, auto);
+    @include flex($JC: space-evenly);
+}
+
+.modal-btn {
+    padding: 0.5em;
+    @include rect(auto, auto, $bRadius: 7px);
+    background-color: orange;
+    @include transition(background-color);
+    &:hover {
+        border: 1px solid $active-btn-border-color;
+        background-color: rgb(255, 255, 255);
+    }
 }
 
 .modal-backdrop {

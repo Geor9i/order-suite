@@ -7,18 +7,17 @@ $window-border-radius: 7px;
 $border-color: #67daf7;
 
 .draggable {
-    cursor: grab;
+    cursor: auto;
 }
 
 .window {
     position: absolute;
     @include rect(35vw, 30vw, $bRadius: 7px);
     @include flex(column, flex-start);
-    @include gradient(135deg, (#e6e6e6, 20%), (#dbdbdb, 100%));
+    @include gradient(135deg, (#f7f7f7, 20%), (#f0f0f0, 100%));
     border: 2px solid $border-color;
     box-shadow: 0 0 30px #0000004f;
-    cursor: grab;
-    header {
+    > header {
         color: #e2e2e2;
         padding: 0 1.5em;
         @include rect(100%, 1.5em);

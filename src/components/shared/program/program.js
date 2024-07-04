@@ -2,10 +2,9 @@ import { render } from "lit-html";
 import { programBaseTemplate } from './programBaseTemplate.js';
 
 export default class Program {
-    constructor(programConfig) {
+    constructor() {
         this.template = programBaseTemplate;
         this.subscriptions = {};
-        this.programConfig = programConfig;
     }
 
     boot(windowContentElement) {

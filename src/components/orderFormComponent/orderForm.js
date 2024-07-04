@@ -1,11 +1,12 @@
 import { orderFormTemplate } from "./orderFormTemplate.js";
 import styles from './orderForm.module.scss'
 import BaseComponent from "../../framework/baseComponent.js";
+import Calendar from '../calendar/calendar.js'
+
 export default class OrderFormComponent extends BaseComponent {
   constructor({
     renderBody,
     router,
-    calendarComponent,
     harvester,
     processor,
     storeSettings,
@@ -21,7 +22,7 @@ export default class OrderFormComponent extends BaseComponent {
     this.renderHandler = renderBody;
     this.router = router;
     this.authService = services.authService;
-    this.calendarComponent = calendarComponent;
+    this.calendarComponent = new Calendar();
     this.harvester = harvester;
     this.processor = processor;
     this.showView = this._showView.bind(this);

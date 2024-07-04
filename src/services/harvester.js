@@ -38,7 +38,9 @@ export default class Harvester {
 
     //? Get report details data (day span and store name)
     let reportMatch = report.match(reportDetailsPattern);
-    if (reportMatch !== null) {
+    if (!reportMatch) {
+      throw new Error('Wrong Data Provided!')
+    }
       const startDate = this.dateUtil.op(reportMatch.groups.startDate.trim()).format();
       const endDate = this.dateUtil.op(reportMatch.groups.endDate.trim()).format();
       reportData = {
@@ -47,7 +49,6 @@ export default class Harvester {
         endDate: endDate,
         daySpan: this.dateUtil.dateDifference( startDate, endDate )
       }
-    }
 
     categoryMatches.forEach(categoryMatch => {
       const categoryName = categoryMatch.groups.category.trim().toUpperCase();
@@ -57,6 +58,8 @@ export default class Harvester {
     })
     return {reportData, productData};
   }
+
+
 
   purchaseOrderHarvest(report) {
     const edgeConfirmPattern = /\sEXT. PRICE UNIT PRICE U\/M QTY DESCRIPTION VENDOR CODE/g;

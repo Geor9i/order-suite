@@ -1,13 +1,12 @@
 import BaseComponent from "../../framework/baseComponent.js";
 import { calendarTemplate } from "./calendarTemplate.js";
-
-export default class Calendar extends BaseComponent {
-  constructor(renderCalender, utils) {
-    super();
+import { utils } from "../../utils/utilConfig.js";
+import { render } from "lit-html";
+export default class Calendar {
+  constructor() {
     this.domUtil = utils.domUtil;
     this.dateUtil = utils.dateUtil;
     this.stringUtil = utils.stringUtil;
-    this.renderCalender = renderCalender;
     this.showView = this._showView.bind(this);
     this.fillCalendar = this._fillCalendar.bind(this);
     this.upArrowClick = this._upArrowClick.bind(this);
@@ -21,17 +20,20 @@ export default class Calendar extends BaseComponent {
   }
 
   _showView(parent) {
-    this.renderCalender(
+    this.render(
       calendarTemplate(
         this.dateUtil,
         this.stringUtil,
         this.upArrowClick,
         this.downArrowClick,
         this.clickDate
-      ),
-      parent
-    );
+      ), 
+      parent);
     this.fillCalendar();
+  }
+
+  render(template, parent) {
+    render(template, parent);
   }
 
   _clickDate(e) {

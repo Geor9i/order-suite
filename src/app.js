@@ -3,8 +3,6 @@ import page from "../node_modules/page/page.mjs";
 import { render } from "../node_modules/lit-html/lit-html.js";
 import ComponentManager from "./framework/componentManager.js";
 import Processor from "./processing/processor.js";
-import Calendar from "./components/calendar/calendar.js";
-import Harvester from "./reportHarvesters/harvester.js";
 import NavComponent from "./components/nav/nav.js";
 import OrderPage from "./components/orderPage/orderPage.js";
 import OrderFormComponent from "./components/orderFormComponent/orderForm.js";
@@ -19,7 +17,7 @@ import ProductManager from "./components/productManager/productManager.js";
 import { serviceProvider as services } from './services/serviceProvider.js';
 import { storeSettings } from "./storeSettings.js";
 import { utils } from "./utils/utilConfig.js";
-import { purchaseReport, invReport, unprocessedOrderRMF, unprocessedOrderReport } from '../inventoryReport.js';
+import ErrorDisplay from './components/errorDisplay/errorDisplay.js';
 
 if (module.hot) {
   module.hot.accept();
@@ -35,28 +33,18 @@ const router = {
 //Render Functions
 const renderNav = (template) => render(template, nav);
 const renderBody = (template) => render(template, main);
-const renderCalender = (template, parent) => render(template, parent);
 
 //Product Processor
 const processor = new Processor(storeSettings, utils);
 const CM = new ComponentManager();
 //Components
 const navComponent = new NavComponent(renderNav, router, services, utils);
-const calendarComponent = new Calendar(renderCalender, utils);
-
 //Loaders
 const baseLoader = { renderBody, router, utils, services };
 const funcLoader = {
-  calendarComponent,
-  harvester,
   processor,
   storeSettings,
 };
-
-// const { productData: inventoryProducts } = harvester.inventoryHarvest(invReport);
-// const { productData: orderProducts } = harvester.purchaseOrderHarvest(purchaseReport);
-// const matched = harvester.inventoryPairs(inventoryProducts, orderProducts);
-// console.log(matched);
 
 page(services.authService.confirmUser);
 page(navComponent.showView);
@@ -72,24 +60,3 @@ page("/restaurant-sales", () => CM.mount(SalesAnalysis, baseLoader, funcLoader))
 page("/product-manager", () => CM.mount(ProductManager, baseLoader));
 page("/404", () => CM.mount(NotFoundPage, baseLoader));
 page.start();
-// const salesDataMap = harvester.salesSummaryExtractor(report);
-
-// // Convert Map entries to an array of strings
-// const mapEntries = Array.from(salesDataMap.entries())
-//   .map(([key, value]) => `salesData.set('${key}', ${JSON.stringify(value)});`);
-
-// // Join the array into a single string
-// const salesDataString = `
-// const salesData = new Map();
-// ${mapEntries.join('\n')}
-// `;
-
-// const blob = new Blob([salesDataString], { type: 'application/javascript' });
-
-// const a = document.createElement('a');
-// a.href = URL.createObjectURL(blob);
-// a.download = 'salesData.js';
-
-// document.body.appendChild(a);
-// a.click();
-// document.body.removeChild(a);
