@@ -39,9 +39,9 @@ export default class Window {
         this.element.remove();
     }
 
-    boot(Program, ...programArgs) {
-        this.program = new Program();
-        this.program.render(this.contentContainer, ...programArgs);
+    bootProgram(Program, programConfig) {
+        this.program = new Program(programConfig);
+        this.program.boot(this.contentContainer);
     }
 
     create() {

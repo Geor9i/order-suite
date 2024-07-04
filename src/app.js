@@ -39,7 +39,6 @@ const renderCalender = (template, parent) => render(template, parent);
 
 //Product Processor
 const processor = new Processor(storeSettings, utils);
-const harvester = new Harvester(utils);
 const CM = new ComponentManager();
 //Components
 const navComponent = new NavComponent(renderNav, router, services, utils);

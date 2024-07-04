@@ -2,14 +2,16 @@ import { render } from "lit-html";
 import { programBaseTemplate } from './programBaseTemplate.js';
 
 export default class Program {
-    constructor() {
+    constructor(programConfig) {
         this.template = programBaseTemplate;
         this.subscriptions = {};
+        this.programConfig = programConfig;
     }
 
-    render(windowContentElement, ...templateArgs) {
-        render(this.template(...templateArgs), windowContentElement);
+    boot(windowContentElement) {
+        render(this.template(), windowContentElement);
     }
+
 
     close() {
         for (let group in this.subscriptions) {

@@ -120,7 +120,8 @@ export default class ProductManager extends BaseComponent {
             button.classList.add(styles['bar-button-active']);
             const config = barButtons.find(entry => entry.description === description);
             const window = new Window(windowContainer, description);
-            config?.class && window.boot(config.class, this.userData[userDataDetail.PRODUCTS]);
+            const programConfig = {products: this.userData[userDataDetail.PRODUCTS]}
+            config?.class && window.bootProgram(config.class, programConfig);
             const unsubscribe = window.on('minimizeTarget', subscriberId, () => {
                 const {rect} = this.eventUtil.elementData(button);
                 const {rect: parentRect} = this.eventUtil.elementData(windowContainer);
