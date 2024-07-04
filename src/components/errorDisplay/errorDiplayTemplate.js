@@ -1,12 +1,10 @@
 import { html } from "lit-html";
 import styles from './errorDisplay.scss';
+import { when } from "lit-html/directives/when.js";
 
 export const errorDisplayTemplate = (errors, controls) => html`
 <div class=${styles['error-container']}>
-    ${console.log(errors)}
-    ${errors.forEach(error => console.log(error.message))}
-    ${errors.forEach(error => html`
-        <h2>Hello</h2>
+    ${errors.map(error => html`
         <div class=${styles['error']}>
             <p>${error.message}</p>
         </div>

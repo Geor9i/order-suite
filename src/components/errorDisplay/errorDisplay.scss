@@ -6,15 +6,16 @@
 .error-container {
     position: absolute;
     z-index: 1001;
-    @include rect(30vw, 20vh, 200px, $bRadius: 13px);
+    @include rect(30vw, 20vh, 400px, $bRadius: 13px);
     @include flex(column, $gap: 1em);
-    box-shadow: 0 0 20px inset #000;
+    background-color: #fff;
+    box-shadow: 0 0 10px inset #ff0000;
 }
 
 .error-backdrop {
     position: absolute;
     z-index: 1000;
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(5px);
 }
 
 .error {
