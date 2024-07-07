@@ -81,6 +81,7 @@ $active-btn-border-color: #2b9de9;
     @include rect(auto, auto, $bRadius: 7px);
     background-color: orange;
     @include transition(background-color);
+    cursor: pointer;
     &:hover {
         border: 1px solid $active-btn-border-color;
         background-color: rgb(255, 255, 255);

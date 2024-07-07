@@ -1,5 +1,4 @@
 import { html, render } from "lit-html";
-import { errorDisplayTemplate } from "./errorDiplayTemplate.js";
 import styles from './errorDisplay.scss';
 import { when } from "lit-html/directives/when.js";
 

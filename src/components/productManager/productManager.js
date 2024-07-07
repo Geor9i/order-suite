@@ -141,10 +141,13 @@ export default class ProductManager extends BaseComponent {
                 this.windows[subscriberId].subscriptions.forEach(unsubscribe => unsubscribe());
                 this.windows[subscriberId] = null;
             })
+            const unsubscribe3 = window.on('send', subscriberId, (data) => {
+                console.log('data in manager: ', data);
+            })
             this.windows[subscriberId] = {
                 window,
                 button,
-                subscriptions: [unsubscribe, unsubscribe1, unsubscribe2]};
+                subscriptions: [unsubscribe, unsubscribe1, unsubscribe2, unsubscribe3]};
         } else if (state === 'minimized') {
             this.windows[subscriberId].window.emit('maximizeWindow');
             button.classList.remove(styles['bar-button-minimized']);

@@ -42,6 +42,11 @@ export default class Window {
     bootProgram(Program, programConfig) {
         this.program = new Program(programConfig);
         this.program.boot(this.contentContainer);
+        this.program.on('send', this.jsEventBusSubscriberId, this.sendData.bind(this))
+    }
+
+    sendData(data) {
+        this.emit('send', data);
     }
 
     create() {

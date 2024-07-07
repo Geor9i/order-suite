@@ -47,9 +47,10 @@ export default class Modal {
     }
     async confirmModal(buttonOptions) {
         if (buttonOptions?.callback) {
-            const isConfirmed = await buttonOptions.callback();
-            if (isConfirmed) {
-                this.emit('confirmModal', buttonOptions.confirmMessage);
+            const data = await buttonOptions.callback();
+            if (data) {
+                this.emit(buttonOptions.confirmMessage, data);
+                this.closeModal();
             }
         }
     }
