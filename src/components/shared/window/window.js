@@ -10,6 +10,7 @@ export default class Window {
         this.title = title;
         this.jsEventBusSubscriberId = `Window_${Math.random() * 1000000}`;
         this.parent = parent;
+        this.parentDataCallback = null;
         this.eventUtil = utils.eventUtil;
         this.jsEventBus = serviceProvider.jsEventBus;
         this.jsEvenUnsubscribeArr = [];
@@ -40,9 +41,8 @@ export default class Window {
     }
 
     bootProgram(Program, programConfig) {
-        this.program = new Program(programConfig);
+        this.program = new Program(programConfig, this.parentDataCallback);
         this.program.boot(this.contentContainer);
-        this.program.on('send', this.jsEventBusSubscriberId, this.sendData.bind(this))
     }
 
     sendData(data) {

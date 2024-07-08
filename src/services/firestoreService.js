@@ -42,6 +42,11 @@ export default class FirestoreService {
     }
   }
 
+  async setInventoryTemplate(productGroups) {
+    const documentRef = doc(this.db, db.USERS, this.user.uid);
+    await updateDoc(documentRef, { products: productGroups });
+  }
+
   _updateState(doc) {
     if (doc.exists() && this.user) {
       let newState = doc.data();

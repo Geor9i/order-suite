@@ -4,12 +4,14 @@
 @import '../../../styles/partials/effects';
 
 .error-container {
+    padding: 2em;
     position: absolute;
     z-index: 1001;
     @include rect(30vw, 20vh, 400px, $bRadius: 13px);
     @include flex(column, $gap: 1em);
     background-color: #fff;
     box-shadow: 0 0 10px inset #ff0000;
+    border: 2px solid red;
 }
 
 .error-backdrop {

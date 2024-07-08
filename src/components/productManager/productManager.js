@@ -6,6 +6,7 @@ import Window from '../shared/window/window.js';
 import { bus } from "../../constants/busEvents.js";
 import { userDataDetail } from "../../constants/userDataDetail.js";
 import { barButtons } from "./constants/productManagerBarButtons.js";
+import { messages } from "./constants/communication.js";
 
 export default class ProductManager extends BaseComponent {
     constructor({ renderBody, router, services, utils }) {
@@ -120,7 +121,8 @@ export default class ProductManager extends BaseComponent {
             button.classList.add(styles['bar-button-active']);
             const config = barButtons.find(entry => entry.description === description);
             const window = new Window(windowContainer, description);
-            const programConfig = {products: this.userData[userDataDetail.PRODUCTS]}
+            window.parentDataCallback = this.receiveProgramData.bind(this);
+            const programConfig = {productGroups: this.userData[userDataDetail.PRODUCTS]}
             config?.class && window.bootProgram(config.class, programConfig);
             const unsubscribe = window.on('minimizeTarget', subscriberId, () => {
                 const {rect} = this.eventUtil.elementData(button);
@@ -141,13 +143,10 @@ export default class ProductManager extends BaseComponent {
                 this.windows[subscriberId].subscriptions.forEach(unsubscribe => unsubscribe());
                 this.windows[subscriberId] = null;
             })
-            const unsubscribe3 = window.on('send', subscriberId, (data) => {
-                console.log('data in manager: ', data);
-            })
             this.windows[subscriberId] = {
                 window,
                 button,
-                subscriptions: [unsubscribe, unsubscribe1, unsubscribe2, unsubscribe3]};
+                subscriptions: [unsubscribe, unsubscribe1, unsubscribe2]};
         } else if (state === 'minimized') {
             this.windows[subscriberId].window.emit('maximizeWindow');
             button.classList.remove(styles['bar-button-minimized']);
@@ -166,6 +165,13 @@ export default class ProductManager extends BaseComponent {
         }
     }
 
+    receiveProgramData(data) {
+        const { message } = data;
+        if (message === messages.INVENTORY_TEMPLATE_IMPORT) {
+            const { productData } = data;
+            this.firestoreService.setInventoryTemplate(productData)
+        }
+    }
 
 
 }

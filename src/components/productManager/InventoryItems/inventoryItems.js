@@ -3,24 +3,26 @@ import { serviceProvider } from "../../../services/serviceProvider.js";
 import Modal from "../../shared/modal/modal.js";
 import Program from "../../shared/program/program.js";
 import { inventoryItemsTemplate } from "./inventoryItemsTemplate.js";
+import { messages } from "../constants/communication.js";
 
 export default class InventoryItems extends Program {
-    constructor(programConfig) {
+    constructor(programConfig, parentDataCallback) {
         super();
         this.subscriberId = 'InventoryItems';
         this.programConfig = programConfig;
+        this.productGroups = programConfig.productGroups;
         this.template = inventoryItemsTemplate;
         this.harvester = serviceProvider.harvester;
         this.errorRelay = serviceProvider.errorRelay;
+        this.parentDataCallback = parentDataCallback;
     }
 
     boot(windowContentElement) {
-        const { products } = this.programConfig;
         if (!products) {
             const buttons = [{ title: 'Import from Clipboard', confirmMessage: 'confirmed', callback: this.importProducts.bind(this)}];
             const modal = new Modal(windowContentElement, 'Inventory is Empty', 'Please Import Your Inventory Activity' , { buttons, noClose: true });
         } else {
-            render(this.template(products), windowContentElement);
+            render(this.template(this.productGroups), windowContentElement);
         }
     }
 
@@ -40,6 +42,9 @@ export default class InventoryItems extends Program {
         } else if (Object.keys(productData).length < minProductGrops) {
             throw new Error(`Discovered product groups must be at least ${minProductGrops}!\nPlease include more product categories!`);
         }
-        this.emit('send', data);
+        const dataTransmission = { reportData, productData, message: messages.INVENTORY_TEMPLATE_IMPORT }
+        this.parentDataCallback(dataTransmission);
+        this.productGroups = productGroups;
+        render(this.template(this.productGroups), windowContentElement);
     }
 }
