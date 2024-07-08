@@ -18,7 +18,7 @@ export default class InventoryItems extends Program {
     }
 
     boot(windowContentElement) {
-        if (!products) {
+        if (!this.products) {
             const buttons = [{ title: 'Import from Clipboard', confirmMessage: 'confirmed', callback: this.importProducts.bind(this)}];
             const modal = new Modal(windowContentElement, 'Inventory is Empty', 'Please Import Your Inventory Activity' , { buttons, noClose: true });
         } else {
