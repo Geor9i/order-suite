@@ -3,15 +3,17 @@ import styles from "./salesAnalysisPage.module.scss";
 import BaseComponent from "../../framework/baseComponent";
 
 export default class SalesAnalysis extends BaseComponent {
-  constructor({ renderBody, router, services, utils, harvester }) {
+  constructor({ renderBody, router, services, utils }) {
     super();
+    console.log(utils);
     this.render = renderBody;
     this.router = router;
-    this.harvester = harvester;
+    this.harvester = services.harvester;
     this.authService = services.authService;
     this.stringUtil = utils.stringUtil;
     this.timeUtil = utils.timeUtil;
     this.dateUtil = utils.dateUtil;
+    this.formUtil = utils.formUtil;
     this.domUtil = utils.domUtil;
     this.mathUtil = utils.mathUtil;
     this.hourlySalesInputHandler = this._hourlySalesInputHandler.bind(this);
@@ -91,20 +93,8 @@ export default class SalesAnalysis extends BaseComponent {
 
   submitHandler(e) {
     e.preventDefault();
-  }
-
-  salesGraph() {
-    const canvas = document.getElementById('salesGraph');
-    canvas.width = window.innerWidth / 2;
-    canvas.height = window.innerHeight / 2;
-    const c = canvas.getContext('2d');
-    
-    c.beginPath();
-    c.fillStyle = 'blue'
-    c.arc(100, 100, 50, 0, Math.PI * 2);
-    c.fill()
-
-    console.log(c);
+    const formData = this.formUtil.getFormData(e.target);
+    console.log(formData);
   }
 
   _showView() {
@@ -121,10 +111,9 @@ export default class SalesAnalysis extends BaseComponent {
         this.weeklyTotal,
         this.hourlySalesDumpHandler,
         this.hourlySalesReportHandler,
-        this.submitHandler
+        this.submitHandler.bind(this)
       )
     );
-    this.salesGraph()
   }
 
   getHourlySalesTemplate() {

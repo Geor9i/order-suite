@@ -10,13 +10,15 @@
 }
 
 .category-container {
-    @include flex();
+    @include flex($AI: stretch);
     flex: 1 1, 20%;
     background-color: blue;
+    overflow: auto;
 }
 
 .product-container {
     @include flex();
     flex: 1 1;
     background-color: red;
+    overflow: auto;
 }

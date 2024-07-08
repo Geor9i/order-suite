@@ -1,0 +1,70 @@
+@import '../../../../styles/partials/box';
+@import '../../../../styles/partials/flex';
+@import '../../../../styles/partials/input';
+@import '../../../../styles/partials/responsive';
+
+.container {
+    @include flex(column);
+    @include rect(100%, 100%, 1000px, 800px);
+}
+
+.record-import-container {
+    @include flex(column, flex-start, $gap: 0.5em);
+    @include rect(100%, 50%);
+}
+
+.record-import-header {
+    padding: 0.5em;
+    @include rect(100%);
+    @include grid(80% 1fr);
+    .title {
+        font-size: 1em;
+    }
+    .import-btn {
+        cursor: pointer;
+        font-size: 1em;
+        padding: 0.2em 0.5em;
+        @include rect($bRadius: 7px);
+        border: 1px solid black;
+        @include transition((background-color, color));
+        &:hover {
+            background-color: black;
+            color: white;
+        }
+    }
+}
+
+
+.record-container {
+    @include rect(100%, 100%);
+    background-color: #fff;
+}
+
+.record-item {
+    @include grid(40% repeat(3, 1fr));
+    background-color: #0ba5ff;
+    text-align: center;
+    p {
+    padding: 0.2em;
+    font-size: 0.8em;
+    @include rect(100%, 100%);
+    @include flex();
+            border-right: 1px solid black;
+    }
+   
+}
+
+.record-item-btn {
+    @include rect(1em, 0.5em, $bRadius: 7px);
+    @include transition((background-color, color));
+    &:hover {
+        background-color: red;
+        color: white;
+    }
+}
+
+.header {
+    font-weight: bold;
+    border-bottom: 2px solid black;
+    background-color: #fff;
+}

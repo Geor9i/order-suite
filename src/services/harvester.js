@@ -59,8 +59,6 @@ export default class Harvester {
     return {reportData, productData};
   }
 
-
-
   purchaseOrderHarvest(report) {
     const edgeConfirmPattern = /\sEXT. PRICE UNIT PRICE U\/M QTY DESCRIPTION VENDOR CODE/g;
     const chromeConfirmPattern = /VENDOR CODE DESCRIPTION QTY U\/M UNIT PRICE EXT. PRICE/g;

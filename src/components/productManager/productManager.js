@@ -122,7 +122,7 @@ export default class ProductManager extends BaseComponent {
             const config = barButtons.find(entry => entry.description === description);
             const window = new Window(windowContainer, description);
             window.parentDataCallback = this.receiveProgramData.bind(this);
-            const programConfig = {productGroups: this.userData[userDataDetail.PRODUCTS.key]}
+            const programConfig = {inventory: this.userData[userDataDetail.INVENTORY.key]}
             config?.class && window.bootProgram(config.class, programConfig);
             const unsubscribe = window.on('minimizeTarget', subscriberId, () => {
                 const {rect} = this.eventUtil.elementData(button);
@@ -172,6 +172,4 @@ export default class ProductManager extends BaseComponent {
             this.firestoreService.setInventoryTemplate(productData)
         }
     }
-
-
 }

@@ -41,12 +41,8 @@ export default class Window {
     }
 
     bootProgram(Program, programConfig) {
-        this.program = new Program(programConfig, this.parentDataCallback);
-        this.program.boot(this.contentContainer);
-    }
-
-    sendData(data) {
-        this.emit('send', data);
+        this.program = new Program(this.contentContainer, programConfig, this.parentDataCallback);
+        this.program.boot();
     }
 
     create() {

@@ -6,6 +6,7 @@ import { JSEventBusService } from "./jseventBus.js";
 import { app } from '../config/firebaseConfig.js';
 import Harvester from "./harvester.js";
 import ErrorRelay from "./errorRelay.js";
+import Processor from "./processor.js";
 
 class ServiceProvider {
     constructor() {
@@ -16,6 +17,7 @@ class ServiceProvider {
         this.jsEventManagerService = new JSEventManagerService(this.jsEventBus);
         this.harvester = new Harvester();
         this.errorRelay = new ErrorRelay();
+        this.processor = new Processor();
     }
 }
 

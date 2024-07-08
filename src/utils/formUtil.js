@@ -1,4 +1,9 @@
+import ObjectUtil from "./objectUtil.js";
+
 export default class FormUtil {
+  constructor () {
+    this.objectUtil = new ObjectUtil();
+  }
     formValidator(formData, minPasswordLength = 1, rePass = null) {
       if (Object.keys(formData).length === 0) {
         throw new Error("Form must be filled!");
@@ -69,9 +74,9 @@ export default class FormUtil {
   
 
   getFormFieldsObj(form) {
-    let fields = this.createElementArray(form, 'input');
+    let fields = this.objectUtil.createElementArray(form, 'input');
     fields = fields.filter(el => el.value !== 'submit')
-    fields = this.elementArrayToObject(fields, 'name');
+    fields = this.objectUtil.elementArrayToObject(fields, 'name');
     return fields;
   }
 

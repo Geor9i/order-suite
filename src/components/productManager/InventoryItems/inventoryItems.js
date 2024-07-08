@@ -8,23 +8,22 @@ import styles from './inventoryItems.scss';
 import { html } from "lit-html";
 
 export default class InventoryItems extends Program {
-    constructor(programConfig, parentDataCallback) {
+    constructor(windowContentElement, programConfig, parentDataCallback) {
         super();
         this.subscriberId = 'InventoryItems';
         this.programConfig = programConfig;
-        this.productGroups = programConfig.productGroups;
+        this.inventory = programConfig.inventory;
         this.template = inventoryItemsTemplate;
         this.harvester = serviceProvider.harvester;
         this.errorRelay = serviceProvider.errorRelay;
         this.parentDataCallback = parentDataCallback;
-        this.windowContentElement = null;
+        this.windowContentElement = windowContentElement;
     }
 
-    boot(windowContentElement) {
-        this.windowContentElement = windowContentElement;
-        if (!this.productGroups) {
+    boot() {
+        if (!this.inventory) {
             const buttons = [{ title: 'Import from Clipboard', confirmMessage: 'confirmed', callback: this.importProducts.bind(this)}];
-            const modal = new Modal(this.windowContentElement, 'Inventory is Empty', 'Please Import Your Inventory Activity' , { buttons, noClose: true });
+            new Modal(this.windowContentElement, 'Inventory is Empty', 'Please Import Your Inventory Activity' , { buttons, noClose: true });
         } else {
             this.render();
         }
@@ -34,7 +33,7 @@ export default class InventoryItems extends Program {
         const controls = {
             toggleGroup: this.toggleGroup.bind(this)
         }
-        render(this.template(this.productGroups, controls), this.windowContentElement);
+        render(this.template(this.inventory, controls), this.windowContentElement);
     }
 
     importProducts() {
@@ -55,13 +54,13 @@ export default class InventoryItems extends Program {
         }
         const dataTransmission = { reportData, productData, message: messages.INVENTORY_TEMPLATE_IMPORT }
         this.parentDataCallback(dataTransmission);
-        this.productGroups = productGroups;
+        this.inventory = productGroups;
         this.render();
     }
 
     toggleGroup(groupName) {
         const productContainer = document.querySelector(`.${styles['product-container']}`);
-        const products = this.productGroups[groupName];
+        const products = this.inventory[groupName];
         const template = (products) => html`
         <ul>
         ${Object.keys(products).map(productName => html`

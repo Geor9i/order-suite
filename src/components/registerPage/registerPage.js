@@ -1,6 +1,6 @@
 import { db } from "../../constants/db.js";
 import { registerPageTemplate } from "./registerPageTemplate.js";
-import { registerUserData } from "../../constants/registerUserData.js";
+import { userDataDetail } from "../../constants/userDataDetail.js";
 import BaseComponent from "../../framework/baseComponent.js";
 import { routes } from "../../constants/routing.js";
 
@@ -32,7 +32,11 @@ export default class RegisterPage extends BaseComponent {
       const { email, password, storeName } = formData;
       try {
         await this.authService.register(email, password);
-        await this.firestoreService.setDoc(db.USERS, {...registerUserData, STORE_NAME: storeName }, { merge: true })
+        const userSetupData = Object.keys(userDataDetail).reduce((obj, key) => {
+          obj[key] = null;
+          return obj;
+        }, {})
+        await this.firestoreService.setDoc(db.USERS, {...userSetupData, STORE_NAME: storeName }, { merge: true })
         this.router.redirect(routes.HOME);
       } catch (err) {
         console.log(err);

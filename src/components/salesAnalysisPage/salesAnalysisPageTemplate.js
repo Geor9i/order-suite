@@ -14,22 +14,7 @@ export const salesAnalysisPageTemplate = (
   submitHandler
 ) => html`
 <div class=${styles["page__container"]}>
-    <div @click=${slideOpen} data-id="sales-summary-dropdown" class=${`${styles["section__bar"]} ${styles["section__bar-closed"]}`}>Sales Summary
-    </div>
-    <div id="sales-summary-dropdown" class=${styles["expand__container"]}>
-        <div class=${styles['inner-slider-container']}>
-          <div @click=${slideOpen} data-id="sales-summary-graph" class=${`${styles["section__bar"]} ${styles["section__bar-closed"]}`}>Sales Data
-          </div>
-          <div id="sales-summary-graph" class=${styles["expand__container"]}>
-            <h2>2024</h2>
-            <canvas id="salesGraph"></canvas>
-          </div>
-        </div>
-
-        <div class=${styles["submit-btn-container"]}>
-            <button class=${styles["submit-btn"]}>Submit</button>
-        </div>
-    </div>
+   
 
     <div @click=${slideOpen} data-id="hourly-sales-dropdown" class=${`${styles["section__bar"]} ${styles["section__bar-closed"]}`}>Hourly Sales
     </div>
