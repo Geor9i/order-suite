@@ -4,7 +4,7 @@ import styles from './productManager.module.scss';
 import w_styles from '../shared/window/window.scss';
 import Window from '../shared/window/window.js';
 import { bus } from "../../constants/busEvents.js";
-import { userDataDetail } from "../../constants/userDataDetail.js";
+import { db } from "../../constants/db.js";
 import { barButtons } from "./constants/productManagerBarButtons.js";
 import { messages } from "./constants/communication.js";
 
@@ -122,7 +122,7 @@ export default class ProductManager extends BaseComponent {
             const config = barButtons.find(entry => entry.description === description);
             const window = new Window(windowContainer, description);
             window.parentDataCallback = this.receiveProgramData.bind(this);
-            const programConfig = {inventory: this.userData[userDataDetail.INVENTORY.key]}
+            const programConfig = {inventory: this.userData[db.INVENTORY]}
             config?.class && window.bootProgram(config.class, programConfig);
             const unsubscribe = window.on('minimizeTarget', subscriberId, () => {
                 const {rect} = this.eventUtil.elementData(button);
@@ -165,11 +165,12 @@ export default class ProductManager extends BaseComponent {
         }
     }
 
-    receiveProgramData(data) {
-        const { message } = data;
-        if (message === messages.INVENTORY_TEMPLATE_IMPORT) {
-            const { productData } = data;
-            this.firestoreService.setInventoryTemplate(productData)
+    receiveProgramData(message, data) {
+        const importDate = this.dateUtil.op(new Date()).format({asString: true, delimiter: '-'});
+        const locations = {
+            [messages.INVENTORY_ACTIVITY_IMPORT]: db.INVENTORY_ACTIVITY,
+            [messages.INVENTORY_RECORD_IMPORT]: db.PURCHASE_PRODUCTS,
         }
+        this.firestoreService.importInventoryRecord(importDate, data, locations[message]);
     }
 }

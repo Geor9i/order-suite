@@ -1,13 +1,13 @@
 import { html } from "lit-html";
 import styles from './inventoryRecords.scss';
-import { INVENTORY_RECORDS } from "../../../constants/userDataDetail.js";
+import { INVENTORY } from "../../../constants/db.js";
 
 export const InventoryRecordsTemplate = (records, controls) => html`
 <div class=${styles['container']}>
-        ${Object.keys(INVENTORY_RECORDS).map(recordGroup => html`
+        ${Object.keys(INVENTORY).map(recordGroup => html`
                 <section class=${styles['record-import-container']}>
                         <div class=${styles['record-import-header']}>
-                                <p class=${styles['title']}>${INVENTORY_RECORDS[recordGroup].title}</p>
+                                <p class=${styles['title']}>${INVENTORY[recordGroup].title}</p>
                                 <a @click=${() => controls.importData(recordGroup)} class=${styles['import-btn']}>Import</a>
                         </div>
                     <div class=${styles['record-container']}>
@@ -17,7 +17,7 @@ export const InventoryRecordsTemplate = (records, controls) => html`
                                 <p class=${styles['record-item-text']}>End date</p>        
                                 <a class=${styles['record-item-text']}>Delete</a>
                         </div>
-                        ${Object.keys(records[INVENTORY_RECORDS[recordGroup].key]).map(record => recordItem(records[INVENTORY_RECORDS[recordGroup].key][record]))}
+                        ${Object.keys(records[INVENTORY[recordGroup].key]).map(record => recordItem(records[INVENTORY[recordGroup].key][record]))}
                     </div>
                 </section>
         `)}

@@ -1,4 +1,3 @@
-import { db } from "../constants/db.js";
 import { bus } from '../constants/busEvents.js';
 import { utils } from "../utils/utilConfig";
 import {
@@ -11,6 +10,7 @@ import {
   deleteDoc,
   deleteField,
 } from "firebase/firestore";
+import { db } from "../constants/db.js";
 
 export default class FirestoreService {
   constructor(app, eventBus) {
@@ -42,9 +42,16 @@ export default class FirestoreService {
     }
   }
 
-  async setInventoryTemplate(productGroups) {
+  async importInventoryRecord(importDate, data, dbLocation = db.INVENTORY_ACTIVITY) {
     const documentRef = doc(this.db, db.USERS, this.user.uid);
-    await updateDoc(documentRef, { products: productGroups });
+    const dbRouter = {
+      [db.INVENTORY_ACTIVITY]: `${db.INVENTORY}.${db.INVENTORY_RECORDS}.${db.INVENTORY_ACTIVITY}.${importDate}`,
+      [db.PURCHASE_PRODUCTS]: `${db.INVENTORY}.${db.INVENTORY_RECORDS}.${db.PURCHASE_PRODUCTS}.${importDate}`,
+    }
+    const updates = {
+      [dbRouter[dbLocation]]: data,
+    };
+    await updateDoc(documentRef, updates);
   }
 
   _updateState(doc) {

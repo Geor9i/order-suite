@@ -6,7 +6,7 @@ import Program from "../../shared/program/program.js";
 import { InventoryRecordsTemplate } from "./inventoryRecordsTemplate.js";
 import { messages } from "../constants/communication.js";
 import styles from './inventoryRecords.scss';
-import { INVENTORY_RECORDS } from "../../../constants/userDataDetail.js";
+import { db, INVENTORY } from "../../../constants/db.js";
 
 export default class InventoryRecords extends Program {
     constructor(windowContentElement, programConfig, parentDataCallback) {
@@ -29,20 +29,25 @@ export default class InventoryRecords extends Program {
         const controls = {
             importData: this.importData.bind(this)
         }
-        const records = Object.keys(INVENTORY_RECORDS).reduce((obj, key) => {
-            obj[key] = this?.inventory?.[INVENTORY_RECORDS[key].key] || {};
+        const records = Object.keys(INVENTORY).reduce((obj, key) => {
+            obj[key] = this?.inventory?.[INVENTORY[key].key] || {};
             return obj
         }, {})
         render(this.template(records, controls), this.windowContentElement);
     }
 
-    async importData(group) {
+    async importData(recordGroup) {
         try {
             const text = await navigator.clipboard.readText();
-            const data = this.harvester[INVENTORY_RECORDS[group].harvester](text);
-            console.log(data);
+            const data = this.harvester[INVENTORY[recordGroup].harvester](text);
+            const message = {
+                [db.INVENTORY_ACTIVITY]: messages.INVENTORY_ACTIVITY_IMPORT,
+                [db.PURCHASE_PRODUCTS]: messages.INVENTORY_RECORD_IMPORT,
+            }
+            if (data) {
+                this.parentDataCallback(message[recordGroup], data);
+            }
         } catch(err) {
-            console.log();
             this.errorRelay.send(err);
         }
     }

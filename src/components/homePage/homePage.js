@@ -2,7 +2,7 @@ import { homePageTemplate } from "./homePageTemplate.js";
 import { guestHomeTemplate } from './guestHomeTemplate';
 import { bus } from '../../constants/busEvents.js';
 import { routes } from "../../constants/routing.js";
-import { userDataDetail } from "../../constants/userDataDetail.js";
+import { db_main_collections } from "../../constants/db.js";
 import BaseComponent from "../../framework/baseComponent.js";
 import styles from './homePage.module.scss';
 import stylesGuest from './guestHome.scss';
@@ -47,8 +47,8 @@ export default class HomeComponent extends BaseComponent {
 
   _profileCompletionReport() {
     const completionFactors = {}; 
-    Object.keys(userDataDetail).forEach(key => completionFactors[key] = this.userData[key])
-    const progressReport = { ...userDataDetail };
+    Object.keys(db_main_collections).forEach(key => completionFactors[key] = this.userData[key])
+    const progressReport = { ...db_main_collections };
 
     const profileCompletionsShare = Math.round(1 / Object.keys(completionFactors).length);
     let completion = 0;

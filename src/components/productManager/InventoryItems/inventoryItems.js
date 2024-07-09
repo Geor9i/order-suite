@@ -52,9 +52,8 @@ export default class InventoryItems extends Program {
         } else if (Object.keys(productData).length < minProductGrops) {
             throw new Error(`Discovered product groups must be at least ${minProductGrops}!\nPlease include more product categories!`);
         }
-        const dataTransmission = { reportData, productData, message: messages.INVENTORY_TEMPLATE_IMPORT }
-        this.parentDataCallback(dataTransmission);
-        this.inventory = productGroups;
+        this.parentDataCallback(messages.INVENTORY_ACTIVITY_IMPORT, data);
+        this.inventory = productData;
         this.render();
     }
 

@@ -1,6 +1,5 @@
-import { db } from "../../constants/db.js";
+import { db, db_main_collections } from "../../constants/db.js";
 import { registerPageTemplate } from "./registerPageTemplate.js";
-import { userDataDetail } from "../../constants/userDataDetail.js";
 import BaseComponent from "../../framework/baseComponent.js";
 import { routes } from "../../constants/routing.js";
 
@@ -32,7 +31,7 @@ export default class RegisterPage extends BaseComponent {
       const { email, password, storeName } = formData;
       try {
         await this.authService.register(email, password);
-        const userSetupData = Object.keys(userDataDetail).reduce((obj, key) => {
+        const userSetupData = Object.keys(db_main_collections).reduce((obj, key) => {
           obj[key] = null;
           return obj;
         }, {})

@@ -135,7 +135,7 @@ export default class ObjectUtil {
               globalStructureMatch = false;
               globalReferenceMatch = false;
               config.invalid = true;
-              if (!options.fullReport) {
+              if (!options?.fullReport) {
                 return config;
               }
             }
