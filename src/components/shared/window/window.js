@@ -41,7 +41,7 @@ export default class Window {
     }
 
     bootProgram(Program, programConfig) {
-        this.program = new Program(this.contentContainer, programConfig, this.parentDataCallback);
+        this.program = new Program(this.contentContainer, this.parentDataCallback, programConfig);
         this.program.boot();
     }
 

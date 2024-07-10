@@ -1,17 +1,22 @@
 import { render } from "lit-html";
 import { html } from "lit-html";
 import { serviceProvider } from "../../../services/serviceProvider.js";
-import Modal from "../../shared/modal/modal.js";
 import Program from "../../shared/program/program.js";
 import { InventoryRecordsTemplate } from "./inventoryRecordsTemplate.js";
 import { messages } from "../constants/communication.js";
 import styles from './inventoryRecords.scss';
 import { db, INVENTORY } from "../../../constants/db.js";
+import { bus } from "../../../constants/busEvents.js";
 
 export default class InventoryRecords extends Program {
     constructor(windowContentElement, programConfig, parentDataCallback) {
         super();
         this.subscriberId = 'DataImports';
+        this.subscriptionArr = [];
+        this.firestoreService = serviceProvider.firestoreService;
+        this.inventoryPurchaseRecords = this.firestoreService?.userData?.[db.INVENTORY]?.[db.INVENTORY_RECORDS]?.[db.PURCHASE_PRODUCTS] || {};
+        this.inventoryActivityRecords = this.firestoreService?.userData?.[db.INVENTORY]?.[db.INVENTORY_RECORDS]?.[db.INVENTORY_ACTIVITY] || {};
+        this.eventBus = serviceProvider.eventBus;
         this.programConfig = programConfig;
         this.inventory = programConfig.inventory;
         this.template = InventoryRecordsTemplate;
@@ -22,17 +27,24 @@ export default class InventoryRecords extends Program {
     }
 
     boot() {
-       this.render()
+        this.subscriptionArr.forEach(unsubscribe => unsubscribe());
+        const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, this.boot.bind(this));
+        this.subscriptionArr = [unsubscribe];
+       this.render();
+    }
+
+    close() {
+        this.subscriptionArr.forEach(unsubscribe => unsubscribe());
     }
 
     render() {
         const controls = {
             importData: this.importData.bind(this)
         }
-        const records = Object.keys(INVENTORY).reduce((obj, key) => {
-            obj[key] = this?.inventory?.[INVENTORY[key].key] || {};
-            return obj
-        }, {})
+        const records = {
+            [INVENTORY.PURCHASE_PRODUCTS]: this.inventoryPurchaseRecords,
+            [INVENTORY.INVENTORY_ACTIVITY]: this.inventoryActivityRecords,
+        }
         render(this.template(records, controls), this.windowContentElement);
     }
 

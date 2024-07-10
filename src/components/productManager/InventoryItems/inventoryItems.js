@@ -6,13 +6,17 @@ import { inventoryItemsTemplate } from "./inventoryItemsTemplate.js";
 import { messages } from "../constants/communication.js";
 import styles from './inventoryItems.scss';
 import { html } from "lit-html";
-
+import { db } from "../../../constants/db.js";
+import { bus } from "../../../constants/busEvents.js";
 export default class InventoryItems extends Program {
-    constructor(windowContentElement, programConfig, parentDataCallback) {
+    constructor(windowContentElement, parentDataCallback, programConfig) {
         super();
         this.subscriberId = 'InventoryItems';
+        this.subscriptionArr = [];
         this.programConfig = programConfig;
-        this.inventory = programConfig.inventory;
+        this.firestoreService = serviceProvider.firestoreService;
+        this.inventory = this.firestoreService?.[db.INVENTORY]?.[db.INVENTORY_ACTIVITY] || {};
+        this.eventBus = serviceProvider.eventBus;
         this.template = inventoryItemsTemplate;
         this.harvester = serviceProvider.harvester;
         this.errorRelay = serviceProvider.errorRelay;
@@ -21,12 +25,20 @@ export default class InventoryItems extends Program {
     }
 
     boot() {
-        if (!this.inventory) {
+        this.subscriptionArr.forEach(unsubscribe => unsubscribe());
+        const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, this.boot.bind(this));
+        this.subscriptionArr = [unsubscribe];
+        const inventoryRecordsArr = Object.keys(this.inventory);
+        if (!inventoryRecordsArr.length) {
             const buttons = [{ title: 'Import from Clipboard', confirmMessage: 'confirmed', callback: this.importProducts.bind(this)}];
             new Modal(this.windowContentElement, 'Inventory is Empty', 'Please Import Your Inventory Activity' , { buttons, noClose: true });
         } else {
             this.render();
         }
+    }
+
+    close() {
+        this.subscriptionArr.forEach(unsubscribe => unsubscribe());
     }
 
     render() {

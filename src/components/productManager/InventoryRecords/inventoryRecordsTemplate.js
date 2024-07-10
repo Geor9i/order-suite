@@ -17,7 +17,7 @@ export const InventoryRecordsTemplate = (records, controls) => html`
                                 <p class=${styles['record-item-text']}>End date</p>        
                                 <a class=${styles['record-item-text']}>Delete</a>
                         </div>
-                        ${Object.keys(records[INVENTORY[recordGroup].key]).map(record => recordItem(records[INVENTORY[recordGroup].key][record]))}
+                        ${Object.keys(records?.[INVENTORY?.[recordGroup]]).map(record => recordItem(records?.[INVENTORY?.[recordGroup]]?.[record]))}
                     </div>
                 </section>
         `)}
@@ -26,9 +26,10 @@ export const InventoryRecordsTemplate = (records, controls) => html`
 
 const recordItem = (item) => html`
 <div class=${styles['record-item']}>
-<p class=${styles['record-item-text']}>${item.importDate}</p>        
-<p class=${styles['record-item-text']}>${item.startDate}</p>        
-<p class=${styles['record-item-text']}>${item.endDate}</p>          
+${console.log(item)}
+<p class=${styles['record-item-text']}>${item?.reportData?.importDate}</p>        
+<p class=${styles['record-item-text']}>${item?.reportData?.startDate}</p>        
+<p class=${styles['record-item-text']}>${item?.reportData?.endDate}</p>          
 <a class=${styles['record-item-btn']}>X</a>
 </div>
 `
