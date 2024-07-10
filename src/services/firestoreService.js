@@ -42,16 +42,26 @@ export default class FirestoreService {
     }
   }
 
-  async importInventoryRecord(importDate, data, dbLocation = db.INVENTORY_ACTIVITY) {
+  async importInventoryRecord(id, data, dbLocation = db.INVENTORY_ACTIVITY) {
     const documentRef = doc(this.db, db.USERS, this.user.uid);
     const dbRouter = {
-      [db.INVENTORY_ACTIVITY]: `${db.INVENTORY}.${db.INVENTORY_RECORDS}.${db.INVENTORY_ACTIVITY}.${importDate}`,
-      [db.PURCHASE_PRODUCTS]: `${db.INVENTORY}.${db.INVENTORY_RECORDS}.${db.PURCHASE_PRODUCTS}.${importDate}`,
+      [db.INVENTORY_ACTIVITY]: `${db.INVENTORY}.${db.INVENTORY_RECORDS}.${db.INVENTORY_ACTIVITY}.${id}`,
+      [db.PURCHASE_PRODUCTS]: `${db.INVENTORY}.${db.INVENTORY_RECORDS}.${db.PURCHASE_PRODUCTS}.${id}`,
     }
     const updates = {
       [dbRouter[dbLocation]]: data,
     };
     await updateDoc(documentRef, updates);
+  }
+
+  async deleteInventoryRecord(id, recordGroup) {
+    const documentRef = doc(this.db, db.USERS, this.user.uid);
+    const fieldPath = `${db.INVENTORY}.${db.INVENTORY_RECORDS}.${recordGroup}.${id}`;
+    const updates = {
+      [fieldPath]: deleteField(),
+    };
+    await updateDoc(documentRef, updates);
+    console.log(`Deleted inventory record ${id} from ${recordGroup}`);
   }
 
   _updateState(doc) {

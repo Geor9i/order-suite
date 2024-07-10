@@ -11,6 +11,7 @@
     "lit-html": "^2.7.5",
     "page": "^1.11.6",
     "path-to-regexp": "^1.2.1",
+    "uuid": "^10.0.0",
     "webpack-cli": "^5.1.4"
   },
   "scripts": {

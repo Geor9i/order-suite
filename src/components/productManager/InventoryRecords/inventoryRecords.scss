@@ -55,7 +55,10 @@
 }
 
 .record-item-btn {
-    @include rect(1em, 0.5em, $bRadius: 7px);
+    cursor: pointer;
+    padding: 0.2em;
+    @include flex();
+    border-radius: 7px;
     @include transition((background-color, color));
     &:hover {
         background-color: red;

@@ -7,18 +7,16 @@ import { messages } from "../constants/communication.js";
 import styles from './inventoryRecords.scss';
 import { db, INVENTORY } from "../../../constants/db.js";
 import { bus } from "../../../constants/busEvents.js";
+import { v4 as uuid } from "uuid";
 
 export default class InventoryRecords extends Program {
-    constructor(windowContentElement, programConfig, parentDataCallback) {
+    constructor( windowContentElement, parentDataCallback, programConfig ) {
         super();
         this.subscriberId = 'DataImports';
         this.subscriptionArr = [];
         this.firestoreService = serviceProvider.firestoreService;
-        this.inventoryPurchaseRecords = this.firestoreService?.userData?.[db.INVENTORY]?.[db.INVENTORY_RECORDS]?.[db.PURCHASE_PRODUCTS] || {};
-        this.inventoryActivityRecords = this.firestoreService?.userData?.[db.INVENTORY]?.[db.INVENTORY_RECORDS]?.[db.INVENTORY_ACTIVITY] || {};
         this.eventBus = serviceProvider.eventBus;
         this.programConfig = programConfig;
-        this.inventory = programConfig.inventory;
         this.template = InventoryRecordsTemplate;
         this.harvester = serviceProvider.harvester;
         this.errorRelay = serviceProvider.errorRelay;
@@ -28,7 +26,7 @@ export default class InventoryRecords extends Program {
 
     boot() {
         this.subscriptionArr.forEach(unsubscribe => unsubscribe());
-        const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, this.boot.bind(this));
+        const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, this.render.bind(this));
         this.subscriptionArr = [unsubscribe];
        this.render();
     }
@@ -38,12 +36,15 @@ export default class InventoryRecords extends Program {
     }
 
     render() {
-        const controls = {
-            importData: this.importData.bind(this)
-        }
+        const controls = { 
+            importData: this.importData.bind(this), 
+            deleteRecord: this.deleteRecord.bind(this),
+        };
+        const formatRecords = (recordCollection) => Object.keys(recordCollection).map(record => recordCollection[record]);
+        const inventory = this.firestoreService.userData[db.INVENTORY];
         const records = {
-            [INVENTORY.PURCHASE_PRODUCTS]: this.inventoryPurchaseRecords,
-            [INVENTORY.INVENTORY_ACTIVITY]: this.inventoryActivityRecords,
+            [db.PURCHASE_PRODUCTS]: formatRecords(inventory?.[db.INVENTORY_RECORDS]?.[db.PURCHASE_PRODUCTS] ?? {}),
+            [db.INVENTORY_ACTIVITY]: formatRecords(inventory?.[db.INVENTORY_RECORDS]?.[db.INVENTORY_ACTIVITY] ?? {})
         }
         render(this.template(records, controls), this.windowContentElement);
     }
@@ -57,6 +58,7 @@ export default class InventoryRecords extends Program {
                 [db.PURCHASE_PRODUCTS]: messages.INVENTORY_RECORD_IMPORT,
             }
             if (data) {
+                data.reportData.id = `${data.reportData.importDate}_${uuid()}`;
                 this.parentDataCallback(message[recordGroup], data);
             }
         } catch(err) {
@@ -64,5 +66,9 @@ export default class InventoryRecords extends Program {
         }
     }
 
+    async deleteRecord(record, recordGroup) {
+        const id = record.reportData.id;
+        await this.firestoreService.deleteInventoryRecord(id, recordGroup);
+    }
    
 }

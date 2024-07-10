@@ -17,19 +17,22 @@ export const InventoryRecordsTemplate = (records, controls) => html`
                                 <p class=${styles['record-item-text']}>End date</p>        
                                 <a class=${styles['record-item-text']}>Delete</a>
                         </div>
-                        ${Object.keys(records?.[INVENTORY?.[recordGroup]]).map(record => recordItem(records?.[INVENTORY?.[recordGroup]]?.[record]))}
+                        ${Object.keys(records?.[recordGroup]).map(record => recordItem(records[recordGroup][record], recordGroup, controls))}
                     </div>
                 </section>
         `)}
 </div>
 `
 
-const recordItem = (item) => html`
+const recordItem = (record, recordGroup, controls) => {
+const { importDate, startDate, endDate } = record.reportData;
+
+return html`
 <div class=${styles['record-item']}>
-${console.log(item)}
-<p class=${styles['record-item-text']}>${item?.reportData?.importDate}</p>        
-<p class=${styles['record-item-text']}>${item?.reportData?.startDate}</p>        
-<p class=${styles['record-item-text']}>${item?.reportData?.endDate}</p>          
-<a class=${styles['record-item-btn']}>X</a>
+<p class=${styles['record-item-text']}>${importDate}</p>        
+<p class=${styles['record-item-text']}>${startDate ?? importDate}</p>        
+<p class=${styles['record-item-text']}>${endDate ?? importDate}</p>          
+<a @click=${() => controls.deleteRecord(record, recordGroup)} class=${styles['record-item-btn']}>X</a>
 </div>
 `
+}

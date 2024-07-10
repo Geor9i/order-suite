@@ -28,7 +28,6 @@ export default class ProductManager extends BaseComponent {
         this.showView = this._showView.bind(this);
         this.sidebarBackdropInitialHover = false;
         this.sideBarHidden = false;
-        console.log(this.userData);
     }
 
     init() {
@@ -166,11 +165,10 @@ export default class ProductManager extends BaseComponent {
     }
 
     receiveProgramData(message, data) {
-        const importDate = this.dateUtil.op(new Date()).format({asString: true, delimiter: '-'});
         const locations = {
             [messages.INVENTORY_ACTIVITY_IMPORT]: db.INVENTORY_ACTIVITY,
             [messages.INVENTORY_RECORD_IMPORT]: db.PURCHASE_PRODUCTS,
         }
-        this.firestoreService.importInventoryRecord(importDate, data, locations[message]);
+        this.firestoreService.importInventoryRecord(data.reportData.id, data, locations[message]);
     }
 }

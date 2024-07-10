@@ -19,8 +19,11 @@ export default class Harvester {
     } else if (report.match(unprocessedOrderReportConfirmPattern)) {
       productMatches = [...report.matchAll(unprocessedOrderReportProductPattern)];
     }
+    const reportData = {
+      importDate: this.dateUtil.op(new Date()).format({asString: true, delimiter: '-'}),
+    }
     const productData = this.formatToBaseUnit(productMatches);
-    return { productData }
+    return { productData, reportData }
   }
 
   inventoryHarvest(report) {
@@ -33,7 +36,6 @@ export default class Harvester {
     //-----------------------------------------------------REGEX
 
     let productData = {};
-    let reportData = {};
     const categoryMatches = [...report.matchAll(reportCategoryPattern)];
 
     //? Get report details data (day span and store name)
@@ -41,12 +43,13 @@ export default class Harvester {
     if (!reportMatch) {
       throw new Error('Wrong Data Provided!')
     }
-      const startDate = this.dateUtil.op(reportMatch.groups.startDate.trim()).format();
-      const endDate = this.dateUtil.op(reportMatch.groups.endDate.trim()).format();
-      reportData = {
+    const startDate = this.dateUtil.op(reportMatch.groups.startDate.trim()).format();
+    const endDate = this.dateUtil.op(reportMatch.groups.endDate.trim()).format();
+      const reportData = {
+        startDate: this.dateUtil.op(startDate).format({asString: true, delimiter: '-'}),
+        endDate: this.dateUtil.op(endDate).format({asString: true, delimiter: '-'}),
+        importDate: this.dateUtil.op(new Date()).format({asString: true, delimiter: '-'}),
         storeName: reportMatch.groups.storeName.trim(),
-        startDate: startDate,
-        endDate: endDate,
         daySpan: this.dateUtil.dateDifference( startDate, endDate )
       }
 
