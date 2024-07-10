@@ -1,39 +1,19 @@
 import { html } from "../../../node_modules/lit-html/lit-html.js";
 import styles from './orderForm.module.scss';
 
-export const orderFormTemplate = (
-  submitHandler,
-  openCalendar,
-  dateInputFieldStartingDate,
-  closeCalendar,
-  receivedToday
-) => html`
+export const orderFormTemplate = (controls, dateInputFieldStartingDate) => html`
  <section class=${styles['order-page__section']}>
-    <div class=${styles['calendar-backdrop']} id="calendar-backdrop" class="calendar-backdrop" @click=${closeCalendar}></div>
-    <form novalidate id="form" class=${styles['order-form']} @submit="${submitHandler}">
-        <div class=${styles['form-group']}>
-            <label for="RMF-data-dump">Paste RMF order page</label>
-            <textarea name="RMF-data-dump" class=${styles['rmf-data-dump']} placeholder="Paste RMF page here!" id="RMF-data-dump"></textarea>
-        </div>
-        <div class=${styles['form-group']}>
-            <h3 class=${styles['input__order__invoiced']}>All food orders invoiced?</h3>
-            <div id="radio-container" class=${styles["radio-container"]}>
-                <label class=${styles['radio-label']} for="previous-invoiced-yes" >Yes</label>
-                <input @click=${receivedToday} class=${styles['radio-button']} type="radio" id="previous-invoiced-yes"
-                    name="previous-invoiced">
-                <label class=${styles['radio-label']} for="previous-invoiced-no">No</label>
-                <input @click=${receivedToday} class=${styles['radio-button']} type="radio" id="previous-invoiced-no" name="previous-invoiced">
-            </div>
-            <div class=${styles['received-today__container']} id="received-today">
-                <label class=${styles['received-today__label']} for="received_today" >Received my order today?</label>
-                <input class=${styles['check-box']} type="checkbox" id="received_today" name="received-today">
-            </div>
+    <div class=${styles['calendar-backdrop']} id="calendar-backdrop" class="calendar-backdrop" @click=${controls.closeCalendar}></div>
+    <form novalidate id="form" class=${styles['order-form']} @submit="${controls.submitHandler}">
+        <div title="Import last week's full Inventory Activity Report" class=${styles['form-group']}>
+            <label for="RMF-data-dump">Inventory Activity Report</label>
+            <a @click=${controls.importInventory} class=${styles['inventory-import-btn']}>Import</a>
         </div>
         <div class=${styles['form-group']}>
             <label id="date-label" for="date-input" >Order Date</label>
             <div id=${styles["calendar-input-container"]}>
                 <input type="text" required="true" id="date-input" name="date" .value=${dateInputFieldStartingDate()}>
-                <div id="date-button" @click=${openCalendar}><i class="fa-solid fa-calendar fa-2x"></i></div>
+                <div id="date-button" @click=${controls.openCalendar}><i class="fa-solid fa-calendar fa-2x"></i></div>
             </div>
         <div id="calendar-container" class=${styles["calendar-container"]}></div>
         </div>

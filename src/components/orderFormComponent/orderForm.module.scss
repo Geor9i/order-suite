@@ -25,7 +25,7 @@
 
       .form-group {
         @include flex(column);
-        width: 100%;
+        @include rect(100%);
         position: relative;
         @include tablet-screen { width: 80% };
         @include phone-screen { width: 100% };
@@ -38,49 +38,24 @@
           @include tablet-screen { width: 80% };
         }
     }
-        .input__order__invoiced {
-          align-self: center;
-          @include phone-screen { font-size: 1em }
-        }
-        
-        .radio-container {
-          width: 15rem;
-          text-align: center;
-          display: block;
-          margin-bottom: 1rem;
-        }
-        
-        .radio-label {
-          font-size: 1.1rem;
-          font-weight: normal;
-          color: rgb(0, 0, 0);
-        }
-        
-        .radio-button {
-          @include rect(1.5em, $cube: true);
-          margin-right: 1.5em;
-          cursor: pointer;
-          accent-color: rgb(46, 46, 46);
-          outline: none;
-        }
-        
-        .check-box {
-          display: inline-block;
-          @include rect(1.6em, $cube: true);
-          margin: 0;
-          accent-color: rgb(100, 100, 100);
-          cursor: pointer;
-        }
 
-        .received-today__container {
-          display: none;
-          justify-content: space-evenly;
-          width: 100%;
-        }
+    .inventory-import-btn {
+      cursor: pointer;
+      padding: 0.5em;
+      font-weight: bold;
+      text-transform: uppercase;
+      @include rect(60%);
+      @include transition((background-color, color));
+      @include flex();
+      background-color: #000;
+      border-radius: 17px;
+      &:hover {
+        background-color: black;
+        color: #fff;
+        box-shadow: 0 0 2px 2px inset #dda9ff;
+      }
+    }
         
-        .received-today__container__on {
-          display: flex;
-        }
 
       #calendar-input-container {
         position: relative;
@@ -129,35 +104,7 @@
         }
       }
  
-  .rmf-data-dump {
-    @include rect(15rem, 3.5rem);
-    @include input(13px);
-    padding: 1em;
-    resize: none;
-    background-color: black;
-    color: white;
-    font-weight: bold;
-    font-size: 1rem;
-    transition: box-shadow 0.3s ease;
-    text-align: center;
-    &::placeholder {
-      color: transparent;
-    }
-    &:hover::placeholder {
-      color: rgb(255, 255, 255);
-      opacity: 1;
-    }
-    &:hover {
-      cursor: pointer;
-      box-shadow: 0 0 0.4rem 0.5rem rgba(255, 255, 255, 0.158) inset,
-        0 0 1px 2px rgb(255, 255, 255) inset, 0 0 1px 2px rgb(255, 255, 255);
-      transition: box-shadow 0.3s ease;
-    }
-    @include phone-screen {
-      width: 80%;
-    }
-  }
-
+ 
   .warning-message {
     @include flex(column, flex-start);
     @include position(absolute, 50%, $left: 20%, $x: -50%, $y: -50%);

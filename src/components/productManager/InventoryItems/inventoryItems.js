@@ -24,12 +24,15 @@ export default class InventoryItems extends Program {
         this.windowContentElement = windowContentElement;
     }
 
+    get inventoryRecords() {
+        return this.firestoreService.userData?.[db.INVENTORY]?.[db.INVENTORY_RECORDS]?.[db.INVENTORY_ACTIVITY] ?? null;
+    }
+
     boot() {
         this.subscriptionArr.forEach(unsubscribe => unsubscribe());
         const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, this.boot.bind(this));
         this.subscriptionArr = [unsubscribe];
-        const inventoryRecordsArr = Object.keys(this.inventory);
-        if (!inventoryRecordsArr.length) {
+        if (!this.inventoryRecords) {
             const buttons = [{ title: 'Import from Clipboard', confirmMessage: 'confirmed', callback: this.importProducts.bind(this)}];
             new Modal(this.windowContentElement, 'Inventory is Empty', 'Please Import Your Inventory Activity' , { buttons, noClose: true });
         } else {
@@ -45,7 +48,7 @@ export default class InventoryItems extends Program {
         const controls = {
             toggleGroup: this.toggleGroup.bind(this)
         }
-        render(this.template(this.inventory, controls), this.windowContentElement);
+        render(this.template(this.inventoryRecords, controls), this.windowContentElement);
     }
 
     importProducts() {

@@ -1,20 +1,11 @@
 import { orderFormTemplate } from "./orderFormTemplate.js";
-import styles from './orderForm.module.scss'
+import styles from "./orderForm.module.scss";
 import BaseComponent from "../../framework/baseComponent.js";
-import Calendar from '../calendar/calendar.js'
+import Calendar from "../calendar/calendar.js";
 
 export default class OrderFormComponent extends BaseComponent {
-  constructor({
-    renderBody,
-    router,
-    harvester,
-    processor,
-    storeSettings,
-    services,
-    utils,
-  }) {
+  constructor({ renderBody, router, services, utils }) {
     super();
-    this.storeSettings = storeSettings;
     this.dateUtil = utils.dateUtil;
     this.formUtil = utils.formUtil;
     this.domUtil = utils.domUtil;
@@ -22,9 +13,10 @@ export default class OrderFormComponent extends BaseComponent {
     this.renderHandler = renderBody;
     this.router = router;
     this.authService = services.authService;
+    this.errorRelay = services.errorRelay;
+    this.harvester = services.harvester;
     this.calendarComponent = new Calendar();
-    this.harvester = harvester;
-    this.processor = processor;
+    this.processor = services.processor;
     this.showView = this._showView.bind(this);
     this.openCalendar = this._openCalendar.bind(this);
     this.submitHandler = this._submitHandler.bind(this);
@@ -40,15 +32,15 @@ export default class OrderFormComponent extends BaseComponent {
       return;
     }
 
-    let template = orderFormTemplate(
-      this.submitHandler,
-      this.openCalendar,
-      this.dateInputFieldStartingDate,
-      this.closeCalendar,
-      this.receivedToday
-    );
+    const controls = {
+      submitHandler: this.submitHandler.bind(this),
+      openCalendar: this.openCalendar.bind(this),
+      closeCalendar: this.closeCalendar.bind(this),
+      importInventory: this.importInventory.bind(this),
+    };
+
+    let template = orderFormTemplate(controls, this.dateInputFieldStartingDate);
     this.renderHandler(template);
-    this.rmfDumpHandler();
   }
 
   _openCalendar(e) {
@@ -68,10 +60,11 @@ export default class OrderFormComponent extends BaseComponent {
       { asDate: true }
     );
 
-    return `${nextAvailableDeliveryDate.getDate()}/${nextAvailableDeliveryDate.getMonth() + 1
-      }/${nextAvailableDeliveryDate.getFullYear()} - ${this.stringUtil.toPascalCase(
-        weekdays[nextAvailableDeliveryDate.getDay() - 1]
-      )}`;
+    return `${nextAvailableDeliveryDate.getDate()}/${
+      nextAvailableDeliveryDate.getMonth() + 1
+    }/${nextAvailableDeliveryDate.getFullYear()} - ${this.stringUtil.toPascalCase(
+      weekdays[nextAvailableDeliveryDate.getDay() - 1]
+    )}`;
   }
 
   _closeCalendar() {
@@ -84,13 +77,7 @@ export default class OrderFormComponent extends BaseComponent {
   _submitHandler(e) {
     e.preventDefault();
     let form = e.target;
-    let radioElementYes = document.getElementById("previous-invoiced-yes");
-    let radioElementNo = document.getElementById("previous-invoiced-no");
     let formData = this.formUtil.getFormData(form);
-    formData.radioYes = radioElementYes.checked;
-    formData.radioNo = radioElementNo.checked;
-    // this.processor.nextOrder(formData)
-
     if (this.formValidator(formData)) {
       let [date, weekday] = formData.date.split("-");
       formData.date = this.dateUtil.op(date).format();
@@ -101,33 +88,25 @@ export default class OrderFormComponent extends BaseComponent {
     }
   }
 
-  rmfDumpHandler() {
-    let rmfDataDumpElement = document.getElementById("RMF-data-dump");
-    rmfDataDumpElement.addEventListener("input", (e) => {
-      if (rmfDataDumpElement.value.length >= 1) {
-        this.deliveryHarvestProducts = this.harvester.reportHarvest([
-          rmfDataDumpElement.value,
-        ]);
-        //If valid products have been discovered on entry
-        if (this.deliveryHarvestProducts) {
-          rmfDataDumpElement.value = "Data Received!";
-          rmfDataDumpElement.disabled = true;
-        } else {
-          rmfDataDumpElement.value = "";
-          e.currentTarget.placeholder = "Wrong Data!";
-        }
-      }
-    });
+  async importInventory() {
+    const text = await navigator.clipboard.readText();
+    try {
+      const { productData, reportData } = this.harvester.inventoryHarvest(text);
+      console.log(reportData);
+    } catch (err) {
+      this.errorRelay.send(err);
+    }
   }
 
   receivedToday(e) {
-    let receivedTodayContainerElement = document.getElementById("received-today");
-    const choice = e.currentTarget.id.replace('previous-invoiced-', '');
-    const on = styles['received-today__container__on'];
-    if (choice === 'no') {
-      receivedTodayContainerElement.classList.add(on)
+    let receivedTodayContainerElement =
+      document.getElementById("received-today");
+    const choice = e.currentTarget.id.replace("previous-invoiced-", "");
+    const on = styles["received-today__container__on"];
+    if (choice === "no") {
+      receivedTodayContainerElement.classList.add(on);
     } else {
-      receivedTodayContainerElement.classList.remove(on)
+      receivedTodayContainerElement.classList.remove(on);
     }
   }
 
@@ -138,16 +117,9 @@ export default class OrderFormComponent extends BaseComponent {
     let pass = true;
 
     if (formData["RMF-data-dump"] === "") {
-      this.print("Paste your RMF order page and include:");
-      this.print("1. Previous Week's Usage");
-      this.print("2. Last Order Detail");
+      this.print("Copy your last week's Inventory Activity and click import");
       pass = false;
     }
-    if (!formData["radioNo"] && !formData["radioYes"]) {
-      this.print("Have all RMF orders been accepted ?");
-      pass = false;
-    }
-
     if (formData.date === "") {
       this.print("Select a valid delivery date!");
       pass = false;
@@ -159,7 +131,9 @@ export default class OrderFormComponent extends BaseComponent {
       if (dateCheckPattern.test(orderInvoiceDate)) {
         orderInvoiceDate = this.dateUtil.op(orderInvoiceDate).format();
         let invoiceWeekday = weekdays[orderInvoiceDate.getDay() - 1];
-        const deliveryDayAvailable = Object.keys(this.storeSettings.orderDays).includes(invoiceWeekday);
+        const deliveryDayAvailable = Object.keys(
+          this.storeSettings.orderDays
+        ).includes(invoiceWeekday);
         if (!deliveryDayAvailable) {
           this.print("Select an available delivery date!");
         }

@@ -182,9 +182,6 @@ export default class Harvester {
     let productData = {};
     productMatches.forEach(match => {
       try {
-        if (match.groups.product.includes('FRIES 11X11')) {
-          console.log(match.groups.product);
-        }
           const product = this.stringUtil.removeSpecialChars(match.groups.product.trim())
           .toUpperCase()
           const props = Object.keys(match.groups).reduce((propObj, key) => {

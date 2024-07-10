@@ -1,11 +1,11 @@
 import { html } from "lit-html";
 import styles from './inventoryItems.scss';
 
-export const inventoryItemsTemplate = (productGroups, controls) => html`
+export const inventoryItemsTemplate = (inventoryItems, controls) => html`
 <div class=${styles['container']}>
     <section class=${styles['category-container']}>
     <ul>
-     ${Object.keys(productGroups).map(groupName => html`
+     ${Object.keys(inventoryItems).map(groupName => html`
         <li @click=${() => controls.toggleGroup(groupName)}>${groupName}</li>
         `)}
     </ul>
