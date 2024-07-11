@@ -50,6 +50,7 @@ export default class Modal {
         if (options?.program) {
             const contentContainer = modal.querySelector(`.${styles['content']}`);
             this.program = new options.program.class(contentContainer);
+            this.program.boot();
         }
         if (options?.styles) {
             Object.keys(options.styles).forEach(styleProp => modal.style[styleProp] = options.styles[styleProp]);

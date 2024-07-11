@@ -17,6 +17,7 @@ export default class OpenOrderEditor extends Program {
         this.harvester = serviceProvider.harvester;
         this.errorRelay = serviceProvider.errorRelay;
         this.contentElement = contentElement;
+        console.log(openOrderEditorTemplate);
     }
 
     get openOrders() {

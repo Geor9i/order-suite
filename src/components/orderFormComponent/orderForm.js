@@ -107,7 +107,9 @@ export default class OrderFormComponent extends BaseComponent {
       width: '60vw',
       height: '40vh',
     }
-    new Modal(document.body, 'Open Order Editor', '', {program: programConfig, styles, backdrop: true});
+    const modal = new Modal(document.body, 'Open Order Editor', '', {program: programConfig, styles, backdrop: true});
+    const modalHeader = modal.element.querySelector('header');
+    modalHeader.style.background = '#09b3ec';
   }
 
   receivedToday(e) {

@@ -2,7 +2,7 @@ import { html } from "lit-html";
 import styles from './openOrderEditor.scss';
 import { INVENTORY } from "../../../constants/db.js";
 
-export const openOrderEditor = (records, controls) => html`
+export const openOrderEditorTemplate = (records, controls) => html`
 <div class=${styles['container']}>
         ${Object.keys(INVENTORY).map(recordGroup => html`
                 <section class=${styles['record-import-container']}>
