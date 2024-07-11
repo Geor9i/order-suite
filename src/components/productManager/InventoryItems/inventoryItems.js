@@ -15,7 +15,6 @@ export default class InventoryItems extends Program {
         this.subscriptionArr = [];
         this.programConfig = programConfig;
         this.firestoreService = serviceProvider.firestoreService;
-        this.inventory = this.firestoreService?.[db.INVENTORY]?.[db.INVENTORY_ACTIVITY] || {};
         this.eventBus = serviceProvider.eventBus;
         this.template = inventoryItemsTemplate;
         this.harvester = serviceProvider.harvester;
@@ -30,7 +29,7 @@ export default class InventoryItems extends Program {
 
     boot() {
         this.subscriptionArr.forEach(unsubscribe => unsubscribe());
-        const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, this.boot.bind(this));
+        const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, this.render.bind(this));
         this.subscriptionArr = [unsubscribe];
         if (!this.inventoryRecords) {
             const buttons = [{ title: 'Import from Clipboard', confirmMessage: 'confirmed', callback: this.importProducts.bind(this)}];
@@ -68,13 +67,12 @@ export default class InventoryItems extends Program {
             throw new Error(`Discovered product groups must be at least ${minProductGrops}!\nPlease include more product categories!`);
         }
         this.parentDataCallback(messages.INVENTORY_ACTIVITY_IMPORT, data);
-        this.inventory = productData;
         this.render();
     }
 
     toggleGroup(groupName) {
         const productContainer = document.querySelector(`.${styles['product-container']}`);
-        const products = this.inventory[groupName];
+        const products = this.inventoryRecords[groupName];
         const template = (products) => html`
         <ul>
         ${Object.keys(products).map(productName => html`

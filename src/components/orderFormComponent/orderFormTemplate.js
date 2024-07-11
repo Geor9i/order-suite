@@ -6,8 +6,12 @@ export const orderFormTemplate = (controls, dateInputFieldStartingDate) => html`
     <div class=${styles['calendar-backdrop']} id="calendar-backdrop" class="calendar-backdrop" @click=${controls.closeCalendar}></div>
     <form novalidate id="form" class=${styles['order-form']} @submit="${controls.submitHandler}">
         <div title="Import last week's full Inventory Activity Report" class=${styles['form-group']}>
-            <label for="RMF-data-dump">Inventory Activity Report</label>
+            <p class=${styles['form-group-title']} >Inventory Activity Report</p>
             <a @click=${controls.importInventory} class=${styles['inventory-import-btn']}>Import</a>
+        </div>
+        <div class=${styles['form-group']}>
+            <p>Configure open orders</p>
+            <a @click=${controls.editOpenOrders} class=${styles['open-order-btn']}>Edit</a>
         </div>
         <div class=${styles['form-group']}>
             <label id="date-label" for="date-input" >Order Date</label>

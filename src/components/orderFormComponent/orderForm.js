@@ -2,6 +2,8 @@ import { orderFormTemplate } from "./orderFormTemplate.js";
 import styles from "./orderForm.module.scss";
 import BaseComponent from "../../framework/baseComponent.js";
 import Calendar from "../calendar/calendar.js";
+import Modal from '../shared/modal/modal.js';
+import OpenOrderEditor from "./openOrderEditor/openOrderEditor.js"
 
 export default class OrderFormComponent extends BaseComponent {
   constructor({ renderBody, router, services, utils }) {
@@ -37,6 +39,7 @@ export default class OrderFormComponent extends BaseComponent {
       openCalendar: this.openCalendar.bind(this),
       closeCalendar: this.closeCalendar.bind(this),
       importInventory: this.importInventory.bind(this),
+      editOpenOrders: this.editOpenOrders.bind(this),
     };
 
     let template = orderFormTemplate(controls, this.dateInputFieldStartingDate);
@@ -96,6 +99,15 @@ export default class OrderFormComponent extends BaseComponent {
     } catch (err) {
       this.errorRelay.send(err);
     }
+  }
+
+  editOpenOrders() {
+    const programConfig = { class: OpenOrderEditor };
+    const styles = {
+      width: '60vw',
+      height: '40vh',
+    }
+    new Modal(document.body, 'Open Order Editor', '', {program: programConfig, styles, backdrop: true});
   }
 
   receivedToday(e) {

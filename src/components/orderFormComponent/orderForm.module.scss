@@ -22,9 +22,15 @@
       @include tablet-screen { min-width: 50% };
       @include phone-screen { min-width: 80% };
     }
+    .form-title{
+      padding: 0.5em 2em;
+      font-size: 1.2em;
+      font-weight: bold;
+      text-align: center
+    }
 
       .form-group {
-        @include flex(column);
+        @include flex(column, space-evenly);
         @include rect(100%);
         position: relative;
         @include tablet-screen { width: 80% };
@@ -37,6 +43,26 @@
           background-color: rgb(255, 255, 255);
           @include tablet-screen { width: 80% };
         }
+    }
+    .form-group-horizontal {
+      @include flex();
+    }
+
+    .radio-group {
+      @include flex(column);
+      padding: 0 2em;
+      label {
+        font-size: 1.5em
+      }
+      input {
+        @include rect(1.5em, 1.5em);
+      }
+    }
+
+    .form-group-title {
+      padding: 0.5em 0;
+      font-size: 1.2em;
+      font-weight: bold;
     }
 
     .inventory-import-btn {
@@ -53,6 +79,19 @@
         background-color: black;
         color: #fff;
         box-shadow: 0 0 2px 2px inset #dda9ff;
+      }
+    }
+
+    .open-order-btn {
+      @extend .inventory-import-btn;
+      padding: 0.2em;
+      color: #000;
+      background-color: #fff;
+      border: 1px solid #000;
+      &:hover {
+        background-color: rgb(78, 250, 135);
+        color: #fff;
+        box-shadow: 0 0 2px 2px inset #ffffff;
       }
     }
         
@@ -95,7 +134,6 @@
         border-bottom: 1px solid black;
         justify-self: center;
         align-self: center;
-        margin-top: 3rem;
         grid-column: 1;
         cursor: pointer;
         @include transition(background-color);

@@ -15,12 +15,14 @@ export const modalTemplate = (title = '', message = '', controls, options) => ht
         </div>
     </header>
     <div class=${styles['content']}>
-        <p class=${styles['message']}>${message}</p>
-        <div class=${styles['btn-container']}>
-            ${options?.buttons.map(buttonObj => html`
-                <a @click=${() => controls.confirm(buttonObj)} class=${styles['modal-btn']}>${buttonObj.title}</a>`
-            )}
-        </div>
+        ${message && html`<p class=${styles['message']}>${message}</p>`}
+        ${options?.buttons?.length && html`
+             <div class=${styles['btn-container']}>
+                ${options.buttons.map(buttonObj => html`
+                    <a @click=${() => controls.confirm(buttonObj)} class=${styles['modal-btn']}>${buttonObj.title}</a>`
+                )}
+            </div>
+            `}
     </div>
 
 `

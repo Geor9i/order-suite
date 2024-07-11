@@ -5,11 +5,11 @@ export default class Program {
     constructor() {
         this.template = programBaseTemplate;
         this.subscriptions = {};
-        this.windowContentElement = null;
+        this.contentElement = null;
     }
 
     boot() {
-        render(this.template(), this.windowContentElement);
+        render(this.template(), this.contentElement);
     }
 
 

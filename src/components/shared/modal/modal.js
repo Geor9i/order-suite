@@ -13,6 +13,7 @@ export default class Modal {
         this.jsEventBus = serviceProvider.jsEventBus;
         this.jsEvenUnsubscribeArr = [];
         this.element = null;
+        this.modalBackdrop = null;
         this.events = {};
         this.program = null;
         this.create(title, message, options);
@@ -23,6 +24,7 @@ export default class Modal {
     }
     destroy() {
         this.element.remove();
+        this.modalBackdrop && this.modalBackdrop.remove();
     }
     create(title, message, options) {
         this.buildModal(title, message, options);
@@ -34,9 +36,10 @@ export default class Modal {
         modal.classList.add(styles['modal']);
         this.parent.appendChild(modal);
         if (options?.backdrop)  {
-            const modalBackdrop = document.createElement('div');
-            modalBackdrop.classList.add(styles['modal-backdrop']);
-            this.parent.appendChild(modalBackdrop);
+            this.modalBackdrop = document.createElement('div');
+            this.modalBackdrop.classList.add(styles['modal-backdrop']);
+            this.modalBackdrop.addEventListener('click', this.closeModal.bind(this));
+            this.parent.appendChild(this.modalBackdrop);
         }
         const controls = {
             confirm: this.confirmModal.bind(this),
@@ -44,6 +47,13 @@ export default class Modal {
         }
         render(modalTemplate(title, message, controls, options), modal);
         this.element = modal;
+        if (options?.program) {
+            const contentContainer = modal.querySelector(`.${styles['content']}`);
+            this.program = new options.program.class(contentContainer);
+        }
+        if (options?.styles) {
+            Object.keys(options.styles).forEach(styleProp => modal.style[styleProp] = options.styles[styleProp]);
+        }
     }
     async confirmModal(buttonOptions) {
         if (buttonOptions?.callback) {
@@ -56,7 +66,8 @@ export default class Modal {
     }
 
     closeModal() {
-        this.destroy()
+        this.destroy();
+        this.program.close();
         this.emit('closeModal');
     };
     
