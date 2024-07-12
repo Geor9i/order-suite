@@ -1,10 +1,11 @@
 import { orderFormTemplate } from "./orderFormTemplate.js";
-import styles from "./orderForm.module.scss";
+import styles from "./orderForm.scss";
 import BaseComponent from "../../framework/baseComponent.js";
 import Calendar from "../calendar/calendar.js";
 import Modal from '../shared/modal/modal.js';
 import OpenOrderEditor from "./openOrderEditor/openOrderEditor.js"
 import { v4 as uuid } from 'uuid';
+
 export default class OrderFormComponent extends BaseComponent {
   constructor({ renderBody, router, services, utils }) {
     super();
@@ -82,8 +83,8 @@ export default class OrderFormComponent extends BaseComponent {
   }
 
   async importInventory() {
-    const text = await navigator.clipboard.readText();
     try {
+      const text = await navigator.clipboard.readText();
       const { productData, reportData } = this.harvester.inventoryHarvest(text);
       console.log(reportData);
     } catch (err) {

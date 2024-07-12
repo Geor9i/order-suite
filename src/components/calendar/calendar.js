@@ -16,11 +16,11 @@ export default class Calendar {
     this.domUtil = utils.domUtil;
     this.dateUtil = utils.dateUtil;
     this.stringUtil = utils.stringUtil;
-    const date = new Date();
-    this.date = date.getDate();
-    this.year = date.getFullYear();
-    this.month = date.getMonth();
-    this.day = date.getDay();
+    this.today = new Date();
+    this.date = this.today.getDate();
+    this.year = this.today.getFullYear();
+    this.month = this.today.getMonth();
+    this.day = this.today.getDay();
     this.mode = "date";
     this._delimiter = ' ';
     this.months = this.dateUtil.getMonths([]);
@@ -38,7 +38,7 @@ export default class Calendar {
     return `${this.stringUtil.toPascalCase(this.weekdays[this.day - 1])}${this._delimiter}${this.date}${this._delimiter}${this.shortMonths[this.month]}${this._delimiter}${this.year}`;
   }
   get dateObj() {
-    return new Date(`${this.year}/${this.month}/${this.date}`);
+    return new Date(`${this.year}/${this.month + 1}/${this.date}`);
   }
 
   renderBody(x, y) {
@@ -62,10 +62,7 @@ export default class Calendar {
     this.contentContainer = this.modal.element.querySelector("main");
     this.dateDisplay = this.modal.element.querySelector(`.${styles["calendar-date"]}`);
    
-    render(
-      calendarDateTemplate(this.shortWeekdays, this.dateMatrix(), controls),
-      this.contentContainer,
-    );
+    this.renderContent();
     this.setDisplayDate();
   }
 
@@ -101,10 +98,15 @@ export default class Calendar {
   }
 
   renderContent() {
+    const date = {
+      date: this.date,
+      month: this.month,
+      year: this.year,
+    }
     const modes = {
-      date: {template: calendarDateTemplate, data: () => [this.shortWeekdays, this.dateMatrix()]},
-      month: {template: calendarMonthsTemplate, data: () => [this.monthMatrix()]},
-      year: {template: calendarYearsTemplate, data: () => [this.yearsMatrix()]},
+      date: {template: calendarDateTemplate, data: () => [this.shortWeekdays, this.dateMatrix(), this.today]},
+      month: {template: calendarMonthsTemplate, data: () => [this.monthMatrix(), this.today, date]},
+      year: {template: calendarYearsTemplate, data: () => [this.yearsMatrix(), this.today]},
     } 
     const controls = {
       clickCell: this.clickCell.bind(this),

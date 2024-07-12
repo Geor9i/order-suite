@@ -1,7 +1,6 @@
 import { storeSetupTemplate } from "./StoreSetupTemplate.js";
 import styles from './storeSetupScreen.module.scss';
 import BaseComponent from '../../framework/baseComponent.js';
-import { db } from "../../constants/db.js";
 import { routes } from "../../constants/routing.js";
 export default class StoreTemplateScreen extends BaseComponent {
   constructor({ renderBody, router, services, utils }) {
@@ -9,14 +8,12 @@ export default class StoreTemplateScreen extends BaseComponent {
     this.render = renderBody;
     this.router = router;
     this.authService = services.authService;
+    this.errorRelay = services.errorRelay;
     this.firestoreService = services.firestoreService;
     this.stringUtil = utils.stringUtil;
     this.dateUtil = utils.dateUtil;
     this.domUtil = utils.domUtil;
     this.showView = this._showView.bind(this);
-    this.toggleDay = this._toggleDay.bind(this);
-    this.showDeliveryDetails = this._showDeliveryDetails.bind(this);
-    this.submitHandler = this._submitHandler.bind(this);
   }
 
   _showView(ctx) {
@@ -31,23 +28,23 @@ export default class StoreTemplateScreen extends BaseComponent {
 
     this.render(
       storeSetupTemplate(
-        this.showDeliveryDetails,
-        this.toggleDay,
+        this.showDeliveryDetails.bind(this),
+        this.toggleDay.bind(this),
         weekdays,
         this.firestoreService.userData.STORE_NAME,
-        this.submitHandler
+        this.submitHandler.bind(this)
       )
     );
   }
 
-  async _submitHandler() {
+  async submitHandler() {
     const formData = this.getFormData();
     console.log(formData);
         try {
-          await this.firestoreService.setDoc(db.USERS, { STORE_SETTINGS: formData }, { merge: true });
+          await this.firestoreService.setStoreTemplate(formData);
           this.router.redirect(routes.HOME);
         } catch (err) {
-          console.log(err);
+          this.errorRelay.send(err);
         }
   }
 
@@ -93,7 +90,7 @@ export default class StoreTemplateScreen extends BaseComponent {
     return {...infoInputs, weekdays: weekdayContainers};
   }
 
-  _showDeliveryDetails(e) {
+  showDeliveryDetails(e) {
     const weekday = e.currentTarget.dataset.id;
     const detailsContainer = document.getElementById(
       `delivery-info-container-${weekday}`
@@ -101,7 +98,7 @@ export default class StoreTemplateScreen extends BaseComponent {
     this.domUtil.addRemoveClass(detailsContainer, styles['inactive']);
   }
 
-  _toggleDay(e) {
+  toggleDay(e) {
     const element = e.currentTarget;
     const weekday = element.dataset.id;
     const closedTextContainer = document.getElementById(`closed-day-container-${weekday}`);

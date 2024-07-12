@@ -64,6 +64,17 @@ export default class FirestoreService {
     console.log(`Deleted inventory record ${id} from ${recordGroup}`);
   }
 
+  async setStoreTemplate(template) {
+    const documentRef = doc(this.db, db.USERS, this.user.uid);
+    const fieldPath = `${db.STORE_SETTINGS}`;
+    const updates = {
+      [fieldPath]: template,
+    };
+    await updateDoc(documentRef, updates);
+    console.log(`Updated store template!`);
+  }
+
+
   _updateState(doc) {
     if (doc.exists() && this.user) {
       let newState = doc.data();
@@ -122,7 +133,6 @@ export default class FirestoreService {
     if (this.user) {
       try {
         let documentRef;
-        debugger;
         if (nestedKeys.length > 0) {
           documentRef = doc(
             this.db,

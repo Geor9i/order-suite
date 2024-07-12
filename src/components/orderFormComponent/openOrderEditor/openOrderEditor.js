@@ -11,20 +11,30 @@ import Calendar from "../../calendar/calendar.js";
 export default class OpenOrderEditor extends Program {
     constructor(contentElement) {
         super();
-        this.subscriberId = 'OpenOrderEditor';
+        this.subscriberId = `OpenOrderEditor_${uuid()}`;
         this.subscriptionArr = [];
-        this.domUtil = utils.domUtil;
+        this.dateUtil = utils.dateUtil;
         this.firestoreService = serviceProvider.firestoreService;
         this.eventBus = serviceProvider.eventBus;
         this.template = openOrderEditorTemplate;
         this.harvester = serviceProvider.harvester;
         this.errorRelay = serviceProvider.errorRelay;
         this.contentElement = contentElement;
+        this.date = '';
         this.calendar = new Calendar();
+        this.calendar.on('close', this.subscriberId, this.setDate.bind(this));
+        this.openOrderRecords = {};
     }
 
     get openOrders() {
         return this.firestoreService.userData?.[db.INVENTORY]?.[db.INVENTORY_RECORDS]?.[db.OPEN_ORDERS] ?? null;
+    }
+
+    setDate(data) {
+        const { date, dateObj } = data;
+        this.dateObj = dateObj;
+        this.date = date;
+        this.render();
     }
 
     boot() {
@@ -42,27 +52,37 @@ export default class OpenOrderEditor extends Program {
         const controls = {
             importOrder: this.importOrder.bind(this),
             openCalendar: this.calendar.open.bind(this.calendar),
-            closeCalendar: this.calendar.close.bind(this.calendar),
+            deleteRecord: this.deleteRecord.bind(this),
         }
-        render(this.template(this.openOrders, controls), this.contentElement);
+        render(this.template(this.openOrderRecords, this.date, controls), this.contentElement);
     }
 
-    async importOrder(recordGroup) {
+    async importOrder() {
         try {
+            if (!this.date) {
+                throw new  Error('Please select a delivery date!');
+            }
             const text = await navigator.clipboard.readText();
             const data = this.harvester.purchaseOrderHarvest(text);
             if (data) {
                 data.reportData.id = `${data.reportData.importDate}_${uuid()}`;
-                this.parentDataCallback(message[recordGroup], data);
+                data.reportData.arrivaldateObj = this.dateObj;
+                const deliveryDate = this.dateUtil.op(this.dateObj).format({asString: true, delimiter: '-'});
+                if (!this.openOrderRecords.hasOwnProperty(deliveryDate)) {
+                    this.openOrderRecords[deliveryDate] = [];
+                }
+                this.openOrderRecords[deliveryDate].push(data);
+                this.render();
             }
+            console.log(this.openOrderRecords);
         } catch(err) {
             this.errorRelay.send(err);
         }
     }
 
-    async deleteRecord(record, recordGroup) {
-        const id = record.reportData.id;
-        await this.firestoreService.deleteInventoryRecord(id, recordGroup);
+    async deleteRecord(deliveryDate, index) {
+        this.openOrderRecords[deliveryDate].splice(index, 1);
+        this.render();
     }
    
 }

@@ -61,9 +61,11 @@ $input-size: 100%;
     }
 
     .form-group-title {
+      width: 100%;
       padding: 0.5em 0;
       font-size: 1.2em;
       font-weight: bold;
+      text-align: center
     }
 
     .inventory-import-btn {

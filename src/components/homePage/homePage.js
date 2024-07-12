@@ -29,7 +29,7 @@ export default class HomeComponent extends BaseComponent {
     if (!this.userData) {
       this.renderHandler(guestHomeTemplate());
     } else {
-      const { completion, progressReport } = this._profileCompletionReport();
+      const { completion, progressReport } = this.profileCompletionReport();
       this.renderHandler(homePageTemplate(completion, progressReport, this.userData))
     }
     this.container = document.querySelector(`.${styles['container']}`) || document.querySelector(`.${stylesGuest['container']}`);
@@ -45,7 +45,7 @@ export default class HomeComponent extends BaseComponent {
     this.userDataSubscription && this.userDataSubscription();
   }
 
-  _profileCompletionReport() {
+  profileCompletionReport() {
     const completionFactors = {}; 
     Object.keys(db_main_collections).forEach(key => completionFactors[key] = this.userData[key])
     const progressReport = { ...db_main_collections };
@@ -64,14 +64,11 @@ export default class HomeComponent extends BaseComponent {
           let fieldShare = Math.ceil(1 / profileAreaLenght);
           if (!this.objUtil.isEmpty(profileArea[field])) {
             profileAreaCompletion += fieldShare;
-          } else {
-            progressReport[factor].push(field)
           }
         }
         profileAreaCompletion = Math.max(100, profileAreaCompletion);
         completion += profileCompletionsShare * (profileAreaCompletion / 100);
     }
-    console.log(progressReport);
     return { completion, progressReport };
   }
 }

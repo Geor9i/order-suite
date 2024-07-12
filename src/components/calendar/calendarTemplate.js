@@ -19,7 +19,7 @@ export const calendarBodyTemplate = (controls) => html`
 </div>
 `
 
-export const calendarDateTemplate = (weekdays, dates, controls) => html`
+export const calendarDateTemplate = (weekdays, dates, today, controls) => html`
     <div class=${styles['row']}>
         ${weekdays.map(day => html`
             <div class=${styles['cell-inactive']}>${day}</div>
@@ -34,29 +34,47 @@ export const calendarDateTemplate = (weekdays, dates, controls) => html`
                 data-month=${date[1].month}
                 data-year=${date[1].year} 
                 data-day=${date[1].weekday}
-                class=${date[1]?.range ? `${styles['cell']} ${styles['cell-indirect']}` : styles['cell']}>
-                    ${date[0]}
+                class=
+                ${
+                    today.getDate() === date[0] && today.getMonth() === date[1].month && today.getFullYear() === date[1].year ?
+                    `${styles['cell']} ${styles['today']}` : date[1]?.range ? `${styles['cell']} ${styles['cell-indirect']}` : styles['cell']}>
+                    ${date[0]
+                }
                 </div>
             `)}
         </div>
     `)}
 `
 
-export const calendarMonthsTemplate = (months, controls) => html`
+export const calendarMonthsTemplate = (months, today, calendarDate, controls) => html`
     ${months.map((group, i1) => html`
         <div class=${styles['row']}>
             ${group.map((date, i2) => html`
-                <div data-month=${(i1 * 4) + i2} @click=${controls.clickCell} class=${styles['cell']}>${date}</div>
+                <div
+                data-month=${(i1 * 4) + i2} 
+                @click=${controls.clickCell} 
+                class=${today.getMonth() === (i1 * 4) + i2 && today.getFullYear() === calendarDate.year ?
+                    `${styles['cell']} ${styles['today']}` 
+                    : styles['cell']}>
+                ${date}
+                </div>
             `)}
         </div>
     `)}
 ` 
 
-export const calendarYearsTemplate = (years, controls) => html`
+export const calendarYearsTemplate = (years, today, controls) => html`
     ${years.map(group => html`
         <div class=${styles['row']}>
             ${group.map(year => html`
-                <div data-year=${year} @click=${controls.clickCell} class=${styles['cell']}>${year}</div>
+                <div 
+                data-year=${year} 
+                @click=${controls.clickCell} 
+                class=${today.getFullYear() === year ?
+                    `${styles['cell']} ${styles['today']}` 
+                    : styles['cell']}>
+                ${year}
+            </div>
             `)}
         </div>
     `)}

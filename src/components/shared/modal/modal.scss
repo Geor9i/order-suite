@@ -12,7 +12,6 @@ $active-btn-border-color: #2b9de9;
     z-index: 1001;
     @include rect(60%, 40%, $bRadius: 7px);
     @include flex(column, flex-start);
-    @include gradient(135deg, (#e6e6e6, 20%), (#dbdbdb, 100%));
     border: 2px solid $border-color;
     box-shadow: 0 0 30px #0000004f;
     .modal-header {

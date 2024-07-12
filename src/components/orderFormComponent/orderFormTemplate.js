@@ -1,5 +1,5 @@
 import { html } from "../../../node_modules/lit-html/lit-html.js";
-import styles from './orderForm.module.scss';
+import styles from './orderForm.scss';
 
 export const orderFormTemplate = (controls, nextOrderDate) => html`
  <section class=${styles['order-page__section']}>
