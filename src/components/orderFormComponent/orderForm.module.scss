@@ -163,7 +163,6 @@
   .calendar-backdrop {
     @include rect(100%, 100%);
     @include position(absolute, $all: 0);
-    display: none;
     backdrop-filter: blur(0.5px);
     z-index: 1000;
   }

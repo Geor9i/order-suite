@@ -7,10 +7,9 @@ $modal-border-radius: 7px;
 $border-color: #e9312b;
 $active-btn-border-color: #2b9de9;
 
-
 .modal {
     position: absolute;
-    z-index: 101;
+    z-index: 1001;
     @include rect(60%, 40%, $bRadius: 7px);
     @include flex(column, flex-start);
     @include gradient(135deg, (#e6e6e6, 20%), (#dbdbdb, 100%));
@@ -59,7 +58,6 @@ $active-btn-border-color: #2b9de9;
 }
 
 .content {
-    padding: 1em;
     @include flex(column, $gap: 1em);
     @include rect(100%, 100%);
 }
@@ -88,6 +86,7 @@ $active-btn-border-color: #2b9de9;
 
 .modal-backdrop {
     position: absolute;
-    z-index: 100;
+    backdrop-filter: blur(2px);
+    z-index: 1000;
     inset: 0;
 }

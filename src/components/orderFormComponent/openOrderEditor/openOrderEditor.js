@@ -5,19 +5,22 @@ import { openOrderEditorTemplate } from "./openOrderEditorTemplate.js";
 import styles from './openOrderEditor.scss';
 import { db } from "../../../constants/db.js";
 import { bus } from "../../../constants/busEvents.js";
-
+import {v4 as uuid } from 'uuid';
+import { utils } from "../../../utils/utilConfig.js";
+import Calendar from "../../calendar/calendar.js";
 export default class OpenOrderEditor extends Program {
     constructor(contentElement) {
         super();
         this.subscriberId = 'OpenOrderEditor';
         this.subscriptionArr = [];
+        this.domUtil = utils.domUtil;
         this.firestoreService = serviceProvider.firestoreService;
         this.eventBus = serviceProvider.eventBus;
         this.template = openOrderEditorTemplate;
         this.harvester = serviceProvider.harvester;
         this.errorRelay = serviceProvider.errorRelay;
         this.contentElement = contentElement;
-        console.log(openOrderEditorTemplate);
+        this.calendar = new Calendar();
     }
 
     get openOrders() {
@@ -29,6 +32,8 @@ export default class OpenOrderEditor extends Program {
         const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, this.render.bind(this));
         this.subscriptionArr = [unsubscribe];
         this.render();
+        this.calendarContainer = document.querySelector(`.${styles['calendar-container']}`);
+        this.calendar.showView(this.calendarContainer);
     }
 
     close() {
@@ -37,15 +42,29 @@ export default class OpenOrderEditor extends Program {
 
     render() {
         const controls = {
+            importOrder: this.importOrder.bind(this),
+            openCalendar: this.calendar.open,
+            closeCalendar: this.calendar.close,
         }
         render(this.template(this.openOrders, controls), this.contentElement);
     }
 
-    importProducts() {
-           return navigator.clipboard.readText()
-            .then(text => this.harvester.inventoryHarvest(text))
-            .then(data => this.validateSendProductImport(data))
-            .catch(err => this.errorRelay.send(err))
+    async importOrder(recordGroup) {
+        try {
+            const text = await navigator.clipboard.readText();
+            const data = this.harvester.purchaseOrderHarvest(text);
+            if (data) {
+                data.reportData.id = `${data.reportData.importDate}_${uuid()}`;
+                this.parentDataCallback(message[recordGroup], data);
+            }
+        } catch(err) {
+            this.errorRelay.send(err);
+        }
     }
 
+    async deleteRecord(record, recordGroup) {
+        const id = record.reportData.id;
+        await this.firestoreService.deleteInventoryRecord(id, recordGroup);
+    }
+   
 }

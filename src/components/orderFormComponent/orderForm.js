@@ -17,14 +17,10 @@ export default class OrderFormComponent extends BaseComponent {
     this.authService = services.authService;
     this.errorRelay = services.errorRelay;
     this.harvester = services.harvester;
-    this.calendarComponent = new Calendar();
+    this.calendar = new Calendar();
     this.processor = services.processor;
     this.showView = this._showView.bind(this);
-    this.openCalendar = this._openCalendar.bind(this);
-    this.submitHandler = this._submitHandler.bind(this);
     this.dateInputFieldStartingDate =
-      this._dateInputFieldStartingDate.bind(this);
-    this.closeCalendar = this._closeCalendar.bind(this);
     this.deliveryHarvestProducts = null;
   }
 
@@ -36,26 +32,19 @@ export default class OrderFormComponent extends BaseComponent {
 
     const controls = {
       submitHandler: this.submitHandler.bind(this),
-      openCalendar: this.openCalendar.bind(this),
-      closeCalendar: this.closeCalendar.bind(this),
+      openCalendar: this.calendar.open,
+      closeCalendar: this.calendar.close,
       importInventory: this.importInventory.bind(this),
       editOpenOrders: this.editOpenOrders.bind(this),
     };
 
-    let template = orderFormTemplate(controls, this.dateInputFieldStartingDate);
+    let template = orderFormTemplate(controls, this.getNextDeliveryDate());
     this.renderHandler(template);
+    this.calendarContainer = document.getElementById("calendar-container");
+    this.calendar.showView(this.calendarContainer);
   }
 
-  _openCalendar(e) {
-    e.preventDefault();
-    let calendarContainer = document.getElementById("calendar-container");
-    let backDrop = document.getElementById("calendar-backdrop");
-    this.domUtil.toggleVisibility(calendarContainer);
-    this.domUtil.toggleVisibility(backDrop);
-    this.calendarComponent.showView(calendarContainer);
-  }
-
-  _dateInputFieldStartingDate() {
+  getNextDeliveryDate() {
     let currentDate = new Date();
     const weekdays = this.dateUtil.getWeekdays([]);
     let nextAvailableDeliveryDate = this.dateUtil.findDeliveryDate(
@@ -70,14 +59,7 @@ export default class OrderFormComponent extends BaseComponent {
     )}`;
   }
 
-  _closeCalendar() {
-    let calendarContainer = document.getElementById("calendar-container");
-    let backDrop = document.getElementById("calendar-backdrop");
-    this.domUtil.toggleVisibility(backDrop, { off: true });
-    this.domUtil.toggleVisibility(calendarContainer, { off: true });
-  }
-
-  _submitHandler(e) {
+  submitHandler(e) {
     e.preventDefault();
     let form = e.target;
     let formData = this.formUtil.getFormData(form);
@@ -105,7 +87,7 @@ export default class OrderFormComponent extends BaseComponent {
     const programConfig = { class: OpenOrderEditor };
     const styles = {
       width: '60vw',
-      height: '40vh',
+      height: '50vh',
     }
     const modal = new Modal(document.body, 'Open Order Editor', '', {program: programConfig, styles, backdrop: true});
     const modalHeader = modal.element.querySelector('header');

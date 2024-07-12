@@ -90,3 +90,11 @@ $body-border-radius: 13px;
         border-radius: 3px;
     }
 }
+
+.calendar-backdrop {
+    @include rect(100%, 100%);
+    @include position(absolute, $all: 0);
+    backdrop-filter: blur(0.5px);
+    z-index: 1000;
+  }
+  

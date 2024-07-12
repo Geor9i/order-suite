@@ -77,7 +77,11 @@ export default class Harvester {
     }
     const productData = this.formatToBaseUnit(productMatches);
 
-    return {productData};
+    const reportData = {
+      importDate: this.dateUtil.op(new Date()).format({asString: true, delimiter: '-'}),
+    }
+
+    return {productData, reportData};
   }
 
   salesSummaryExtractor(report) {

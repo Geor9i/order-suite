@@ -1,168 +1,148 @@
 import BaseComponent from "../../framework/baseComponent.js";
-import { calendarTemplate } from "./calendarTemplate.js";
+import { calendarBodyTemplate, calendarMonthsTemplate, calendarYearsTemplate, calendarDateTemplate} from "./newCalendarTemplate.js";
 import { utils } from "../../utils/utilConfig.js";
 import { render } from "lit-html";
+import styles from './styles.scss';
 export default class Calendar {
-  constructor() {
+  constructor(calendarContainer) {
+    this.calendarContainer = calendarContainer;
     this.domUtil = utils.domUtil;
     this.dateUtil = utils.dateUtil;
     this.stringUtil = utils.stringUtil;
-    this.showView = this._showView.bind(this);
-    this.fillCalendar = this._fillCalendar.bind(this);
-    this.upArrowClick = this._upArrowClick.bind(this);
-    this.downArrowClick = this._downArrowClick.bind(this);
-    this.clickDate = this._clickDate.bind(this);
-    this.today = new Date();
-    this.year = this.today.getFullYear();
-    this.month = this.today.getMonth();
-    this.originMonth = this.today.getMonth();
-    this.originYear = this.today.getFullYear();
+    this.date = new Date().getDate();
+    this.year = new Date().getFullYear();
+    this.month = new Date().getMonth();
+    this.day = new Date().getDay();
+    this.mode = 'date';
+    this.months = this.dateUtil.getMonths([]);
+    this.weekdays = this.dateUtil.getWeekdays([]).map(day => this.stringUtil.toPascalCase(day.slice(0, 3)));
+    this.render();
+    console.log(this.months);
   }
 
-  _showView(parent) {
-    this.render(
-      calendarTemplate(
-        this.dateUtil,
-        this.stringUtil,
-        this.upArrowClick,
-        this.downArrowClick,
-        this.clickDate
-      ), 
-      parent);
-    this.fillCalendar();
-  }
-
-  render(template, parent) {
-    render(template, parent);
-  }
-
-  _clickDate(e) {
-    if (e.target.parentNode.tagName === "TR" && e.target.dataset.date) {
-      let selectedDate = e.target.dataset.date
-      let dateInputField = document.getElementById("date-input");
-      dateInputField.value = selectedDate;
-      let calendarContainer = document.getElementById("calendar-container");
-      let backDrop = document.getElementById("calendar-backdrop");
-      this.domUtil.toggleVisibility(calendarContainer, { off: true });
-      this.domUtil.toggleVisibility(backDrop, { off: true });
+  render() {
+    const controls = {
+      changeMode: this.changeMode.bind(this, 1),
+      upArrowClick: this.upArrowClick.bind(this),
+      downArrowClick: this.downArrowClick.bind(this),
     }
+    render(calendarBodyTemplate(controls), this.calendarContainer);
+    this.content = this.calendarContainer.querySelector('main');
+    this.dateDisplay = this.calendarContainer.querySelector(`.${styles['calendar-date']}`);
+    this.showDates();
   }
 
-  //Function to fill the dates in the calendar
-  _fillCalendar() {
-    const months = this.dateUtil.getMonths([]);
-    let calenderHeaderTextElement = document.getElementById(
-      "calendar-header-text"
-    );
-    let calendarTrCollection = document.querySelectorAll(`#day-table tr`);
-    let todayDate = this.today;
-    let year = this.year;
-    let month = this.month;
-    let day = todayDate.getDate();
+  open() {
+    if (!this.backdrop) {
+      this.backdrop = document.createElement('div');
+      this.backdrop.className = styles['calendar-backdrop'];
+      this.backdrop.addEventListener('click', this.close.bind(this));
+      document.body.appendChild(this.backdrop);
+    } else {
+      document.body.appendChild(this.backdrop);
+    }
+    this.domUtil.toggleVisibility(this.calendarContainer);
+  }
 
-    let selectedMonth = [...this.calendarMonth(year, month)];
-    let prevMonth = this.getRightDate(year, month, "back");
+  showDates() {
+    const controls = {
+      clickCell: this.clickCell.bind(this)
+    }
+    render(calendarDateTemplate(this.weekdays, this.dateMatrix(), controls), this.content);
+    this.setDisplayDate()
+  }
+
+  setDisplayDate() {
+    const display = {
+      date: () => `${this.year} ${this.months[this.month].toUpperCase()}`,
+      month: () => `${this.year}`,
+      year: () => `${this.year} - ${this.year + 16}`,
+    }
+    this.dateDisplay.textContent = display[this.mode]();
+  }
+
+  close() {
+    this.backdrop.remove();
+    this.domUtil.toggleVisibility(this.calendarContainer, { off: true });
+  }
+
+
+  changeMode(sign) {
+    const modes = [
+      {type: 'date', template: calendarDateTemplate, data: [this.weekdays, this.dateMatrix()] },
+      {type: 'month', template: calendarMonthsTemplate, data: [this.monthMatrix()] },
+      {type: 'year', template: calendarYearsTemplate, data: [this.yearsMatrix()] },
+    ];
+    const controls = {
+      clickCell: this.clickCell.bind(this)
+     }
+     const modeIndex = modes.findIndex(mode => mode.type === this.mode);
+     const newMode = modes[Math.min(Math.max(modeIndex + sign, 0), modes.length - 1)];
+     this.mode = newMode.type;
+     render(newMode.template(...newMode.data, controls), this.content)
+  }
+
+
+  clickCell(e) {
+    this.changeMode(-1);
+    if (this.mode === 'date') {
+      let keys = e.target.dataset;
+      Object.keys(keys).forEach(entry => this[entry] = Number(keys[entry]));
+    }
+    this.setDisplayDate();
+  }
+
+  monthMatrix() {
+  const monthMatrix = [];
+  const months = this.dateUtil.getMonths([]).map(month => month.slice(0, 3).toUpperCase());
+  months.forEach((month, i) => i % 4 === 0 ? monthMatrix.push([month]) : monthMatrix[monthMatrix.length - 1].push(month));
+  return monthMatrix;
+  }
+  yearsMatrix() {
+    const yearMatrix = [];
+    const startYear = this.year;
+    const years = new Array(16).fill(startYear).map((year, i) => year + i);
+    years.forEach((year, i) => i % 4 === 0 ? yearMatrix.push([year]) : yearMatrix[yearMatrix.length - 1].push(year));
+    return yearMatrix;
+    }
+
+  dateMatrix () {
+    const totalCells = 42;
+    const dateMatrix = [];
+    let selectedMonth = [...this.calendarMonth(this.year, this.month)];
+    let prevMonth = this.getMonthYear(this.year, this.month, "back");
     prevMonth = [...this.calendarMonth(prevMonth.year, prevMonth.month - 1)];
-
-    let nextMonth = this.getRightDate(year, month, "next");
+    let nextMonth = this.getMonthYear(this.year, this.month, "next");
     nextMonth = [...this.calendarMonth(nextMonth.year, nextMonth.month - 1)];
-    let isCurrent = false;
-
-    //Get the index for the last monday of the previous month
-    let prevMonthIndex = prevMonth.reduce((acc, curr, i) => {
-      if (curr[1] === "monday") {
-        acc.pop();
-        acc.push(i);
-      }
-      return acc;
-    }, [])[0];
-    let currentMonthIndex = 0;
-    let nextMonthIndex = 0;
-    calenderHeaderTextElement.innerText = `${year} ${months[month]}`;
-
-    let activeRows = Array.from(calendarTrCollection).slice(1);
-
-    //iterate over calendar table to map dates
-    //row iteration
-    for (let row = 0; row < activeRows.length; row++) {
-      let colCollection = activeRows[row].cells;
-      //col iteration
-      for (let col = 0; col < colCollection.length; col++) {
-        //if the current date's weekday calender mapping does not match the first weekday of the selected month
-        if (!isCurrent && prevMonth.length > prevMonthIndex) {
-          colCollection[col].innerText = prevMonth[prevMonthIndex][0];
-          colCollection[col].style.backgroundColor = "rgba(200,200,200,0.5)";
-          colCollection[col].style.color = "rgba(100,100,100,0.5)";
-
-          let dateValues = this.getRightDate(year, month, "back");
-          colCollection[col].dataset.date = `${colCollection[col].innerText}/${dateValues.month}/${
-              dateValues.year
-            } - ${this.stringUtil.toPascalCase(this.dateUtil.getWeekdays(col + 1))}`
-          prevMonthIndex++;
-        }
-        //if the two weekdays match confirm in boolean
-        if (this.dateUtil.getWeekdays(col + 1) === selectedMonth[0][1]) {
-          isCurrent = true;
-        }
-        //begin printing current month
-        if (isCurrent) {
-          //if there are no more days in the current month begin priniting next month
-          if (currentMonthIndex > selectedMonth.length - 1) {
-            colCollection[col].innerText = nextMonth[nextMonthIndex][0];
-            //styles
-            colCollection[col].style.backgroundColor = "rgba(200,200,200,0.5)";
-            colCollection[col].style.color = "rgba(100,100,100,0.5)";
-            nextMonthIndex++;
-
-            let dateValues = this.getRightDate(year, month, "next");
-            colCollection[col].dataset.date = `${colCollection[col].innerText}/${
-              dateValues.month
-            }/${dateValues.year} - ${this.stringUtil.toPascalCase(this.dateUtil.getWeekdays(col + 1))}`;
-            continue;
-          }
-          // else print current month
-          //-------------------------
-          //have the current date always selected on the calender
-          if (selectedMonth[currentMonthIndex][0] === day) {
-            if (month === this.originMonth && year === this.originYear) {
-              colCollection[col].style.border = "1px solid rgba(255,72,0, 0.5)";
-            }
-          } else {
-            colCollection[col].style.border = "";
-          }
-          colCollection[col].innerText = selectedMonth[currentMonthIndex][0];
-          colCollection[col].style.backgroundColor = "rgba(243,243,243,1)";
-          colCollection[col].style.color = "rgba(0,0,0,0.8)";
-          currentMonthIndex++;
-          colCollection[col].dataset.date = `${colCollection[col].innerText}/${
-            month + 1
-          }/${year} - ${this.stringUtil.toPascalCase(this.dateUtil.getWeekdays(col + 1))}`;
-        }
-      }
-    }
-    //Update Value in Calendar
-    this.year = year;
-    this.month = month;
+    const lastMonthCells = Math.abs(1 - selectedMonth[0][1].weekday);
+    const nextMonthCells = totalCells - (lastMonthCells + selectedMonth.length);
+    const calendarRange = [
+      ...prevMonth.slice(prevMonth.length - lastMonthCells),
+      ...selectedMonth,
+      ...nextMonth.slice(0, nextMonthCells)
+    ];
+    calendarRange.forEach((day, i) => i % 7 === 0 ? dateMatrix.push([day]) : dateMatrix[dateMatrix.length - 1].push(day));
+    return dateMatrix;
   }
 
   calendarMonth(year, month) {
     const monthDayCount = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    let weekdays = this.dateUtil.getWeekdays([]);
+    let weekdays = [1, 2, 3, 4, 5, 6, 7];
 
     function monthDataMap(year, month) {
       let monthMap = new Map();
       let months = getDaysByMonth(year);
-      let weekDay = getFirstWeekDayYear(year);
+      let weekday = getFirstWeekDayYear(year);
       for (let m = 0; m < months.length; m++) {
         for (let d = 1; d <= months[m]; d++) {
           if (month === m) {
-            monthMap.set(d, weekDay);
+            monthMap.set(d, {weekday, month, year});
           }
 
-          weekDay =
-            weekdays.indexOf(weekDay) + 1 > 6
+          weekday =
+            weekdays.indexOf(weekday) + 1 > 6
               ? weekdays[0]
-              : weekdays[weekdays.indexOf(weekDay) + 1];
+              : weekdays[weekdays.indexOf(weekday) + 1];
         }
       }
 
@@ -232,9 +212,8 @@ export default class Calendar {
 
     return monthDataMap(year, month);
   }
-
   // Get mm/yy for previous or next month in the calendar
-  getRightDate(year, month, direction) {
+  getMonthYear(year, month, direction) {
     month += 1;
     switch (direction) {
       case "back":
@@ -256,9 +235,8 @@ export default class Calendar {
     }
     return { year, month };
   }
-
   //On click functions to change dates
-  _upArrowClick() {
+  upArrowClick() {
     if (this.month + 1 < 12) {
       this.month++;
     } else {
@@ -268,7 +246,7 @@ export default class Calendar {
     this.fillCalendar();
   }
 
-  _downArrowClick() {
+  downArrowClick() {
     if (this.month - 1 >= 0) {
       this.month--;
     } else {

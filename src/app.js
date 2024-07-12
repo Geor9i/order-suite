@@ -15,6 +15,7 @@ import SalesAnalysis from "./components/salesAnalysisPage/salesAnalysisPage.js";
 import ProductManager from "./components/productManager/productManager.js";
 import { serviceProvider as services } from './services/serviceProvider.js';
 import { utils } from "./utils/utilConfig.js";
+import Calendar from './components/calendar/calendar.js';
 
 if (module.hot) {
   module.hot.accept();
@@ -51,3 +52,12 @@ page("/restaurant-sales", () => CM.mount(SalesAnalysis, baseLoader));
 page("/product-manager", () => CM.mount(ProductManager, baseLoader));
 page("/404", () => CM.mount(NotFoundPage, baseLoader));
 page.start();
+
+const container = document.createElement('div');
+container.style.position = 'absolute';
+container.style.width = '40vw';
+container.style.height = '40vw';
+
+document.body.appendChild(container);
+const calendar = new Calendar(container);
+calendar.open()
