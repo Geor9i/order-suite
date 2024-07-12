@@ -14,11 +14,10 @@ export const orderFormTemplate = (controls, nextOrderDate) => html`
         </div>
         <div class=${styles['form-group']}>
             <label id="date-label" for="date-input" >Order Date</label>
-            <div id=${styles["calendar-input-container"]}>
+            <div class=${styles["calendar-input-container"]}>
                 <input type="text" required="true" id="date-input" name="date" .value=${nextOrderDate}>
                 <div id="date-button" @click=${controls.openCalendar}><i class="fa-solid fa-calendar fa-2x"></i></div>
             </div>
-        <div id="calendar-container" class=${styles["calendar-container"]}></div>
         </div>
        <div class=${styles['form-group']}>
             <label for="previous-sales" >Last Week's Sales:</label>

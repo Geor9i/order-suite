@@ -94,36 +94,28 @@
         box-shadow: 0 0 2px 2px inset #ffffff;
       }
     }
-        
 
-      #calendar-input-container {
-        position: relative;
-        min-width: 60%;
-        @include tablet-screen { min-width: 60% };
-        input {
-          width: 100%;
-        }
-        i {
-          @include position(absolute, 0, -20%);
-          @include transition(color);
-          border: none;
-          border-radius: 20%;
-          cursor: pointer;
-          &:hover {
-            color: green;
-          }
-          @include phone-screen {
-             font-size: 1.5em;
-             @include position(absolute, 0, -10%);
-         };
-        }
+    .calendar-input-container {
+      position: relative;
+      @include rect(80%);
+      @include tablet-screen { min-width: 60% };
+      input {
+        width: 100%;
       }
-    
-      .calendar-container {
-        display: none;
-        top: 100%;
-        position: absolute;
-        z-index: 1001;
+      i {
+        @include position(absolute, 0, -20%);
+        @include transition(color);
+        border: none;
+        border-radius: 20%;
+        cursor: pointer;
+        &:hover {
+          color: green;
+        }
+        @include phone-screen {
+           font-size: 1.5em;
+           @include position(absolute, 0, -10%);
+       };
+      }
     }
       
       .create-button {

@@ -4,10 +4,11 @@ import BaseComponent from "../../framework/baseComponent.js";
 import Calendar from "../calendar/calendar.js";
 import Modal from '../shared/modal/modal.js';
 import OpenOrderEditor from "./openOrderEditor/openOrderEditor.js"
-
+import { v4 as uuid } from 'uuid';
 export default class OrderFormComponent extends BaseComponent {
   constructor({ renderBody, router, services, utils }) {
     super();
+    this.subscriberId = `OrderFormComponent_${uuid()}`;
     this.dateUtil = utils.dateUtil;
     this.formUtil = utils.formUtil;
     this.domUtil = utils.domUtil;
@@ -18,13 +19,20 @@ export default class OrderFormComponent extends BaseComponent {
     this.errorRelay = services.errorRelay;
     this.harvester = services.harvester;
     this.calendar = new Calendar();
+    this.calendar.on('close',this.subscriberId ,  this.setDate.bind(this));
     this.processor = services.processor;
     this.showView = this._showView.bind(this);
     this.dateInputFieldStartingDate =
     this.deliveryHarvestProducts = null;
+    this.date = this.calendar.fullDate;
   }
 
-  _showView(ctx) {
+  setDate(date) {
+    this.date = date;
+    this.showView();
+  }
+
+  _showView() {
     if (!this.authService.user) {
       this.router.redirect("/");
       return;
@@ -32,16 +40,14 @@ export default class OrderFormComponent extends BaseComponent {
 
     const controls = {
       submitHandler: this.submitHandler.bind(this),
-      openCalendar: this.calendar.open,
-      closeCalendar: this.calendar.close,
+      openCalendar: this.calendar.open.bind(this.calendar),
+      closeCalendar: this.calendar.close.bind(this.calendar),
       importInventory: this.importInventory.bind(this),
       editOpenOrders: this.editOpenOrders.bind(this),
     };
 
-    let template = orderFormTemplate(controls, this.getNextDeliveryDate());
+    let template = orderFormTemplate(controls,  this.date);
     this.renderHandler(template);
-    this.calendarContainer = document.getElementById("calendar-container");
-    this.calendar.showView(this.calendarContainer);
   }
 
   getNextDeliveryDate() {

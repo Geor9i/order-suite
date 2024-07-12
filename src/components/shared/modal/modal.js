@@ -3,11 +3,11 @@ import { serviceProvider } from "../../../services/serviceProvider.js";
 import styles from './modal.scss';
 import { utils } from "../../../utils/utilConfig.js";
 import { modalTemplate } from "./modalTemplate.js";
-
+import {v4 as uuid} from 'uuid';
 export default class Modal {
     constructor(parent, title, message, options) {
         this.message = message;
-        this.jsEventBusSubscriberId = `Modal_${Math.random() * 1000000}`;
+        this.jsEventBusSubscriberId = `Modal_${uuid()}`;
         this.parent = parent;
         this.eventUtil = utils.eventUtil;
         this.jsEventBus = serviceProvider.jsEventBus;
@@ -68,7 +68,7 @@ export default class Modal {
 
     closeModal() {
         this.destroy();
-        this.program.close();
+        this.program && this.program.close();
         this.emit('closeModal');
     };
     

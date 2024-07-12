@@ -32,8 +32,6 @@ export default class OpenOrderEditor extends Program {
         const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, this.render.bind(this));
         this.subscriptionArr = [unsubscribe];
         this.render();
-        this.calendarContainer = document.querySelector(`.${styles['calendar-container']}`);
-        this.calendar.showView(this.calendarContainer);
     }
 
     close() {
@@ -43,8 +41,8 @@ export default class OpenOrderEditor extends Program {
     render() {
         const controls = {
             importOrder: this.importOrder.bind(this),
-            openCalendar: this.calendar.open,
-            closeCalendar: this.calendar.close,
+            openCalendar: this.calendar.open.bind(this.calendar),
+            closeCalendar: this.calendar.close.bind(this.calendar),
         }
         render(this.template(this.openOrders, controls), this.contentElement);
     }

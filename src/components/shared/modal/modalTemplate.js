@@ -2,7 +2,7 @@ import { html } from "lit-html";
 import styles from './modal.scss';
 
 export const modalTemplate = (title = '', message = '', controls, options) => html`
-    <header class=${styles['modal-header']}>
+   ${!options?.noHeader && html`<header class=${styles['modal-header']}>
         <p>${title}</p>
         <div class=${styles['controls']}>
 
@@ -13,7 +13,7 @@ export const modalTemplate = (title = '', message = '', controls, options) => ht
                     ` : null}
            
         </div>
-    </header>
+    </header>`}
     <div class=${styles['content']}>
         ${message && html`<p class=${styles['message']}>${message}</p>`}
         ${options?.buttons?.length && html`

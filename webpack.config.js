@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = {
   mode: 'development',
   entry: './src/app.js',
-  devtool: 'eval-source-map', // or 'cheap-source-map'
+  devtool: 'source-map', // or 'cheap-source-map'
   output: {
     filename: "[name].js",
     chunkFilename: "[id].[chunkhash].js",

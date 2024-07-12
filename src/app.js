@@ -52,12 +52,3 @@ page("/restaurant-sales", () => CM.mount(SalesAnalysis, baseLoader));
 page("/product-manager", () => CM.mount(ProductManager, baseLoader));
 page("/404", () => CM.mount(NotFoundPage, baseLoader));
 page.start();
-
-const container = document.createElement('div');
-container.style.position = 'absolute';
-container.style.width = '40vw';
-container.style.height = '40vw';
-
-document.body.appendChild(container);
-const calendar = new Calendar(container);
-calendar.open()
