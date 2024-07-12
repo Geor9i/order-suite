@@ -33,7 +33,7 @@ export default class InventoryItems extends Program {
         this.subscriptionArr = [unsubscribe];
         if (!this.inventoryRecords) {
             const buttons = [{ title: 'Import from Clipboard', confirmMessage: 'confirmed', callback: this.importProducts.bind(this)}];
-            new Modal(this.windowContentElement, 'Inventory is Empty', 'Please Import Your Inventory Activity' , { buttons, noClose: true });
+            new Modal(this.windowContentElement, 'Inventory is Empty', 'Please Import Your Inventory Activity' , { buttons, noClose: true, noBackdrop: true });
         } else {
             this.render();
         }

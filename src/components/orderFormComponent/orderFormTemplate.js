@@ -16,7 +16,7 @@ export const orderFormTemplate = (controls, nextOrderDate) => html`
             <label id="date-label" for="date-input" >Order Date</label>
             <div class=${styles["calendar-input-container"]}>
                 <input type="text" required="true" id="date-input" name="date" .value=${nextOrderDate}>
-                <div id="date-button" @click=${controls.openCalendar}><i class="fa-solid fa-calendar fa-2x"></i></div>
+                <div id=${styles['date-btn']} @click=${(e) => controls.openCalendar(e)}><i class="fa-solid fa-calendar fa-2x"></i></div>
             </div>
         </div>
        <div class=${styles['form-group']}>

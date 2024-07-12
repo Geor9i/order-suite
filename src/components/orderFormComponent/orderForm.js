@@ -27,8 +27,10 @@ export default class OrderFormComponent extends BaseComponent {
     this.date = this.calendar.fullDate;
   }
 
-  setDate(date) {
+  setDate(data) {
+    const { date, dateObj } = data;
     this.date = date;
+    this.dateObj = dateObj;
     this.showView();
   }
 
@@ -95,7 +97,7 @@ export default class OrderFormComponent extends BaseComponent {
       width: '60vw',
       height: '50vh',
     }
-    const modal = new Modal(document.body, 'Open Order Editor', '', {program: programConfig, styles, backdrop: true});
+    const modal = new Modal(document.body, 'Open Order Editor', '', { program: programConfig, styles });
     const modalHeader = modal.element.querySelector('header');
     modalHeader.style.background = '#09b3ec';
   }

@@ -9,7 +9,7 @@ import { render } from "lit-html";
 import styles from "./calendar.scss";
 import Modal from "../shared/modal/modal.js";
 export default class Calendar {
-  constructor(width = '350px', height = '350px') {
+  constructor(width = 350, height = 350) {
     this.width = width;
     this.height = height;
     this.modal = null;
@@ -22,8 +22,9 @@ export default class Calendar {
     this.month = date.getMonth();
     this.day = date.getDay();
     this.mode = "date";
-    this._delimiter = '-';
+    this._delimiter = ' ';
     this.months = this.dateUtil.getMonths([]);
+    this.shortMonths = this.months.map((month) => this.stringUtil.toPascalCase(month.slice(0, 3)));
     this.weekdays = this.dateUtil.getWeekdays([]);
     this.shortWeekdays = this.weekdays.map((day) => this.stringUtil.toPascalCase(day.slice(0, 3)));
     this.events = {};
@@ -34,18 +35,23 @@ export default class Calendar {
   }
 
   get fullDate() {
-    return `${this.date}${this._delimiter}${this.month}${this._delimiter}${this.year}  ${this.stringUtil.toPascalCase(this.weekdays[this.day - 1])}`;
+    return `${this.stringUtil.toPascalCase(this.weekdays[this.day - 1])}${this._delimiter}${this.date}${this._delimiter}${this.shortMonths[this.month]}${this._delimiter}${this.year}`;
+  }
+  get dateObj() {
+    return new Date(`${this.year}/${this.month}/${this.date}`);
   }
 
   renderBody(x, y) {
     const modalStyles = {
-      width: this.width,
-      height: this.height,
-      left: `${x}`,
-      top: `${y}`,
+      width: `${this.width}px`,
+      height: `${this.height}px`,
+      left: `${x - (this.width / 2)}px`,
+      top: `${y - (this.height / 2)}px`,
       border: 'none',
+      'z-index': '2001',
     }
-    this.modal = new Modal(document.body, '', '', {noHeader: true, styles: modalStyles, backdrop: true});
+    const backdropStyles = {'z-index': '2000'};
+    this.modal = new Modal(document.body, '', '', { noHeader: true, styles: modalStyles, backdropStyles });
 
     const controls = {
       changeMode: this.changeMode.bind(this, 1),
@@ -64,13 +70,13 @@ export default class Calendar {
   }
 
   open(e) {
-    const { clientX, clientY } = e.target;
+    const { clientX, clientY } = e;
     this.renderBody(clientX, clientY);
     this.emit('open');
   }
 
   close() {
-    this.emit('close', this.fullDate);
+    this.emit('close', {date: this.fullDate, dateObj: this.dateObj});
     this.modal.destroy();
   }
 

@@ -4,6 +4,7 @@
 @import '../../../styles/partials/input';
 @import '../../../styles/partials/responsive';
 
+$input-size: 100%;
 
 .order-page__section {
     position: relative;
@@ -29,20 +30,20 @@
       text-align: center
     }
 
-      .form-group {
-        @include flex(column, space-evenly);
-        @include rect(100%);
-        position: relative;
+    .form-group {
+      @include flex(column, space-evenly);
+      @include rect(60%);
+      position: relative;
+      @include tablet-screen { width: 80% };
+      @include phone-screen { width: 100% };
+      input {
+        @include input(7px);
+        width: $input-size;
+        padding: 0.2em;
+        text-align: center;
+        background-color: rgb(255, 255, 255);
         @include tablet-screen { width: 80% };
-        @include phone-screen { width: 100% };
-        input[type="text"] {
-          @include input(7px);
-          @include rect(60%);
-          padding: 0.2em;
-          text-align: center;
-          background-color: rgb(255, 255, 255);
-          @include tablet-screen { width: 80% };
-        }
+      }
     }
     .form-group-horizontal {
       @include flex();
@@ -70,7 +71,7 @@
       padding: 0.5em;
       font-weight: bold;
       text-transform: uppercase;
-      @include rect(60%);
+      @include rect(80%);
       @include transition((background-color, color));
       @include flex();
       background-color: #000;
@@ -97,13 +98,14 @@
 
     .calendar-input-container {
       position: relative;
-      @include rect(80%);
+      @include rect(100%);
+      @include flex(100%);
       @include tablet-screen { min-width: 60% };
       input {
-        width: 100%;
+        width: $input-size;
       }
       i {
-        @include position(absolute, 0, -20%);
+        @include position(absolute, 0, -15%);
         @include transition(color);
         border: none;
         border-radius: 20%;
@@ -118,22 +120,21 @@
       }
     }
       
-      .create-button {
-        @include rect(10em, 3em);
-        @include button();
-        background-color: rgb(238, 238, 238);
-        border-radius: 13px;
-        border-bottom: 1px solid black;
-        justify-self: center;
-        align-self: center;
-        grid-column: 1;
-        cursor: pointer;
-        @include transition(background-color);
-        &:hover {
-          background-color: rgb(214, 237, 241);
-        }
+    .create-button {
+      @include rect(10em, 3em);
+      @include button();
+      background-color: rgb(238, 238, 238);
+      border-radius: 13px;
+      border-bottom: 1px solid black;
+      justify-self: center;
+      align-self: center;
+      grid-column: 1;
+      cursor: pointer;
+      @include transition(background-color);
+      &:hover {
+        background-color: rgb(214, 237, 241);
       }
- 
+    }
  
   .warning-message {
     @include flex(column, flex-start);
@@ -151,11 +152,3 @@
     display: block;
     margin-left: auto;
   }
-  
-  .calendar-backdrop {
-    @include rect(100%, 100%);
-    @include position(absolute, $all: 0);
-    backdrop-filter: blur(0.5px);
-    z-index: 1000;
-  }
-  

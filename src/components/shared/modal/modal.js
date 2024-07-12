@@ -3,7 +3,7 @@ import { serviceProvider } from "../../../services/serviceProvider.js";
 import styles from './modal.scss';
 import { utils } from "../../../utils/utilConfig.js";
 import { modalTemplate } from "./modalTemplate.js";
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
 export default class Modal {
     constructor(parent, title, message, options) {
         this.message = message;
@@ -35,11 +35,14 @@ export default class Modal {
         const modal = document.createElement('div');
         modal.classList.add(styles['modal']);
         this.parent.appendChild(modal);
-        if (options?.backdrop)  {
+        if (!options?.noBackdrop)  {
             this.modalBackdrop = document.createElement('div');
             this.modalBackdrop.classList.add(styles['modal-backdrop']);
             this.modalBackdrop.addEventListener('click', this.closeModal.bind(this));
             this.parent.appendChild(this.modalBackdrop);
+            if (options?.backdropStyles) {
+                Object.keys(options.backdropStyles).forEach(styleProp => this.modalBackdrop.style[styleProp] = options.backdropStyles[styleProp]);
+            }
         }
         const controls = {
             confirm: this.confirmModal.bind(this),
