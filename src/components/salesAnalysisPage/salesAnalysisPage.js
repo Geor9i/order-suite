@@ -1,34 +1,59 @@
 import { salesAnalysisPageTemplate } from "./salesAnalysisPageTemplate";
 import styles from "./salesAnalysisPage.module.scss";
 import BaseComponent from "../../framework/baseComponent";
-
+import { bus } from '../../constants/busEvents'
+import {v4 as uuid} from 'uuid';
+import { db } from '../../constants/db.js';
 export default class SalesAnalysis extends BaseComponent {
   constructor({ renderBody, router, services, utils }) {
     super();
-    console.log(utils);
+    this.subscriberId = `SalesAnalysis_${uuid()}`
     this.render = renderBody;
     this.router = router;
     this.harvester = services.harvester;
     this.authService = services.authService;
+    this.firestoreService = services.firestoreService;
+    this.errorRelay = services.errorRelay;
+    this.eventBus = services.eventBus;
     this.stringUtil = utils.stringUtil;
     this.timeUtil = utils.timeUtil;
     this.dateUtil = utils.dateUtil;
     this.formUtil = utils.formUtil;
     this.domUtil = utils.domUtil;
     this.mathUtil = utils.mathUtil;
-    this.hourlySalesInputHandler = this._hourlySalesInputHandler.bind(this);
-    this.hourlySalesChangeHandler = this._hourlySalesChangeHandler.bind(this);
-    this.hourlySalesDumpHandler = this._hourlySalesDumpHandler.bind(this);
-    this.hourlySalesReportHandler = this._hourlySalesReportHandler.bind(this);
     this.showView = this._showView.bind(this);
-    this.slideOpen = this._slideOpen.bind(this);
-    this.hourlySales = this.getHourlySalesTemplate();
     this.weeklyTotal = 0;
     this.hourlySalesReport = null;
     this.sliderContainers = [];
+    this.storeTemplateData = null;
+    this.salesData = null;
+    this.hourlySalesTemplate = null;
   }
 
-  _slideOpen(e) {
+  init() {
+    this.storeTemplateData = this.firestoreService.userData?.[db.STORE_SETTINGS];
+    this.salesData = this.firestoreService.userData?.[db.SALES_DATA];
+    this.eventBus.on(bus.USERDATA, this.subscriberId, (data) => this.salesData = data[db.SALES_DATA]);
+    this.hourlySalesTemplate = this.getHourlySalesTemplate();
+    this.preventEnterSubmit = (e) => e.key === 'Enter' && e.preventDefault();
+    document.addEventListener('keydown', this.preventEnterSubmit);
+  }
+
+  destroy() {
+    document.removeEventListener('keydown', this.preventEnterSubmit);
+  }
+
+  getHourlySalesArr() {
+    const weekGuide = this.dateUtil.getWeekdays([]);
+    return this.hourlySalesTemplateArr = Object.keys(this.hourlySalesTemplate)
+    .sort((a, b) => weekGuide.indexOf(a) - weekGuide.indexOf(b))
+    .reduce((arr, weekday) => {
+      arr.push([weekday, this.hourlySalesTemplate[weekday]])
+      return arr;
+    }, []);
+  }
+
+  slideOpen(e) {
     const barElement = e.currentTarget;
     const id = barElement.dataset.id;
     const container = document.getElementById(id);
@@ -77,24 +102,37 @@ export default class SalesAnalysis extends BaseComponent {
     }
   }
 
-  getRestaurantData() {
-    return {
-      openTimes: {
-        monday: { startTime: "11:00", endTime: "23:00" },
-        tuesday: { startTime: "11:00", endTime: "23:00" },
-        wednesday: { startTime: "11:00", endTime: "23:00" },
-        thursday: { startTime: "11:00", endTime: "23:00" },
-        friday: { startTime: "11:00", endTime: "23:00" },
-        saturday: { startTime: "11:00", endTime: "23:00" },
-        sunday: { startTime: "11:00", endTime: "23:00" },
-      },
-    };
-  }
-
-  submitHandler(e) {
+ async submitHandler(e) {
     e.preventDefault();
+    const weekGuide = this.dateUtil.getWeekdays([]);
     const formData = this.formUtil.getFormData(e.target);
-    console.log(formData);
+    const formHours = Object.keys(formData);
+    const weeklyTotal = this.getWeeklyTotal(true);
+    const result = weekGuide.reduce((obj, weekday) => {
+      obj[weekday] = {};
+      const pattern = new RegExp(`${weekday}-\\d+`);
+      const hours = formHours.filter(hour => hour.match(pattern)!== null);
+      let total = 0;
+      const hourTemplate = hours.reduce((hourObj, hourWeekday) => {
+        const hour = hourWeekday.split('-')[1];
+        hourObj[hour] = Number(formData[hourWeekday]);
+        total += Number(formData[hourWeekday]);
+        return hourObj;
+      }, {});
+      obj[weekday] = {
+        hours: hourTemplate,
+        total,
+        share: (total / weeklyTotal) * 100,
+      }
+      return obj;
+    }, {});
+
+    try {
+      await this.firestoreService.setHourlySales(result);
+      this.router.redirect("/");
+    }catch(err) {
+      this.errorRelay.send(err);
+    }
   }
 
   _showView() {
@@ -102,15 +140,16 @@ export default class SalesAnalysis extends BaseComponent {
       this.router.redirect("/");
       return;
     }
+    const hourlySales = this.getHourlySalesArr();
     this.render(
       salesAnalysisPageTemplate(
-        this.slideOpen,
-        this.hourlySales,
-        this.hourlySalesInputHandler,
-        this.hourlySalesChangeHandler,
+        this.slideOpen.bind(this),
+        hourlySales,
+        this.hourlySalesInputHandler.bind(this),
+        this.hourlySalesChangeHandler.bind(this),
         this.weeklyTotal,
-        this.hourlySalesDumpHandler,
-        this.hourlySalesReportHandler,
+        this.hourlySalesDumpHandler.bind(this),
+        this.hourlySalesReportHandler.bind(this),
         this.submitHandler.bind(this)
       )
     );
@@ -132,7 +171,7 @@ export default class SalesAnalysis extends BaseComponent {
   }
 
   workHours(dataType = []) {
-    let { openTimes } = this.getRestaurantData();
+    const openTimes = this.getOpenTimes();
     return Object.keys(openTimes).reduce((obj, weekday) => {
       const { startTime, endTime } = openTimes[weekday];
       obj[weekday] = this.timeUtil.hourlyTimeWindow(
@@ -143,8 +182,19 @@ export default class SalesAnalysis extends BaseComponent {
       return obj;
     }, {});
   }
+  
+  getOpenTimes() {
+    const { weekdays } = this.storeTemplateData;
+    return Object.keys(weekdays).reduce((obj, day) => {
+      obj[day] = {
+        startTime: weekdays[day].open,
+        endTime: weekdays[day].close,
+      }
+      return obj;
+    }, {})
+  }
 
-  _hourlySalesInputHandler(e) {
+  hourlySalesInputHandler(e) {
     const { value, name, id } = e.target;
     let filteredValue = this.stringUtil.filterString(value, [
       { symbol: "\\d" },
@@ -154,24 +204,24 @@ export default class SalesAnalysis extends BaseComponent {
     if (e.target.tagName === "INPUT" && (id.includes('total') || id.includes('share'))) {
       const [field, weekday] = e.target.id.split("-");
       console.log(weekday);
-      this.hourlySales[weekday].totals[field] = filteredValue;
+      this.hourlySalesTemplate[weekday].totals[field] = filteredValue;
     } else if (e.target.tagName === "INPUT") {
       const [weekday, hour] = name.split("-");
-      this.hourlySales[weekday].hours[hour] = filteredValue;
+      this.hourlySalesTemplate[weekday].hours[hour] = filteredValue;
     }
     e.target.value = filteredValue;
     this.showView();
   }
 
-  _hourlySalesChangeHandler(e) {
+  hourlySalesChangeHandler(e) {
     let { name, value, id } = e.target;
     if (e.target.tagName === "INPUT" && (id.includes('total') || id.includes('share'))) {
       const [field, weekday] = e.target.id.split("-");
-      this.hourlySales[weekday].totals[field] = Number(value);
+      this.hourlySalesTemplate[weekday].totals[field] = Number(value);
       this.calcFromTotals(field, weekday);
     } else if (e.target.tagName === "INPUT") {
       const [weekday, hour] = name.split("-");
-      this.hourlySales[weekday].hours[hour] = Number(value);
+      this.hourlySalesTemplate[weekday].hours[hour] = Number(value);
       const weeklyTotal = this.getWeeklyTotal();
       this.updateTotals();
       this.updateWeeklyShare(weeklyTotal);
@@ -189,26 +239,26 @@ export default class SalesAnalysis extends BaseComponent {
       if (weeklyTotal === 0) return;
 
       let currentShareTotal = 0;
-      Object.keys(this.hourlySales).forEach((day) => {
-        currentShareTotal += this.hourlySales[day].totals.share;
+      Object.keys(this.hourlySalesTemplate).forEach((day) => {
+        currentShareTotal += this.hourlySalesTemplate[day].totals.share;
       });
       let shareDifference = 100 - currentShareTotal;
       const sharesArr = [];
       let selectedShareIndex;
-      Object.keys(this.hourlySales).forEach((day, i) => {
+      Object.keys(this.hourlySalesTemplate).forEach((day, i) => {
         if (weekday === day) {
           selectedShareIndex = i;
         }
-        sharesArr.push(this.hourlySales[day].totals.share);
+        sharesArr.push(this.hourlySalesTemplate[day].totals.share);
       });
       let adjustedShares = this.mathUtil.spreadProportionateValueArr(
         sharesArr,
         shareDifference,
         selectedShareIndex
       );
-      Object.keys(this.hourlySales).forEach((day, i) => {
-        this.hourlySales[day].totals.share = adjustedShares[i];
-        this.hourlySales[day].totals.total =
+      Object.keys(this.hourlySalesTemplate).forEach((day, i) => {
+        this.hourlySalesTemplate[day].totals.share = adjustedShares[i];
+        this.hourlySalesTemplate[day].totals.total =
           weeklyTotal * (adjustedShares[i] / 100);
         this.updateHours(day);
       });
@@ -217,9 +267,9 @@ export default class SalesAnalysis extends BaseComponent {
   }
 
   updateHours(weekday) {
-    const { total } = this.hourlySales[weekday].totals;
-    const hourValuesArr = Object.values(this.hourlySales[weekday].hours);
-    const hourKeysArr = Object.keys(this.hourlySales[weekday].hours);
+    const { total } = this.hourlySalesTemplate[weekday].totals;
+    const hourValuesArr = Object.values(this.hourlySalesTemplate[weekday].hours);
+    const hourKeysArr = Object.keys(this.hourlySalesTemplate[weekday].hours);
     let adjustedValuesArr = this.mathUtil.evenArrRatioToSum(
       hourValuesArr,
       total,
@@ -227,28 +277,28 @@ export default class SalesAnalysis extends BaseComponent {
       true
     );
     for (let hour of hourKeysArr) {
-      this.hourlySales[weekday].hours[hour] = adjustedValuesArr.shift();
+      this.hourlySalesTemplate[weekday].hours[hour] = adjustedValuesArr.shift();
     }
   }
 
   updateWeeklyShare(weeklyTotal) {
     if (weeklyTotal === 0) return null;
-    Object.keys(this.hourlySales).forEach((weekday) => {
-      this.hourlySales[weekday].totals.share =
-        (this.hourlySales[weekday].totals.total / weeklyTotal) * 100;
+    Object.keys(this.hourlySalesTemplate).forEach((weekday) => {
+      this.hourlySalesTemplate[weekday].totals.share =
+        (this.hourlySalesTemplate[weekday].totals.total / weeklyTotal) * 100;
     });
   }
 
   getWeeklyTotal(fromTotal = false) {
     let weeklyTotal = 0;
-    Object.keys(this.hourlySales).forEach((weekday) => {
+    Object.keys(this.hourlySalesTemplate).forEach((weekday) => {
       let total = 0;
       if (fromTotal) {
-        total = Number(this.hourlySales[weekday].totals.total);
+        total = Number(this.hourlySalesTemplate[weekday].totals.total);
       } else {
-        total = Object.keys(this.hourlySales[weekday].hours).reduce(
+        total = Object.keys(this.hourlySalesTemplate[weekday].hours).reduce(
           (total, hour) =>
-            (total += Number(this.hourlySales[weekday].hours[hour])),
+            (total += Number(this.hourlySalesTemplate[weekday].hours[hour])),
           0
         );
       }
@@ -258,17 +308,17 @@ export default class SalesAnalysis extends BaseComponent {
   }
 
   updateTotals() {
-    Object.keys(this.hourlySales).forEach((weekday) => {
-      let total = Object.keys(this.hourlySales[weekday].hours).reduce(
+    Object.keys(this.hourlySalesTemplate).forEach((weekday) => {
+      let total = Object.keys(this.hourlySalesTemplate[weekday].hours).reduce(
         (total, hour) =>
-          (total += Number(this.hourlySales[weekday].hours[hour])),
+          (total += Number(this.hourlySalesTemplate[weekday].hours[hour])),
         0
       );
-      this.hourlySales[weekday].totals.total = total;
+      this.hourlySalesTemplate[weekday].totals.total = total;
     });
   }
 
-  _hourlySalesDumpHandler(e) {
+ hourlySalesDumpHandler(e) {
     const dump = e.currentTarget;
     const { value } = dump;
     this.hourlySalesReport = this.harvester.hourlySalesExtractor(value);
@@ -278,30 +328,30 @@ export default class SalesAnalysis extends BaseComponent {
     }, 3000);
   }
 
-  _hourlySalesReportHandler() {
+  hourlySalesReportHandler() {
     if (!this.hourlySalesReport) return;
 
     const selectValue = document.getElementById('hourly-report-select').value;
     if (selectValue === 'averageReport') {
-      const weekdayCount = Object.keys(this.hourlySales).length
-      for (let weekday in this.hourlySales) {
-        for (let hour in this.hourlySales[weekday].hours) {
+      const weekdayCount = Object.keys(this.hourlySalesTemplate).length
+      for (let weekday in this.hourlySalesTemplate) {
+        for (let hour in this.hourlySalesTemplate[weekday].hours) {
           if (this.hourlySalesReport.hours.hasOwnProperty(hour)) {
-            this.hourlySales[weekday].hours[hour] = this.hourlySalesReport.hours[hour].hourlySales / weekdayCount;
+            this.hourlySalesTemplate[weekday].hours[hour] = this.hourlySalesReport.hours[hour].hourlySales / weekdayCount;
           }
         }
       }
     } else {
-      for (let hour in this.hourlySales[selectValue].hours) {
+      for (let hour in this.hourlySalesTemplate[selectValue].hours) {
         if (this.hourlySalesReport.hours.hasOwnProperty(hour)) {
-          this.hourlySales[selectValue].hours[hour] = this.hourlySalesReport.hours[hour].hourlySales
+          this.hourlySalesTemplate[selectValue].hours[hour] = this.hourlySalesReport.hours[hour].hourlySales
         }
       }
     }
     const weeklyTotal = this.getWeeklyTotal();
-    this.updateTotals()
+    this.updateTotals();
     this.weeklyTotal = this.getWeeklyTotal(true);
-    this.updateWeeklyShare(weeklyTotal)
-    this.showView()
+    this.updateWeeklyShare(weeklyTotal);
+    this.showView();
   }
 }

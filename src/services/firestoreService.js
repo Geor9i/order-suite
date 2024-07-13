@@ -74,6 +74,16 @@ export default class FirestoreService {
     console.log(`Updated store template!`);
   }
 
+  async setHourlySales(data) {
+    const documentRef = doc(this.db, db.USERS, this.user.uid);
+    const fieldPath = `${db.SALES_DATA}.${db.HOURLY_SALES}`;
+    const updates = {
+      [fieldPath]: data,
+    };
+    await updateDoc(documentRef, updates);
+    console.log(`Updated Hourly Sales!`);
+  }
+
 
   _updateState(doc) {
     if (doc.exists() && this.user) {

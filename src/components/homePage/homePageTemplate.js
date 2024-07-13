@@ -17,7 +17,7 @@ ${Object.keys(progressReport).map(area => {
     if (progressReport[area].untouched) {
         return html`<p class=${styles['report-general-notification']}>Please complete ${progressReport[area].title} <a class=${styles['link']} href=${progressReport[area].link}>here</a></p>`
     } else {
-        return console.log('else');
+        // return console.log('else');
     }
 })}
 </div>
