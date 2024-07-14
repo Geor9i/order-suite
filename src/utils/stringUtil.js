@@ -216,6 +216,7 @@ export default class StringUtil {
     }
     const unmatchedWords = longerWordArr.filter((_, i) => !matchedIndexes.has(i));
     const matchedWords = [...matchedIndexes].map(index => longerWordArr[index]);
+    score = Math.max((score + (matchedWords.length) * 2) - unmatchedWords.length, 0)
     return [matchedWords, unmatchedWords, score];
   }
 
@@ -233,7 +234,7 @@ export default class StringUtil {
    
     let [shorterWord, longerWord] = [wordA, wordB].sort((a, b) => a.length - b.length);
     if (longerWord.includes(shorterWord)) {
-      score = (shorterWord.length * 10) - (longerWord.length - shorterWord.length);
+      score = shorterWord.length  / longerWord.length;
     }
     return score;
       

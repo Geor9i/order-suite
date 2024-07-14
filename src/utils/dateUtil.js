@@ -232,11 +232,20 @@ export default class DateUtil {
     return true;
   }
 
-  getDay(dateObj) {
+  getDay(date) {
+    let day = date;
+    if (date instanceof Date ) {
+    day = date.getDay();
+    }
     const ref = [0,1,2,3,4,5,6];
-    const day = dateObj.getDay();
     const index = ref.indexOf(day);
     ref.unshift(ref.pop()); 
     return ref[index]
+  }
+
+  compare(date1, date2) {
+    const date1String = `${date1.getFullYear()}/${date1.getMonth()}/${date1.getDate()}`;
+    const date2String = `${date2.getFullYear()}/${date2.getMonth()}/${date2.getDate()}`;
+    return date1String === date2String;
   }
 }
