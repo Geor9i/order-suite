@@ -1,10 +1,10 @@
 import { orderFormTemplate } from "./orderFormTemplate.js";
-import styles from "./orderForm.scss";
 import BaseComponent from "../../framework/baseComponent.js";
 import Calendar from "../calendar/calendar.js";
 import Modal from '../shared/modal/modal.js';
 import OpenOrderEditor from "./openOrderEditor/openOrderEditor.js"
 import { v4 as uuid } from 'uuid';
+import { messages } from "./constants.js";
 
 export default class OrderFormComponent extends BaseComponent {
   constructor({ renderBody, router, services, utils }) {
@@ -26,6 +26,8 @@ export default class OrderFormComponent extends BaseComponent {
     this.dateInputFieldStartingDate =
     this.deliveryHarvestProducts = null;
     this.date = this.calendar.fullDate;
+    this.currentInventory = null;
+    this.openOrders = null;
   }
 
   setDate(data) {
@@ -49,51 +51,39 @@ export default class OrderFormComponent extends BaseComponent {
       editOpenOrders: this.editOpenOrders.bind(this),
     };
 
-    let template = orderFormTemplate(controls,  this.date);
+    let template = orderFormTemplate(controls,  this.date, this);
     this.renderHandler(template);
-  }
-
-  getNextDeliveryDate() {
-    let currentDate = new Date();
-    const weekdays = this.dateUtil.getWeekdays([]);
-    let nextAvailableDeliveryDate = this.dateUtil.findDeliveryDate(
-      currentDate,
-      { asDate: true }
-    );
-
-    return `${nextAvailableDeliveryDate.getDate()}/${
-      nextAvailableDeliveryDate.getMonth() + 1
-    }/${nextAvailableDeliveryDate.getFullYear()} - ${this.stringUtil.toPascalCase(
-      weekdays[nextAvailableDeliveryDate.getDay() - 1]
-    )}`;
   }
 
   submitHandler(e) {
     e.preventDefault();
     let form = e.target;
     let formData = this.formUtil.getFormData(form);
-    if (this.formValidator(formData)) {
-      let [date, weekday] = formData.date.split("-");
-      formData.date = this.dateUtil.op(date).format();
-      formData.weekday = weekday;
-      formData.products = this.deliveryHarvestProducts;
-      this.processor.nextOrder(formData);
-      this.router.navigate("/order-details");
+    const { previousSales, salesForecast } = formData;
+    this.formValidator(formData);
+    const data = {
+      previousSales, salesForecast,
+      date: this.dateObj,
+      inventory: this.currentInventory,
+      openOrders: this.openOrders
     }
+    this.processor.nextOrder(data);
+    // this.router.navigate("/order-details");
   }
 
   async importInventory() {
     try {
       const text = await navigator.clipboard.readText();
       const { productData, reportData } = this.harvester.inventoryHarvest(text);
-      console.log(reportData);
+      this.currentInventory = { productData, reportData };
+      this._showView();
     } catch (err) {
       this.errorRelay.send(err);
     }
   }
 
   editOpenOrders() {
-    const programConfig = { class: OpenOrderEditor };
+    const programConfig = { class: OpenOrderEditor, callback: this.comunicate.bind(this) };
     const styles = {
       width: '60vw',
       height: '50vh',
@@ -103,95 +93,33 @@ export default class OrderFormComponent extends BaseComponent {
     modalHeader.style.background = '#09b3ec';
   }
 
-  receivedToday(e) {
-    let receivedTodayContainerElement =
-      document.getElementById("received-today");
-    const choice = e.currentTarget.id.replace("previous-invoiced-", "");
-    const on = styles["received-today__container__on"];
-    if (choice === "no") {
-      receivedTodayContainerElement.classList.add(on);
-    } else {
-      receivedTodayContainerElement.classList.remove(on);
+  comunicate(message, data) {
+    if (message === messages.PROCESSED_ORDER) {
+      this.openOrders = Object.keys(data).reduce((obj, date) => {
+        if (data[date].length) {
+          obj[date] = data[date];
+        }
+        return obj;
+      }, {})
     }
   }
 
   formValidator(formData) {
-    const weekdays = this.dateUtil.getWeekdays([]);
-    let warningMessageElement = document.getElementById("warning-message");
-    warningMessageElement.replaceChildren(document.createDocumentFragment());
-    let pass = true;
-
-    if (formData["RMF-data-dump"] === "") {
-      this.print("Copy your last week's Inventory Activity and click import");
-      pass = false;
-    }
-    if (formData.date === "") {
-      this.print("Select a valid delivery date!");
-      pass = false;
-    } else {
-      // Receive and parse date input data
-      let orderInvoiceDate = formData.date.split(" - ")[0];
-      //Check if parsed date is valid
-      let dateCheckPattern = /[0-9]{1,2}(\D+)[0-9]{1,2}\1[0-9]{4}/g;
-      if (dateCheckPattern.test(orderInvoiceDate)) {
-        orderInvoiceDate = this.dateUtil.op(orderInvoiceDate).format();
-        let invoiceWeekday = weekdays[orderInvoiceDate.getDay() - 1];
-        const deliveryDayAvailable = Object.keys(
-          this.storeSettings.orderDays
-        ).includes(invoiceWeekday);
-        if (!deliveryDayAvailable) {
-          this.print("Select an available delivery date!");
+  try {
+        if (!this.currentInventory) {
+          throw new Error('Copy your last week\'s Inventory Activity and click import');
         }
-
-        if (this.isOrderPlacedForDate(orderInvoiceDate)) {
-          this.print("An order for the selected date has already been placed!");
+        if (!formData.date) {
+          throw new Error("Select a valid delivery date!");
+        } 
+        if (!formData["previousSales"] || isNaN(formData["previousSales"])) {
+          throw new Error('Enter a valid number in weekly sales!');
         }
-      }
-    }
-
-    if (
-      formData["previous-sales"] === "" ||
-      isNaN(formData["previous-sales"])
-    ) {
-      this.print("Enter a valid number in weekly sales!");
-      pass = false;
-    }
-    if (
-      formData["sales-forecast"] === "" ||
-      isNaN(formData["sales-forecast"])
-    ) {
-      this.print("Enter a valid number in forecast!");
-      pass = false;
-    }
-
-    return pass;
-  }
-
-  print(message) {
-    let warningMessageElement = document.getElementById("warning-message");
-    let p = document.createElement("p");
-    p.textContent = message;
-    warningMessageElement.appendChild(p);
-  }
-
-  isOrderPlacedForDate(orderInvoiceDate) {
-    if (this.deliveryHarvestProducts) {
-      for (let product in this.deliveryHarvestProducts) {
-        let productLastOrderedOn = new Date(
-          this.deliveryHarvestProducts[product].previousOrderDate
-        );
-        let lastOrderedArrival = this.dateUtil.findDeliveryDate(
-          productLastOrderedOn,
-          { asDate: true }
-        );
-        if (
-          this.dateUtil.op(lastOrderedArrival).format() ===
-          this.dateUtil.op(orderInvoiceDate).format()
-        ) {
-          return true;
+        if (!formData["salesForecast"] || isNaN(formData["salesForecast"])) {
+          throw new Error("Enter a valid number in forecast!");
         }
-      }
+    }catch(err) {
+      this.errorRelay.send(err);
     }
-    return false;
   }
 }

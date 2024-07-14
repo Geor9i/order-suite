@@ -88,80 +88,7 @@ export default class DateUtil {
     return daysBetween;
   }
 
-  /**
-   * This function finds the next or previous order date!
-   * @param {object} [dateFrom] - Provide a date object for the start date! For example today!
-   * @param {Object} [options] - An options object for customization.
-   * @param {boolean} [options.asDate = false] returns result as a date Object!
-   * @param {boolean} [options.asArray = false] Return an array?
-   * @param {boolean} [options.asDateMap = false] Return an object of date Ranges
-   * @param {object} [options.dateTo = null] Will return complete day sequence between two dates if specified!
-   * @returns {any} Depending on option selected 1.date, 2.array, 3.number
-   */
-  findDeliveryDate(
-    dateFrom,
-    options = {
-      asDate: false,
-      asArray: false,
-      goBack: false,
-      dateTo: null,
-      asDateMap: false,
-    }
-  ) {
-    const weekGuide = this.getWeekdays([]);
-    dateFrom =
-      typeof dateFrom === "object" ? dateFrom : this.op(dateFrom).format();
-    let orderDays = Object.keys(storeSettings.orderDays).map(
-      (day) => weekGuide.indexOf(day) + 1
-    );
-    let step = options.goBack ? -1 : 1;
-    let i = dateFrom.getDay();
-    let arr = [];
-    let countDown = options.dateTo
-      ? this.dateDifference(dateFrom, options.dateTo)
-      : 0;
-
-    //Fill an array with a range of weekdays matching the selected dates!
-    arr.push(i);
-    do {
-      i += step;
-      countDown !== 0 ? countDown-- : countDown;
-      i > 7 ? (i = 1) : i;
-      i < 1 ? (i = 7) : i;
-      arr.push(i);
-    } while (countDown !== 0 || !orderDays.includes(i));
-
-    //If array has been selected as output
-    if (options.asArray) {
-      //If asDateMap is true convert dates to a map of weekly stats and estimates
-      if (options.asDateMap) {
-        let map = new Map();
-        let dateStamp = new Date(dateFrom);
-        let dateStampFormat;
-        let properties = {};
-        for (let i = 0; i < arr.length; i++) {
-          const day = dateStamp.getDay();
-          dateStampFormat = `${
-            weekGuide[(day === 0 ? 7 : day) - 1]
-          } <=> ${this.op(dateStamp).format()}`;
-          map.set(dateStampFormat, properties);
-          dateStamp = new Date(dateStamp.setDate(dateStamp.getDate() + 1));
-        }
-
-        return map;
-      }
-      return arr;
-    }
-    //if date has been selected as output
-    if (options.asDate) {
-      let date = new Date(dateFrom);
-      if (options.goBack) {
-        date = new Date(date.setDate(dateFrom.getDate() - arr.length - 1));
-      }
-      date = new Date(date.setDate(dateFrom.getDate() + arr.length - 1));
-      return date;
-    }
-  }
+ 
 
   op(date) {
     this.result = date;
@@ -303,5 +230,13 @@ export default class DateUtil {
       }
     }
     return true;
+  }
+
+  getDay(dateObj) {
+    const ref = [0,1,2,3,4,5,6];
+    const day = dateObj.getDay();
+    const index = ref.indexOf(day);
+    ref.unshift(ref.pop()); 
+    return ref[index]
   }
 }

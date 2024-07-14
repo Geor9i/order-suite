@@ -351,25 +351,5 @@ export default class TimeUtil {
     };
   }
 
-  currentWorkHoursPercentage() {
-    const date = new Date();
-    const weekdays = this.dateUtil.getWeekdays([]);
-    let currentWeekday = date.getDay() - 1;
-    currentWeekday = currentWeekday <= 0 ? weekdays[6] : weekdays[currentWeekday]
-    const { startTime, endTime } = this.storeSettings.openTimes[currentWeekday];
-    let lzH = date.getHours() < 10 ? "0" : "";
-    let lzM = date.getMinutes() < 10 ? "0" : "";
-    let currentTime = `${lzH}${date.getHours()}:${lzM}${date.getMinutes()}`;
-    let totalWorkHours = this.time().timeSpanLength(startTime, endTime);
-    if (this.time(currentTime).isWithin(startTime, endTime)) {
-      let workHours = this.math().deduct(currentTime, startTime);
-      return this.math().divide(workHours, totalWorkHours, {
-        percentage: true,
-      });
-    } else if (this.time(currentTime).isLessEqThan(endTime)) {
-      return 0;
-    } else if (this.time(currentTime).isBiggerEqThan(endTime)) {
-      return 1;
-    }
-  }
+  
 }

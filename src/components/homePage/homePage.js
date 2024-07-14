@@ -46,7 +46,8 @@ export default class HomeComponent extends BaseComponent {
   }
 
   profileCompletionReport() {
-    const completionFactors = {}; 
+    const completionFactors = 
+    {}; 
     Object.keys(db_main_collections).forEach(key => completionFactors[key] = this.userData[key])
     const progressReport = { ...db_main_collections };
 

@@ -84,6 +84,11 @@ $input-size: 100%;
         box-shadow: 0 0 2px 2px inset #dda9ff;
       }
     }
+    .inventory-import-btn-done {
+      background-color: #6eff0e;
+      box-shadow: 0 0 10px 3px inset #fff;
+      color: #6eff0e;
+    }
 
     .open-order-btn {
       @extend .inventory-import-btn;

@@ -15,7 +15,6 @@ import SalesAnalysis from "./components/salesAnalysisPage/salesAnalysisPage.js";
 import ProductManager from "./components/productManager/productManager.js";
 import { serviceProvider as services } from './services/serviceProvider.js';
 import { utils } from "./utils/utilConfig.js";
-import Calendar from './components/calendar/calendar.js';
 
 if (module.hot) {
   module.hot.accept();

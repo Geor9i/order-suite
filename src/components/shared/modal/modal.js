@@ -52,7 +52,7 @@ export default class Modal {
         this.element = modal;
         if (options?.program) {
             const contentContainer = modal.querySelector(`.${styles['content']}`);
-            this.program = new options.program.class(contentContainer);
+            this.program = new options.program.class(contentContainer, options.program?.callback);
             this.program.boot();
         }
         if (options?.styles) {

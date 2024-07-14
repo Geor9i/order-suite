@@ -35,7 +35,7 @@ export default class Calendar {
   }
 
   get fullDate() {
-    return `${this.stringUtil.toPascalCase(this.weekdays[this.day - 1])}${this._delimiter}${this.date}${this._delimiter}${this.shortMonths[this.month]}${this._delimiter}${this.year}`;
+    return `${this.stringUtil.toPascalCase(this.weekdays[this.day])}${this._delimiter}${this.date}${this._delimiter}${this.shortMonths[this.month]}${this._delimiter}${this.year}`;
   }
   get dateObj() {
     return new Date(`${this.year}/${this.month + 1}/${this.date}`);

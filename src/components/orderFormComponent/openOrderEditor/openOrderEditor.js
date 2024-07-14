@@ -2,14 +2,14 @@ import { render } from "lit-html";
 import { serviceProvider } from "../../../services/serviceProvider.js";
 import Program from "../../shared/program/program.js";
 import { openOrderEditorTemplate } from "./openOrderEditorTemplate.js";
-import styles from './openOrderEditor.scss';
 import { db } from "../../../constants/db.js";
 import { bus } from "../../../constants/busEvents.js";
 import {v4 as uuid } from 'uuid';
 import { utils } from "../../../utils/utilConfig.js";
 import Calendar from "../../calendar/calendar.js";
+import { messages } from '../constants.js'
 export default class OpenOrderEditor extends Program {
-    constructor(contentElement) {
+    constructor(contentElement, parentDataCallback) {
         super();
         this.subscriberId = `OpenOrderEditor_${uuid()}`;
         this.subscriptionArr = [];
@@ -20,6 +20,7 @@ export default class OpenOrderEditor extends Program {
         this.harvester = serviceProvider.harvester;
         this.errorRelay = serviceProvider.errorRelay;
         this.contentElement = contentElement;
+        this.parentDataCallback = parentDataCallback;
         this.date = '';
         this.calendar = new Calendar();
         this.calendar.on('close', this.subscriberId, this.setDate.bind(this));
@@ -72,9 +73,9 @@ export default class OpenOrderEditor extends Program {
                     this.openOrderRecords[deliveryDate] = [];
                 }
                 this.openOrderRecords[deliveryDate].push(data);
+                this.parentDataCallback(messages.PROCESSED_ORDER, this.openOrderRecords);
                 this.render();
             }
-            console.log(this.openOrderRecords);
         } catch(err) {
             this.errorRelay.send(err);
         }
@@ -82,6 +83,7 @@ export default class OpenOrderEditor extends Program {
 
     async deleteRecord(deliveryDate, index) {
         this.openOrderRecords[deliveryDate].splice(index, 1);
+        this.parentDataCallback(messages.PROCESSED_ORDER, this.openOrderRecords);
         this.render();
     }
    

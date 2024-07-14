@@ -1,127 +1,77 @@
 import { utils } from "../utils/utilConfig.js";
-
+import { v4 as uuid } from 'uuid';
+import { db } from '../constants/db.js';
 export default class Processor {
-  constructor() {
-    this.storeSettings = null;
+  constructor(firestoreService) {
+    this.firestoreService = firestoreService;
     this.dateUtil = utils.dateUtil;
     this.timeUtil = utils.timeUtil;
     this.objUtil = utils.objUtil;
     this.stringUtil = utils.stringUtil;
-    this.products = {};
-    this.currentOrderProducts = {};
-    this.productEvolution = {};
-    this.receivedToday = null;
-    this.previousSales = null;
-    this.salesForecast = null;
-    this.orderInvoiceDate = null;
-    this.nextOrderInvoiceDate = null;
     this.placementDate = new Date();
-    this.previousIsInvoiced = null;
-    this.workHoursPercentage = this.timeUtil.currentWorkHoursPercentage();
     this.productCounter = 0;
+    this.orderProducts = {};
   }
-  /**
-   *
-   * @param {Object} deliveryHarvestProducts Products object harvested from deliveryReportHarvest
-   * @param {string} orderInvoiceDate The date for which you want to place the order!
-   * @param {number} salesTotalLastWeek Sales forecast for last week!
-   * @param {number} weeklySalesForecast Weekly forecast inclusive of order date.
-   * @param {number} salesQuotaWeekend Forecasted sales quota as a percentage for the weekend (Friday, Saturday, Sunday)
-   * @param {boolean} previousIsInvoiced Has the previous order been invoiced ? true or false
-   * @param {boolean} checkTime If placing your order at the end of the sales day set to true
-   * @param {Array} orderDays Enter your available order days if omitted: "Monday", "Wednesday" and "Friday"
-   * @returns Forecasted order requirements as an Object!
-   */
-  nextOrder(formData) {
-    this.products = { ...formData.products };
-    const products = { ...formData.products };
-    this.orderInvoiceDate = formData.date;
-    this.nextOrderInvoiceDate = this.dateUtil.findDeliveryDate(formData.date, {
-      asDate: true,
-    });
-    this.previousIsInvoiced = formData.radioYes ? true : false;
-    this.receivedToday =
-      formData["received-today"] !== undefined
-        ? !!formData["received-today"]
-        : null;
-    this.previousSales = Number(formData["previous-sales"]);
-    this.salesForecast = Number(formData["sales-forecast"]);
+ 
+  nextOrder(data) {
+    const weekdayGuide = this.dateUtil.getWeekdays([]);
+    this.productData = data.inventory.productData;
+    const longTermInventoryRecords = this.firestoreService.userData[db.INVENTORY][db.INVENTORY_RECORDS][db.INVENTORY_ACTIVITY];
+    this.longTermInventoryRecord = longTermInventoryRecords[Object.keys(longTermInventoryRecords)[0]].productData;
+    this.openOrders = data.openOrders;
+    this.deliveryDate = data.date;
+    this.previousSales = Number(data.previousSales);
+    this.salesForecast = Number(data.salesForecast);
+    this.storeTemplate = this.firestoreService.userData[db.STORE_SETTINGS];
+    this.salesData = this.firestoreService.userData[db.SALES_DATA][db.HOURLY_SALES];
+    const purchaseProductReports = this.firestoreService.userData[db.INVENTORY][db.INVENTORY_RECORDS][db.PURCHASE_PRODUCTS];
+    this.purchaseProducts = purchaseProductReports[Object.keys(purchaseProductReports)[0]].productData;
+    this.activeDaySpan = this.getActiveOrderDaySpan(this.deliveryDate);
+    this.purchaseRefs = this.inventoryPairs(this.productData, this.purchaseProducts);
+    const productUsage = {};
+    for (let category in this.productData) {
+      for (let product in this.productData[category]) {
+        if (!this.purchaseRefs[product]) continue;
+       
+        const productData = this.productData[category][product];
+        const longTermData = this.longTermInventoryRecord[category][product];
+        const purchaseData = this.purchaseProducts[this.purchaseRefs[product]];
+        
+        console.log('productData: ', productData);
+        console.log('longTermInventoryRecord: ', longTermData);
+        console.log('purchaseProduct: ', purchaseData);
+        const actualAverage = longTermData.actual / longTermData.theoretical;
 
-    for (let product in products) {
-      let nextOrderDate = this.dateUtil.findDeliveryDate(
-        this.orderInvoiceDate,
-        {
-          asDate: true,
-        }
-      );
-      let productUsageMap = this.dateUtil.findDeliveryDate(this.placementDate, {
-        asArray: true,
-        dateTo: nextOrderDate,
-        asDateMap: true,
-      });
-
-      // date object from stored date string!
-      let productLastOrderedOn = new Date(products[product].previousOrderDate);
-      const productArrivalDate = this.dateUtil.findDeliveryDate(
-        productLastOrderedOn,
-        { asDate: true }
-      );
-      //Pre-define variables to store product object params
-      let currProd = {
-        weeklyUsage: products[product].previousWeeksUsage,
-        onHand: products[product].onHand,
-        currentDemand: products[product].previousWeeksUsage,
-        lastOrderQuantity: products[product].previousOrderQuantity,
-        price: products[product].price,
-        safeQuantity: 0,
-        productArrivalDate: this.dateUtil.op(productArrivalDate).format(),
-      };
-
-      //Map onHand and daily usage figures
-      const populatedUsageMap = this.productUsageDaily(
-        productUsageMap,
-        currProd
-      );
-
-      const lastEntry = this.objUtil.getLastMapEntry(populatedUsageMap)[1];
-      const safeQuantity = lastEntry.usage;
-      const remainingProduct = lastEntry.onHand;
-      let orderNow = 0;
-      if (remainingProduct < 0) {
-        orderNow = Math.abs(remainingProduct) + safeQuantity;
-      } else {
-        orderNow =
-        remainingProduct >= safeQuantity
-            ? 0
-            : currProd.safeQuantity - remainingProduct;
-      }
-
-      //Get Delivery day date
-      let orderDayOnHand;
-      for (let entry of populatedUsageMap.entries()) {
-        let currentDate = entry[0].split("<=>")[1].trim();
-        if (currentDate === this.dateUtil.op(this.orderInvoiceDate).format()) {
-          orderDayOnHand = entry[1].onHand;
-          break;
-        }
-      }
-      let order = Math.max(0, Math.ceil(orderNow));
-      let count = order > 0 ? this.productCounter++ : null;
-      const productId = this.generateId(product);
-      if (!this.currentOrderProducts.hasOwnProperty(productId)) {
-        this.currentOrderProducts[productId] = {
-          ...currProd,
-          product,
-          forecastOrder: order,
-          order,
-          count,
-          stockOnOrderDay: Number(orderDayOnHand.toFixed(2)),
-          nextOrderDayOnHand: Number(remainingProduct.toFixed(2)),
-          sideDisplay: true,
+        this.orderProducts[product] = {
+          onHand: productData.endInventory,
+          usageRate: (productData.theoretical * actualAverage) / this.previousSales,
+          order: 0
         };
+        
+        productUsage[product] = new Map();
+        for (let date of this.activeDaySpan) {
+          const weekday = weekdayGuide[this.dateUtil.getDay(date)];
+          const salesShare = this.salesData[weekday].share;
+          const expectedSales = this.salesForecast * (salesShare / 100);
+          const usage = this.orderProducts[product].usageRate * expectedSales;
+          const onHand = this.orderProducts[product].onHand;
+          this.orderProducts[product].onHand = onHand - usage;
+          productUsage[product].set(date, {
+            usage,
+            onHand: this.orderProducts[product].onHand,
+          })
+        }
+        const usageArr = [...productUsage[product]];
+        const remaining = usageArr[usageArr.length - 1][1].onHand;
+        if (remaining <= 0) {
+          this.orderProducts[product].order = Math.ceil(Math.abs(remaining) / purchaseData.case.value);
+        }
       }
+      console.log(this.orderProducts);
     }
-    return this.currentOrderProducts;
+
+    
+    return this.orderProducts;
   }
 
   productUsageDaily(prodMap, product) {
@@ -165,7 +115,7 @@ export default class Processor {
 
       // Zero out minus quantities that add up to onHand before deliveryDay
       deliveryDayMarker =
-        currentDate === this.dateUtil.op(this.orderInvoiceDate).format()
+        currentDate === this.dateUtil.op(this.deliveryDate).format()
           ? true
           : deliveryDayMarker;
       if (p.onHand <= 0 && !deliveryDayMarker) {
@@ -215,7 +165,7 @@ export default class Processor {
         usageMap = this.productUsageDaily(emptyMap, currProd);
         onHand = this.objUtil.getLastMapEntry(usageMap)[1].onHand;
       }
-      const id = this.generateId(product);
+      const id = `${product}_${uuid()}`;
       this.productEvolution[id] = usageMap;
     }
 
@@ -238,12 +188,186 @@ export default class Processor {
     return usageMap;
   }
 
-  generateId(productName) {
-    return this.stringUtil
-      .removeSpecialChars(productName)
-      .split("")
-      .filter((el) => el !== " ")
-      .map((el) => el.toLowerCase())
-      .join("");
+  currentWorkHoursPercentage() {
+    const date = new Date();
+    const weekdays = this.dateUtil.getWeekdays([]);
+    let currentWeekday = date.getDay() - 1;
+    currentWeekday = currentWeekday <= 0 ? weekdays[6] : weekdays[currentWeekday]
+    const { startTime, endTime } = this.storeSettings.openTimes[currentWeekday];
+    let lzH = date.getHours() < 10 ? "0" : "";
+    let lzM = date.getMinutes() < 10 ? "0" : "";
+    let currentTime = `${lzH}${date.getHours()}:${lzM}${date.getMinutes()}`;
+    let totalWorkHours = this.time().timeSpanLength(startTime, endTime);
+    if (this.time(currentTime).isWithin(startTime, endTime)) {
+      let workHours = this.math().deduct(currentTime, startTime);
+      return this.math().divide(workHours, totalWorkHours, {
+        percentage: true,
+      });
+    } else if (this.time(currentTime).isLessEqThan(endTime)) {
+      return 0;
+    } else if (this.time(currentTime).isBiggerEqThan(endTime)) {
+      return 1;
+    }
+  }
+   
+  getActiveOrderDaySpan(deliveryDate) {
+    const weekGuide = this.dateUtil.getWeekdays([]).map((_, i) => i + 1);
+    const orderDays = this.getOrderDays();
+    const today = new Date();
+    const deliveryDayIndex = orderDays.indexOf(deliveryDate.getDay());
+    let daySpan = 0;
+    const startIndex = weekGuide.indexOf(orderDays[deliveryDayIndex]);
+    let initial = true;
+    for (let i = startIndex;i < weekGuide.length; i++) {
+      if (i === weekGuide.length - 1) {
+        i = 0;
+        daySpan++;
+      }
+      if (!initial && orderDays.includes(i + 1)) break;
+      initial = false;
+      daySpan++;
+    }
+    console.log(daySpan);
+    const nextOrderDeliveryDate = new Date(new Date(deliveryDate).setDate(deliveryDate.getDate() + daySpan));
+    const nextOrderDate = nextOrderDeliveryDate.getDate();
+    let currentDateObj = new Date(today);
+    const dateArr = [currentDateObj];
+    while(currentDateObj.getDate() !== nextOrderDate) {
+      currentDateObj = new Date(new Date(currentDateObj).setDate(currentDateObj.getDate() + 1)); 
+        dateArr.push(currentDateObj);
+    }
+    return dateArr;
+  }
+
+  getOrderDays() {
+    const weekdayGuide = this.dateUtil.getWeekdays([]);
+    return Object.keys(this.storeTemplate.weekdays)
+    .filter(day => this.storeTemplate.weekdays[day].hasDelivery)
+    .map(day => weekdayGuide.indexOf(day) + 1)
+    .sort((a, b) => a - b);
+
+  }
+
+  inventoryPairs(inventoryProducts, importProducts) {
+    // Match products
+    const productRefs = {};
+    const matched = {};
+    const unmatchedInventory = {};
+    const importGroups = new Map();
+    const groupWords = (wordArr, productName) => {
+      wordArr.forEach(word => {
+        if (!importGroups.has(word)) {
+          importGroups.set(word, []);
+        }
+        importGroups.get(word).push(productName);
+      });
+    }
+    const toWordArr = ( productName ) => productName.split(' ').map(el => el.trim().toUpperCase());
+    const getImportGroupProducts = (wordArr) => {
+      const products = new Set();
+      wordArr.forEach(word => {
+        if (importGroups.has(word)) {
+          importGroups.get(word).forEach(product => products.add(product));
+        }
+      });
+      return [...products];
+    }
+    const sortCandidates = ((a, b) => {
+      if (b.matchedWords.length - a.matchedWords.length === 0) {
+        return b.score - a.score;
+      } 
+        return b.matchedWords.length - a.matchedWords.length
+    });
+    const unmatchedImport = Object.keys(importProducts).reduce((obj, prodName) => {
+      const words = toWordArr(prodName);
+      groupWords(words, prodName);
+      obj[prodName] = { words };
+      return obj;
+    }, {});
+
+    for (let category in inventoryProducts) {
+      for (let invProduct in inventoryProducts[category]) {
+        if (importProducts.hasOwnProperty(invProduct)) {
+          //? Match same named products
+          matched[invProduct] = invProduct;
+          productRefs[invProduct] = {isMatched: true, group: 'inventory'};
+          continue;
+        }
+          unmatchedInventory[invProduct] = { words: toWordArr(invProduct) };
+          const invWordArr = unmatchedInventory[invProduct].words;
+          const importProductsGroup = getImportGroupProducts(invWordArr);
+          //? Match available import candidates
+          for(let product of importProductsGroup) {
+            if (productRefs?.[product]?.isMatched) continue;
+
+              const importWordArr = unmatchedImport[product].words;
+              const [matchedWords, unmatchedWords, score] = this.stringUtil.matchWords(invWordArr, importWordArr);
+              if (matchedWords.length) {
+                if (!unmatchedInventory[invProduct].hasOwnProperty('candidates')) {
+                  unmatchedInventory[invProduct].candidates = [];
+                }
+                productRefs[product] = {isMatched: false, group: 'import'};
+                unmatchedInventory[invProduct].candidates.push({ matchedWords, unmatchedWords, product, score});
+                if (!unmatchedImport[product].hasOwnProperty('candidates')) {
+                  unmatchedImport[product].candidates = [];
+                }
+                productRefs[invProduct] = {isMatched: false, group: 'inventory'};
+                unmatchedImport[product].candidates.push({ matchedWords, unmatchedWords, product: invProduct, score }) 
+              }
+          }
+          //? sort inventory product candidates
+          if (unmatchedInventory[invProduct].hasOwnProperty('candidates')) {
+            unmatchedInventory[invProduct].candidates.sort(sortCandidates);
+          }
+    }
+  }
+  //? sort import product candidates
+  for (let product in unmatchedImport) {
+    if (!unmatchedImport?.[product]?.candidates) continue;
+    unmatchedImport[product].candidates.sort(sortCandidates);
+  }
+  
+  // combine matches data
+  const inventoryArr = Object.keys(unmatchedInventory);
+  const unmatchedProducts = new Set();
+  const usedIndexes = new Set();
+
+  const findUnmatched = () => inventoryArr.find((product) => productRefs?.[product]?.isMatched === false && !unmatchedProducts.has(product));
+  const findInventoryIndex = (productName) => inventoryArr.findIndex((product) => product === productName);
+  const matchProducts = (productName) => {
+    const ref = productRefs[productName];
+    if (ref.isMatched) return null;
+    const [hostProductGroup, targetProductGroup] = ref.group === 'inventory' ? [unmatchedInventory, unmatchedImport] : [unmatchedImport, unmatchedInventory];
+    const hostProduct = hostProductGroup[productName];
+    for (let targetProduct of hostProduct.candidates) {
+      if (productRefs[targetProduct.product].isMatched) continue;
+      const targetName = targetProduct.product;
+      const target = targetProductGroup[targetName];
+      if (!target) continue;
+      for (let targetCandidate of target.candidates) {
+        if (productRefs[targetProduct.product].isMatched) break;
+        if (productRefs[targetCandidate.product].isMatched) continue;
+        if (targetCandidate.product === productName) {
+          productRefs[productName].isMatched = true;
+          productRefs[targetName].isMatched = true;
+          const [inventoryProductName, importProductName] = ref.group === 'inventory' ? [productName, targetName] : [targetName, productName];
+          const inventoryIndex = findInventoryIndex(inventoryProductName)
+          usedIndexes.add(inventoryIndex);
+          matched[inventoryProductName] = importProductName;
+          return;
+        } else {
+          matchProducts(targetCandidate.product);
+        }
+      }
+    }
+    unmatchedProducts.add(productName);
+  }
+  
+  while(usedIndexes.size < inventoryArr.length - unmatchedProducts.size){
+      const product = findUnmatched();
+      if (!product) break;
+      matchProducts(product)  ;
+  }
+  return matched;
   }
 }

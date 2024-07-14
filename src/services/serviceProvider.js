@@ -17,7 +17,7 @@ class ServiceProvider {
         this.jsEventManagerService = new JSEventManagerService(this.jsEventBus);
         this.harvester = new Harvester();
         this.errorRelay = new ErrorRelay();
-        this.processor = new Processor();
+        this.processor = new Processor(this.firestoreService);
     }
 }
 
