@@ -32,23 +32,23 @@ let tableData = (headerData, products, valueButtonClick, deleteHandler) => html`
   </div>
   <div class=${styles['data-table-container']}>
     <div class=${styles['data-table']}>
-      ${Object.keys(products).map((productId) => {
-        let current = products[productId];
+      ${Object.keys(products).map((product) => {
+        let current = products[product];
         if (current.order) {
-          return html` <div class=${styles['product-table-tr']} id="${current.id}">
-            <div class=${styles['td']}>${current.product}</div>
+          return html` <div class=${styles['product-table-tr']} id="${product}">
+            <div class=${styles['td']}>${product}</div>
             <div class=${`${styles['td']} ${styles['order-value-td']}`}>
-              <button data-id="${productId}" @click=${valueButtonClick} id="main-minus" class=${styles['value-button']}>-</button>
+              <button data-id="${product}" @click=${valueButtonClick} id="main-minus" class=${styles['value-button']}>-</button>
               <p>${current.order}</p>
-              <button data-id="${productId}" @click=${valueButtonClick} id="main-plus" class=${styles['value-button']}>+</button>
+              <button data-id="${product}" @click=${valueButtonClick} id="main-plus" class=${styles['value-button']}>+</button>
             </div>
-            <div class=${styles['td']}>${current.weeklyUsage}</div>
-            <div class=${styles['td']}>${current.price}</div>
-            <div class=${styles['td']}>${current.onHand}</div>
-            <div class=${styles['td']}>${current.stockOnOrderDay}</div>
-            <div class=${styles['td']}>${current.nextOrderDayOnHand}</div>
+            <div class=${styles['td']}>${(current.weeklyUsage / current.purchaseData.case.value).toFixed(2)}</div>
+            <div class=${styles['td']}>${current.purchaseData.price}</div>
+            <div class=${styles['td']}>${(current.onHand / current.purchaseData.case.value).toFixed(2)}</div>
+            <div class=${styles['td']}>${(current.onHandOrderDay / current.purchaseData.case.value).toFixed(2)}</div>
+            <div class=${styles['td']}>${(current.onHandnextOrderDay / current.purchaseData.case.value).toFixed(2)}</div>
             <div class=${styles['td']}>
-              <button data-id="${productId}" @click=${deleteHandler} class=${styles['product-delete-btn']}>Delete</button>
+              <button data-id="${product}" @click=${deleteHandler} class=${styles['product-delete-btn']}>Delete</button>
             </div>
           </div>`;
         }
@@ -60,13 +60,13 @@ let tableData = (headerData, products, valueButtonClick, deleteHandler) => html`
 let sideTable = (products, valueButtonClick) => html`
   <div class=${styles['side-item-screen']}>
     <div id="side-table__search">
-      ${Object.keys(products).map((productId) => {
-        let current = products[productId];
-        const show = current.order === 0 && current.sideDisplay === true;
+      ${Object.keys(products).map((product) => {
+        let current = products[product];
+        const show = current.order <= 0;
         return html`
-          <div id=${productId} class=${`${styles['side-table-tr']} ${!show? styles["hidden"] : ""}`}>
-            <p class=${styles['td']}>${current.product}</p>
-              <button data-id=${productId} @click=${valueButtonClick} id="side-plus" class=${styles['side-value-button']}>+</button>
+          <div id=${product} class=${`${styles['side-table-tr']} ${!show? styles["hidden"] : ""}`}>
+            <p class=${styles['td']}>${product}</p>
+              <button data-id=${product} @click=${valueButtonClick} id="side-plus" class=${styles['side-value-button']}>+</button>
           </div>
         `;
       })}

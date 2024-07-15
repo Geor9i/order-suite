@@ -68,7 +68,7 @@ export default class OrderFormComponent extends BaseComponent {
       openOrders: this.openOrders
     }
     this.processor.nextOrder(data);
-    // this.router.navigate("/order-details");
+    this.router.navigate("/order-details");
   }
 
   async importInventory() {

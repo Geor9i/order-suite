@@ -2,7 +2,7 @@ import BaseComponent from "../../framework/baseComponent.js";
 import { orderPageTemplate } from "./orderPageTemplate.js";
 
 export default class OrderPage extends BaseComponent {
-  constructor({ renderBody, router, processor, services, utils }) {
+  constructor({ renderBody, router, services, utils }) {
     super();
     this.stringUtil = utils.stringUtil;
     this.dateUtil = utils.dateUtil;
@@ -10,7 +10,7 @@ export default class OrderPage extends BaseComponent {
     this.renderHandler = renderBody;
     this.router = router;
     this.authService = services.authService;
-    this.processor = processor;
+    this.processor = services.processor;
     this.valueButtonClick = this._valueButtonClick.bind(this);
     this.searchHandler = this._searchHandler.bind(this);
     this.deleteHandler = this._deleteHandler.bind(this);
@@ -27,7 +27,7 @@ export default class OrderPage extends BaseComponent {
 
     let template = orderPageTemplate(
       this.getHeaderData(),
-      this.processor.currentOrderProducts,
+      this.processor.orderProducts,
       this.searchHandler,
       this.valueButtonClick,
       this.deleteHandler,
@@ -41,7 +41,7 @@ export default class OrderPage extends BaseComponent {
     const element = e.currentTarget;
     const button = element.id.split("-")[1];
     const productId = element.dataset.id;
-    const product = this.processor.currentOrderProducts[productId];
+    const product = this.processor.orderProducts[productId];
     product.order =
       button === "plus" ? product.order + 1 : Math.max(0, product.order - 1);
     this.showView();
@@ -49,7 +49,7 @@ export default class OrderPage extends BaseComponent {
 
   _deleteHandler(e) {
     const productId = e.currentTarget.dataset.id;
-    const product = this.processor.currentOrderProducts[productId];
+    const product = this.processor.orderProducts[productId];
     product.order = 0;
     this.showView();
   }
@@ -60,28 +60,22 @@ export default class OrderPage extends BaseComponent {
       .split(" ")
       .filter((el) => el !== " ")
       .join("");
-    for (let productId in this.processor.currentOrderProducts) {
+    for (let productId in this.processor.orderProducts) {
       if (productId.includes(value) || value === "") {
-        this.processor.currentOrderProducts[productId].sideDisplay = true;
+        this.processor.orderProducts[productId].sideDisplay = true;
       } else {
-        this.processor.currentOrderProducts[productId].sideDisplay = false;
+        this.processor.orderProducts[productId].sideDisplay = false;
       }
     }
     this.showView();
   }
 
   _copyRMFScript() {
-    let usageGraph = this.processor.forecastUsage();
-    console.log(usageGraph);
     let productList = "";
-    for (let productId in this.processor.currentOrderProducts) {
-      if (!usageGraph.hasOwnProperty(productId)) {
-        continue;
-      }
-      const graphSize = usageGraph[productId].size;
-      const color = this.domUtil.getColorForMapSize(graphSize);
-      const product = this.processor.currentOrderProducts[productId];
-      productList += `${product.product}:${product.order}|${graphSize}|${color}\n`;
+    for (let productId in this.processor.orderProducts) {
+      // const graphSize = usageGraph[productId].size;
+      const product = this.processor.orderProducts[productId];
+      productList += `${productId}:${product.order}\n`;
     }
 
     let rmfRelayScript = `let productData = \`${productList}\`;
@@ -91,10 +85,9 @@ export default class OrderPage extends BaseComponent {
       let products = {};
       
       for (let entry of productData) {
-          let [product, params] = entry.split(":");
-          let [value, days, color] = params.split("|");
+          let [product, value] = entry.split(":");
           value = Number(value);
-          products[product] = {value, color, days};
+          products[product] = value;
       }
       
       for (let row = 1; row < tableElement.length; row++) {
@@ -103,19 +96,16 @@ export default class OrderPage extends BaseComponent {
           let inputElement = tableElement[row].cells[3].firstElementChild;
           let rowIncomingDate  = tableElement[row].children[14].children[0];
           if (products.hasOwnProperty(productElement)) {
-            let {value, color, days} = products[productElement];
+            let value = products[productElement];
             if (value > 0) {
               inputElement.value = value;
               inputElement.style.backgroundColor = "#d8ffa6";
             }
-            productEl.textContent = productEl.textContent + "==> days remaining: " + days
-            productEl.style.backgroundColor = color;
             productEl.style.fontWeight = "bold";
             productEl.style.borderRadius = "13px";
             productEl.style.border = "3px solid black";
             delete products[productElement];
           }
-          
       }`;
 
     navigator.clipboard
@@ -129,9 +119,9 @@ export default class OrderPage extends BaseComponent {
   }
 
   _resetHandler() {
-    for (let productId in this.processor.currentOrderProducts) {
-      this.processor.currentOrderProducts[productId].order =
-        this.processor.currentOrderProducts[productId].forecastOrder;
+    for (let productId in this.processor.orderProducts) {
+      this.processor.orderProducts[productId].order =
+        this.processor.orderProducts[productId].forecastOrder;
     }
     this.showView();
   }
@@ -142,18 +132,18 @@ export default class OrderPage extends BaseComponent {
     return {
       invoiceDay: {
         weekday: this.stringUtil.toPascalCase(
-          weekdays[this.processor.orderInvoiceDate.getDay() - 1]
+          weekdays[this.processor.deliveryDate.getDay() - 1]
         ),
-        date: `${this.processor.orderInvoiceDate.getDate()} - ${
-          months[this.processor.orderInvoiceDate.getMonth()]
+        date: `${this.processor.deliveryDate.getDate()} - ${
+          months[this.processor.deliveryDate.getMonth()]
         }`,
       },
       nextInvoiceDay: {
         weekday: this.stringUtil.toPascalCase(
-          weekdays[this.processor.nextOrderInvoiceDate.getDay() - 1]
+          weekdays[this.processor.nextOrderDeliveryDate.getDay() - 1]
         ),
-        date: `${this.processor.nextOrderInvoiceDate.getDate()} - ${
-          months[this.processor.nextOrderInvoiceDate.getMonth()]
+        date: `${this.processor.nextOrderDeliveryDate.getDate()} - ${
+          months[this.processor.nextOrderDeliveryDate.getMonth()]
         }`,
       },
     };
