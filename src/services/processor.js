@@ -38,7 +38,7 @@ export default class Processor {
     for (let category in this.productData) {
       for (let product in this.productData[category]) {
         if (!this.purchaseRefs[product]) continue;
-       if (product.includes('CHICKEN ORIGINAL PIECES')) {
+       if (product.includes('MILK FRESH')) {
         console.log('super');
        }
         const productData = this.productData[category][product];
@@ -48,25 +48,23 @@ export default class Processor {
         // console.log('productData: ', productData);
         // console.log('longTermInventoryRecord: ', longTermData);
         // console.log('purchaseProduct: ', purchaseData);
-        let actualAverage = 0;
+        let actualUsageMargin = 0;
         if (!longTermData.theoretical) {
-          actualAverage = (longTermData.actual / this.longTermInventoryReport.daySpan) * workDayCount;
+          actualUsageMargin = (longTermData.actual / this.longTermInventoryReport.daySpan) * workDayCount;
         } else {
-          actualAverage = longTermData.actual / (longTermData.theoretical || 1);
+          actualUsageMargin = longTermData.actual / (longTermData.theoretical || 1);
         }
         let usageRate;
         if (product === 'CHICKEN ORIGINAL PIECES') {
           let darkChickenProductData = this.longTermInventoryRecord[category]['CHICKEN ORIGINAL DARK MEAT'];
-          actualAverage = (longTermData.actual + darkChickenProductData.actual) / (longTermData.theoretical || 1);
-          usageRate = ((productData.theoretical || 1) * actualAverage) / this.previousSales;
-        }else {
-          usageRate = ((productData.theoretical || 1) * actualAverage) / this.previousSales;
+          actualUsageMargin = (longTermData.actual + darkChickenProductData.actual) / (longTermData.theoretical || 1);
         }
+          usageRate = (((productData.theoretical || 1) * productData.unit.value) * actualUsageMargin) / this.previousSales;
         this.orderProducts[product] = {
           productData,
           purchaseData,
           currentOnHand: 0,
-          onHand: productData.endInventory,
+          onHand: productData.endInventory * productData.unit.value,
           usageRate,
           weeklyUsage: usageRate * this.previousSales,
           order: 0,
@@ -116,7 +114,7 @@ export default class Processor {
         }
         const usageArr = [...productUsage[product]];
         this.orderProducts[product].usageMap = usageArr;
-        const remaining = usageArr[usageArr.length - 1][1].onHand;
+        const remaining = usageArr[usageArr. length - 1][1].onHand;
         if (remaining <= 0) {
           this.orderProducts[product].order = Math.ceil(Math.abs(remaining) / purchaseData.case.value);
         }
@@ -180,7 +178,7 @@ export default class Processor {
     }
     this.nextOrderDeliveryDate = new Date(new Date(deliveryDate).setDate(deliveryDate.getDate() + daySpan));
     const nextOrderDate = this.nextOrderDeliveryDate.getDate();
-    let currentDateObj = new Date(startDate);
+    let currentDateObj = new Date(new Date(startDate).setDate(startDate.getDate() + 1));
     const dateArr = [currentDateObj];
     while(currentDateObj.getDate() !== nextOrderDate) {
       currentDateObj = new Date(new Date(currentDateObj).setDate(currentDateObj.getDate() + 1)); 
