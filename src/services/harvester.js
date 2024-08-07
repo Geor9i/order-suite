@@ -188,6 +188,9 @@ export default class Harvester {
       try {
           const product = this.stringUtil.removeSpecialChars(match.groups.product.trim())
           .toUpperCase()
+          if (product.includes('SAUCE BUTTERMILK DRESSING')) {
+            console.log(product);
+          }
           const props = Object.keys(match.groups).reduce((propObj, key) => {
             if (key === 'product') return propObj;
             let str = match.groups[key]?.trim();

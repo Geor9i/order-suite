@@ -14,7 +14,7 @@ export default class UnitConverter {
         } else {
             let packSize, pack
             if (str.includes('-')) {
-                [pack, packSize] = str.split('-');
+                [pack, packSize] = str.split('-').map(el => el.trim());
             } else {
                 packSize = str
             }
@@ -33,7 +33,7 @@ export default class UnitConverter {
             const unitValue = conversionUnits[unit] || 1;
             const unitAmount = multiplier * Number(value);
             const convertedValue = unitValue * unitAmount;
-            return {pack, value: convertedValue, unit: conversionEndPoints[unit] || 'ea'}
+            return {pack, value: convertedValue, unit: conversionEndPoints[unit] || null}
         }
     }
 

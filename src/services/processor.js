@@ -1,6 +1,7 @@
 import { utils } from "../utils/utilConfig.js";
 import { v4 as uuid } from 'uuid';
 import { db } from '../constants/db.js';
+import { unitValues } from "../constants/units.js";
 export default class Processor {
   constructor(firestoreService) {
     this.firestoreService = firestoreService;
@@ -38,7 +39,7 @@ export default class Processor {
     for (let category in this.productData) {
       for (let product in this.productData[category]) {
         if (!this.purchaseRefs[product]) continue;
-       if (product.includes('MILK FRESH')) {
+       if (product.includes('SAUCE SUPERCHARGER')) {
         console.log('super');
        }
         const productData = this.productData[category][product];
@@ -59,7 +60,7 @@ export default class Processor {
           let darkChickenProductData = this.longTermInventoryRecord[category]['CHICKEN ORIGINAL DARK MEAT'];
           actualUsageMargin = (longTermData.actual + darkChickenProductData.actual) / (longTermData.theoretical || 1);
         }
-          usageRate = (((productData.theoretical || 1) * productData.unit.value) * actualUsageMargin) / this.previousSales;
+          usageRate = (((productData.theoretical || 1) * productData.unit.value) * (actualUsageMargin || 1)) / this.previousSales;
         this.orderProducts[product] = {
           productData,
           purchaseData,
@@ -96,11 +97,11 @@ export default class Processor {
           let onHand = isDeliveryDate ? Math.max(this.orderProducts[product].onHand, 0) : this.orderProducts[product].onHand;
 
           if (this.dateUtil.compare(date, this.deliveryDate)) {
-            this.orderProducts[product].onHandOrderDay = onHand;
+            this.orderProducts[product].onHandOrderDay = onHand / productData.unit.value;
           } else if (this.dateUtil.compare(date, this.nextOrderDeliveryDate)) {
-            this.orderProducts[product].onHandnextOrderDay = onHand;
+            this.orderProducts[product].onHandnextOrderDay = onHand / productData.unit.value;
           } else if (this.dateUtil.compare(date, new Date())) {
-            this.orderProducts[product].currentOnHand = Math.max(onHand, 0);
+            this.orderProducts[product].currentOnHand = Math.max(onHand / productData.unit.value, 0);
           }
 
           if (incomingAmount > 0) {
@@ -116,7 +117,11 @@ export default class Processor {
         this.orderProducts[product].usageMap = usageArr;
         const remaining = usageArr[usageArr. length - 1][1].onHand;
         if (remaining <= 0) {
-          this.orderProducts[product].order = Math.ceil(Math.abs(remaining) / purchaseData.case.value);
+          let unitValue = purchaseData.case.value;
+          if (!purchaseData.case.unit) {
+            unitValue *= unitValues[productData.unit.unit];
+          }
+          this.orderProducts[product].order = Math.ceil(Math.abs(remaining) / unitValue);
         }
       }
     }
@@ -193,7 +198,6 @@ export default class Processor {
     .filter(day => this.storeTemplate.weekdays[day].hasDelivery)
     .map(day => weekdayGuide.indexOf(day) + 1)
     .sort((a, b) => a - b);
-
   }
 
   inventoryPairs(inventoryProducts, importProducts) {

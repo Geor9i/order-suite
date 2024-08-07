@@ -6,6 +6,7 @@ export const conversionUnits = {
     kg: 1000,
     ml: 1,
     l: 1000,
+    ltr: 1000,
 }
 
 export const conversionEndPoints = {
@@ -15,4 +16,15 @@ export const conversionEndPoints = {
     kg: 'g',
     ml: 'ml',
     l: 'ml',
+    ltr: 'ml',
+}
+
+
+export const unitValues = {
+    ea: 1,
+    g: 1000,
+    kg: 1,
+    ml: 1000,
+    l: 1,
+    ltr: 1,
 }
