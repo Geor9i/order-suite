@@ -44,9 +44,9 @@ let tableData = (headerData, products, valueButtonClick, deleteHandler) => html`
             </div>
             <div class=${styles['td']}>${(current.weeklyUsage / current.purchaseData.case.value).toFixed(2)}</div>
             <div class=${styles['td']}>${current.purchaseData.price}</div>
-            <div class=${styles['td']}>${(current.onHand / current.purchaseData.case.value).toFixed(2)}</div>
-            <div class=${styles['td']}>${(current.onHandOrderDay / current.purchaseData.case.value).toFixed(2)}</div>
-            <div class=${styles['td']}>${(current.onHandnextOrderDay / current.purchaseData.case.value).toFixed(2)}</div>
+            <div class=${styles['td']}>${(current.onHand).toFixed(2)}</div>
+            <div class=${styles['td']}>${(current.onHandOrderDay).toFixed(2)}</div>
+            <div class=${styles['td']}>${(current.onHandnextOrderDay).toFixed(2)}</div>
             <div class=${styles['td']}>
               <button data-id="${product}" @click=${deleteHandler} class=${styles['product-delete-btn']}>Delete</button>
             </div>

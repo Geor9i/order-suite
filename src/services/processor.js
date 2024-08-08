@@ -36,6 +36,7 @@ export default class Processor {
     this.activeDaySpan = this.getActiveProductUsageDateSpan(reportEndDate, this.deliveryDate);
     this.purchaseRefs = this.inventoryPairs(this.productData, this.purchaseProducts);
     const productUsage = {};
+    
     for (let category in this.productData) {
       for (let product in this.productData[category]) {
         if (!this.purchaseRefs[product]) continue;
@@ -45,10 +46,6 @@ export default class Processor {
         const productData = this.productData[category][product];
         const longTermData = this.longTermInventoryRecord[category][product] || productData;
         const purchaseData = this.purchaseProducts[this.purchaseRefs[product]];
-        
-        // console.log('productData: ', productData);
-        // console.log('longTermInventoryRecord: ', longTermData);
-        // console.log('purchaseProduct: ', purchaseData);
         let actualUsageMargin = 0;
         if (!longTermData.theoretical) {
           actualUsageMargin = (longTermData.actual / this.longTermInventoryReport.daySpan) * workDayCount;

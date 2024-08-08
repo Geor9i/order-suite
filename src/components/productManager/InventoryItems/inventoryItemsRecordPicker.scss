@@ -1,0 +1,92 @@
+@import '../../../../styles/partials/box';
+@import '../../../../styles/partials/flex';
+@import '../../../../styles/partials/input';
+@import '../../../../styles/partials/responsive';
+
+.container {
+    @include flex(column);
+    @include rect(100%, 100%, $bRadius:7px);
+}
+
+
+.container-header{
+    position: relative;
+    padding: 0.2em;
+    color: #fff;
+    @include grid(1fr 20%);
+    @include rect(100%, $bRadius: 7px);
+    background-color: gray;
+    .title {
+        font-size: 1em;
+    }
+    .import-btn {
+        cursor: pointer;
+        font-size: 2em;
+        line-height: 0.5;
+        padding: 0.1em 0.3em;
+        @include rect($bRadius: 7px);
+        border: 1px solid black;
+        color: rgb(0, 0, 0);
+        background-color: #fff;
+        @include transition((background-color, color));
+        &:hover {
+            background-color: rgb(0, 195, 255);
+            color: rgb(255, 255, 255);
+        }
+    }
+    input {
+        @include input(7px);
+        padding: 0.2em;
+    }
+}
+
+.record-container {
+    @include rect(100%, 100%);
+    background-color: #fff;
+}
+
+.record-item {
+    @include grid(10% repeat(3, 1fr) 10%);
+    background-color: #0ba5ff;
+    text-align: center;
+    p {
+    padding: 0.2em;
+    font-size: 0.8em;
+    @include rect(100%, 100%);
+    @include flex();
+            border-right: 1px solid black;
+    }
+}
+
+.record-item-header {
+    font-weight: bold;
+    border-bottom: 2px solid black;
+    background-color: #fff;
+}
+
+.record-item-btn {
+    cursor: pointer;
+    @include flex();
+    @include rect(100%, 100%);
+    @include transition((background-color, color));
+    &:hover {
+        background-color: red;
+        color: white;
+    }
+}
+
+.submit-btn {
+    padding: 0.5em 1em;
+    @include button(7px);
+    background-color: rgb(221, 206, 206);
+    font-weight: bold;
+    font-size: 1em;
+    @include transition((background-color, color));
+    letter-spacing: 1px;
+    cursor: pointer;
+    &:hover {
+        background-color: rgb(0, 119, 255);
+        color: rgb(238, 241, 237);
+    }
+}
+

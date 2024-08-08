@@ -3,13 +3,13 @@ import { programBaseTemplate } from './programBaseTemplate.js';
 
 export default class Program {
     constructor() {
-        this.template = programBaseTemplate;
+        this.inventoryProductsTemplate = programBaseTemplate;
         this.subscriptions = {};
         this.contentElement = null;
     }
 
     boot() {
-        render(this.template(), this.contentElement);
+        render(this.inventoryProductsTemplate(), this.contentElement);
     }
 
 

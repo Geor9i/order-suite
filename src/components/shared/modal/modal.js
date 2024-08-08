@@ -64,8 +64,8 @@ export default class Modal {
             const data = await buttonOptions.callback();
             if (data) {
                 this.emit(buttonOptions.confirmMessage, data);
-                this.closeModal();
             }
+            this.closeModal();
         }
     }
 

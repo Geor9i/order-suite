@@ -8,6 +8,7 @@ export const db = {
     PURCHASE_PRODUCTS: 'PURCHASE_PRODUCTS',
     INVENTORY_ACTIVITY: 'INVENTORY_ACTIVITY',
     OPEN_ORDERS: 'OPEN_ORDERS',
+    INVENTORY_ITEMS: 'INVENTORY_ITEMS'
 }
 
 export const db_main_collections = {
@@ -19,4 +20,5 @@ export const db_main_collections = {
 export const INVENTORY = {
     PURCHASE_PRODUCTS: {title: 'Purchase Products', key: 'PURCHASE_PRODUCTS', placeholder: 'Paste RMF Unprocessed Order', harvester: 'unprocessedOrderHarvest' },
     INVENTORY_ACTIVITY: {title: 'Inventory Activity', key: 'INVENTORY_ACTIVITY', placeholder: 'Paste Inventory Activity Report', harvester: 'inventoryHarvest' },
+    INVENTORY_ITEMS: {title: 'Inventory Items', key: 'INVENTORY_ITEMS'}
 }

@@ -8,6 +8,9 @@ import styles from './inventoryItems.scss';
 import { html } from "lit-html";
 import { db } from "../../../constants/db.js";
 import { bus } from "../../../constants/busEvents.js";
+import { utils } from "../../../utils/utilConfig.js";
+import { v4 as uuid} from 'uuid';
+import { inventoryItemsRecordPickerTemplate } from "./inventoryItemsRecordPickerTemplate.js";
 export default class InventoryItems extends Program {
     constructor(windowContentElement, parentDataCallback, programConfig) {
         super();
@@ -16,11 +19,15 @@ export default class InventoryItems extends Program {
         this.programConfig = programConfig;
         this.firestoreService = serviceProvider.firestoreService;
         this.eventBus = serviceProvider.eventBus;
-        this.template = inventoryItemsTemplate;
+        this.objUtil = utils.objUtil;
+        this.inventoryProductsTemplate = inventoryItemsTemplate;
+        this.recordPickerTemplate = inventoryItemsRecordPickerTemplate;
         this.harvester = serviceProvider.harvester;
         this.errorRelay = serviceProvider.errorRelay;
         this.parentDataCallback = parentDataCallback;
         this.windowContentElement = windowContentElement;
+        this.inventoryItems = this.firestoreService.userData?.[db.INVENTORY]?.[db.INVENTORY_ITEMS];
+        this.selectedReports = new Map();
     }
 
     get inventoryRecords() {
@@ -29,11 +36,11 @@ export default class InventoryItems extends Program {
 
     boot() {
         this.subscriptionArr.forEach(unsubscribe => unsubscribe());
-        const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, this.render.bind(this));
-        this.subscriptionArr = [unsubscribe];
-        if (!this.inventoryRecords) {
-            const buttons = [{ title: 'Import from Clipboard', confirmMessage: 'confirmed', callback: this.importProducts.bind(this)}];
-            new Modal(this.windowContentElement, 'Inventory is Empty', 'Please Import Your Inventory Activity' , { buttons, noClose: true, noBackdrop: true });
+        // const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, this.render.bind(this));
+        // this.subscriptionArr = [unsubscribe];
+        if (this.objUtil.isEmpty(this.inventoryItems)) {
+            const buttons = [{ title: 'Create', confirmMessage: 'confirmed', callback: this.renderPicker.bind(this)}];
+            new Modal(this.windowContentElement, 'Inventory products not set ', 'Would you like to create a new inventory?' , { buttons, noClose: true, noBackdrop: true });
         } else {
             this.render();
         }
@@ -47,27 +54,53 @@ export default class InventoryItems extends Program {
         const controls = {
             toggleGroup: this.toggleGroup.bind(this)
         }
-        render(this.template(this.inventoryRecords, controls), this.windowContentElement);
+        render(this.inventoryProductsTemplate(this.inventoryRecords, controls), this.windowContentElement);
     }
 
-    importProducts() {
-           return navigator.clipboard.readText()
-            .then(text => this.harvester.inventoryHarvest(text))
-            .then(data => this.validateSendProductImport(data))
-            .catch(err => this.errorRelay.send(err))
-    }
-
-    validateSendProductImport(data) {
-        const {reportData, productData} = data;
-        const minDaySpan = 30;
-        const minProductGrops = 3;
-        if (reportData.daySpan < minDaySpan) {
-            throw new Error(`Report period must span for at least ${minDaySpan} days!`);
-        } else if (Object.keys(productData).length < minProductGrops) {
-            throw new Error(`Discovered product groups must be at least ${minProductGrops}!\nPlease include more product categories!`);
+    renderPicker() {
+        const controls = {
+            addRecord: this.importData.bind(this),
+            deleteRecord: this.deleteRecord.bind(this),
+            buildInventory: this.buildInventory.bind(this),
+            selectReport: this.selectReport.bind(this)
         }
-        this.parentDataCallback(messages.INVENTORY_ACTIVITY_IMPORT, data);
-        this.render();
+        render(this.recordPickerTemplate(this.inventoryRecords, controls), this.windowContentElement);
+    }
+
+    async importData() {
+        try {
+            const text = await navigator.clipboard.readText();
+            const data = this.harvester.inventoryHarvest(text);
+            if (data) {
+                const id = `${data.reportData.importDate}_${uuid()}`;
+                data.reportData.id = id;
+                await this.firestoreService.importInventoryRecord(id, data);
+                this.renderPicker();
+            }
+        } catch(err) {
+            this.errorRelay.send(err);
+        }
+    }
+
+    selectReport(e, record) {
+        const isChecked = e.target.checked;
+        const id = record.reportData.id;
+        if (isChecked) {
+            this.selectedReports.set(id, record)
+        } else {
+            this.selectedReports.delete(id);
+        }
+    }
+
+    async buildInventory() {
+
+    }
+
+    async deleteRecord(record) {
+        const id = record.reportData.id;
+        await this.firestoreService.deleteInventoryRecord(id, db.INVENTORY_ACTIVITY);
+        this.selectedReports.delete(id);
+        this.renderPicker();
     }
 
     toggleGroup(groupName) {
