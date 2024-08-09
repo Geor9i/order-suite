@@ -81,10 +81,13 @@ export default class DateUtil {
   }
 
   dateDifference(date1, date2) {
+    // Set time to 00:00:00.000 for both dates to focus on the date part only
+    date1.setHours(0, 0, 0, 0);
+    date2.setHours(0, 0, 0, 0);
     // calculate the time difference in milliseconds
-    let daysBetween = Math.abs(date1.getTime() - date2.getTime());
+    let timeDifference = Math.abs(date1.getTime() - date2.getTime());
     // convert the time difference from milliseconds to days
-    daysBetween = Math.ceil(daysBetween / (24 * 60 * 60 * 1000));
+    let daysBetween = Math.ceil(timeDifference / (1000 * 3600 * 24));
     return daysBetween;
   }
 
@@ -94,7 +97,9 @@ export default class DateUtil {
     this.result = date;
     return {
       format: ({ delimiter = "/", asString = false } = {}) => {
-        if (typeof this.result === "object") {
+        if (typeof this.result === "object" && !asString) {
+          return this.result;
+        } else if (typeof this.result === "object" && asString) {
           let del = delimiter;
           return `${this.result.getFullYear()}${del}${
             this.result.getMonth() + 1
@@ -247,5 +252,21 @@ export default class DateUtil {
     const date1String = `${date1.getFullYear()}/${date1.getMonth()}/${date1.getDate()}`;
     const date2String = `${date2.getFullYear()}/${date2.getMonth()}/${date2.getDate()}`;
     return date1String === date2String;
+  }
+
+  dateSpanArray(startDate, endDate, asDateObj = true, {delimiter = '-'} = {}) {
+      startDate = this.op(startDate).format();
+      endDate = this.op(endDate).format();
+      let currentDateObj = startDate;
+      const dateArr = [];
+      if (startDate.getTime() >= endDate.getTime()) {
+        return dateArr;
+      }
+      dateArr.push(asDateObj ? currentDateObj : this.op(currentDateObj).format({asString: true, delimiter}));
+      while(!this.compare(currentDateObj, endDate)) {
+        currentDateObj = new Date(new Date(currentDateObj).setDate(currentDateObj.getDate() + 1)); 
+          dateArr.push(asDateObj ? currentDateObj : this.op(currentDateObj).format({asString: true, delimiter}));
+      }
+      return dateArr;
   }
 }

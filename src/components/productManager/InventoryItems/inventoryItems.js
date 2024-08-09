@@ -20,6 +20,7 @@ export default class InventoryItems extends Program {
         this.firestoreService = serviceProvider.firestoreService;
         this.eventBus = serviceProvider.eventBus;
         this.objUtil = utils.objUtil;
+        this.dateUtil = utils.dateUtil;
         this.inventoryProductsTemplate = inventoryItemsTemplate;
         this.recordPickerTemplate = inventoryItemsRecordPickerTemplate;
         this.harvester = serviceProvider.harvester;
@@ -36,8 +37,6 @@ export default class InventoryItems extends Program {
 
     boot() {
         this.subscriptionArr.forEach(unsubscribe => unsubscribe());
-        // const unsubscribe = this.eventBus.on(bus.USERDATA, this.subscriberId, this.render.bind(this));
-        // this.subscriptionArr = [unsubscribe];
         if (this.objUtil.isEmpty(this.inventoryItems)) {
             const buttons = [{ title: 'Create', confirmMessage: 'confirmed', callback: this.renderPicker.bind(this)}];
             new Modal(this.windowContentElement, 'Inventory products not set ', 'Would you like to create a new inventory?' , { buttons, noClose: true, noBackdrop: true });
@@ -93,7 +92,49 @@ export default class InventoryItems extends Program {
     }
 
     async buildInventory() {
-
+        try{
+            if (!this.selectedReports.size) {
+                throw new Error('Please select at least one inventory report to build your Inventory!');
+            }
+            const inventory = {};
+            const reports = [...this.selectedReports]
+            .sort((a, b) => new Date(b[1].reportData.importDate).getTime() - new Date(a[1].reportData.importDate).getTime());
+            
+            reports.forEach(([id, record]) => {
+                const {reportData, productData} = record;
+                const { startDate, endDate, daySpan } = reportData;
+                const dateArr = this.dateUtil.dateSpanArray(startDate, endDate, false);
+                for (let category in productData) {
+                    if (!inventory.hasOwnProperty(category)) {
+                        inventory[category] = {};
+                    }
+                    for (let product in productData[category]) {
+                        if (!inventory[category].hasOwnProperty(product)) {
+                            const { unit, reportName, reportUnitPrice } = productData[category][product]
+                            inventory[category][product] = {
+                                unit,
+                                reportName,
+                                history: dateArr.reduce((obj, date) => {
+                                    obj[date] = {
+                                        ...[ 'actual', 'actualCost', 'missing', 'missingCost', 'theoretical', 'theoreticalCost', 'variance', 'varianceCost', 'waste', 'wasteCost']
+                                        .reduce((statObj, stat) => {
+                                            statObj[stat] = productData[category][product][stat] / daySpan;
+                                            return statObj;
+                                        }, {}),
+                                        reportUnitPrice
+                                    };
+                                    return obj;
+                                }, {})
+                            }
+                        }
+                    }
+                }
+            })
+            console.log(inventory);
+            
+        }catch(err) {
+            this.errorRelay.send(err);
+        }
     }
 
     async deleteRecord(record) {

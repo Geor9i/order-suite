@@ -50,7 +50,7 @@ export default class Harvester {
         endDate: this.dateUtil.op(endDate).format({asString: true, delimiter: '-'}),
         importDate: this.dateUtil.op(new Date()).format({asString: true, delimiter: '-'}),
         storeName: reportMatch.groups.storeName.trim(),
-        daySpan: this.dateUtil.dateDifference( startDate, endDate )
+        daySpan: this.dateUtil.dateDifference(startDate, endDate) + 1
       }
 
     categoryMatches.forEach(categoryMatch => {

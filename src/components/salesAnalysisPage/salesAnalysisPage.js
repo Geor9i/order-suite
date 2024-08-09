@@ -1,5 +1,5 @@
 import { salesAnalysisPageTemplate } from "./salesAnalysisPageTemplate";
-import styles from "./salesAnalysisPage.module.scss";
+import styles from "./salesAnalysisPage.scss";
 import BaseComponent from "../../framework/baseComponent";
 import { bus } from '../../constants/busEvents'
 import {v4 as uuid} from 'uuid';
@@ -8,7 +8,7 @@ export default class SalesAnalysis extends BaseComponent {
   constructor({ renderBody, router, services, utils }) {
     super();
     this.subscriberId = `SalesAnalysis_${uuid()}`
-    this.render = renderBody;
+    this.renderMethod = renderBody;
     this.router = router;
     this.harvester = services.harvester;
     this.authService = services.authService;
@@ -24,7 +24,6 @@ export default class SalesAnalysis extends BaseComponent {
     this.showView = this._showView.bind(this);
     this.weeklyTotal = 0;
     this.hourlySalesReport = null;
-    this.sliderContainers = [];
     this.storeTemplateData = null;
     this.salesData = null;
     this.hourlySalesTemplate = null;
@@ -53,54 +52,6 @@ export default class SalesAnalysis extends BaseComponent {
     }, []);
   }
 
-  slideOpen(e) {
-    const barElement = e.currentTarget;
-    const id = barElement.dataset.id;
-    const container = document.getElementById(id);
-    const isRecorded = this.sliderContainers.some(
-      (element) => element.id === id
-    );
-    if (!isRecorded) {
-      this.sliderContainers.push(container);
-    }
-
-    let containerHierarchies = this.domUtil.getElementHierarchy(
-      this.sliderContainers
-    );
-    const selectedHierarchy = containerHierarchies.find((arr) =>
-      arr.find((element) => element.id === id)
-    );
-    const hierarchyHeightArr = selectedHierarchy.map(
-      (el) => el.getBoundingClientRect().height
-    );
-    const startContainerIndex = selectedHierarchy.findIndex(
-      (element) => element.id === id
-    );
-    const selectedContainer = selectedHierarchy[startContainerIndex];
-    let containerHeight = hierarchyHeightArr[startContainerIndex];
-    let toggleOpen = containerHeight <= 0 ? true : false;
-    if (toggleOpen) {
-      barElement.classList.remove(styles["section__bar-closed"]);
-    } else {
-      barElement.classList.add(styles["section__bar-closed"]);
-    }
-    let cumulativeHeight = this.domUtil.getContentHeight(selectedContainer);
-    selectedContainer.style.height = (toggleOpen ? cumulativeHeight : 0) + "px";
-    // selectedContainer.style.overflow = toggleOpen ? 'auto' : 'hidden';
-    for (let i = startContainerIndex - 1; i >= 0; i--) {
-      if (selectedHierarchy[i].contains(selectedContainer)) {
-        const currentParentContainer = selectedHierarchy[i];
-        let currentParentContainerContentHeight = hierarchyHeightArr[i];
-        cumulativeHeight = toggleOpen
-          ? cumulativeHeight + currentParentContainerContentHeight
-          : cumulativeHeight;
-        currentParentContainer.style.height =
-          (toggleOpen
-            ? cumulativeHeight
-            : currentParentContainerContentHeight - cumulativeHeight) + "px";
-      }
-    }
-  }
 
  async submitHandler(e) {
     e.preventDefault();
@@ -140,19 +91,18 @@ export default class SalesAnalysis extends BaseComponent {
       this.router.redirect("/");
       return;
     }
-    const hourlySales = this.getHourlySalesArr();
-    this.render(
-      salesAnalysisPageTemplate(
-        this.slideOpen.bind(this),
-        hourlySales,
-        this.hourlySalesInputHandler.bind(this),
-        this.hourlySalesChangeHandler.bind(this),
-        this.weeklyTotal,
-        this.hourlySalesDumpHandler.bind(this),
-        this.hourlySalesReportHandler.bind(this),
-        this.submitHandler.bind(this)
-      )
-    );
+    this.render();
+  }
+
+  render() {
+    const controls = {
+      hourlySalesInputHandler: this.hourlySalesInputHandler.bind(this),
+      hourlySalesChangeHandler: this.hourlySalesChangeHandler.bind(this),
+      hourlySalesDumpHandler: this.hourlySalesDumpHandler.bind(this),
+      hourlySalesReportHandler: this.hourlySalesReportHandler.bind(this),
+      submitHandler: this.submitHandler.bind(this)
+    }
+    this.renderMethod(salesAnalysisPageTemplate(this.getHourlySalesArr(), this.weeklyTotal, controls));
   }
 
   getHourlySalesTemplate() {
@@ -318,14 +268,14 @@ export default class SalesAnalysis extends BaseComponent {
     });
   }
 
- hourlySalesDumpHandler(e) {
-    const dump = e.currentTarget;
-    const { value } = dump;
-    this.hourlySalesReport = this.harvester.hourlySalesExtractor(value);
-    dump.value = !this.hourlySalesReport ? "Wrong Data!" : "Received!";
-    setTimeout(() => {
-      dump.value = "";
-    }, 3000);
+  hourlySalesDumpHandler(e) {
+      const dump = e.currentTarget;
+      const { value } = dump;
+      this.hourlySalesReport = this.harvester.hourlySalesExtractor(value);
+      dump.value = !this.hourlySalesReport ? "Wrong Data!" : "Received!";
+      setTimeout(() => {
+        dump.value = "";
+      }, 3000);
   }
 
   hourlySalesReportHandler() {
