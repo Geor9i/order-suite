@@ -1,6 +1,6 @@
 import { html } from 'lit-html';
-import styles from './productManager.module.scss'
-import { barButtons } from './constants/productManagerBarButtons.js';
+import styles from './storeManager.scss'
+import { barButtons } from './constants/storeManagerBarButtons.js';
 
 export const productManagerTemplate = (func) => html`
 

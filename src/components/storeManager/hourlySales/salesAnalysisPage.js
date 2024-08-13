@@ -1,9 +1,9 @@
 import { salesAnalysisPageTemplate } from "./salesAnalysisPageTemplate";
 import styles from "./salesAnalysisPage.scss";
-import BaseComponent from "../../framework/baseComponent";
-import { bus } from '../../constants/busEvents'
+import BaseComponent from "../../../framework/baseComponent.js";
+import { bus } from '../../../constants/busEvents.js'
 import {v4 as uuid} from 'uuid';
-import { db } from '../../constants/db.js';
+import { db } from '../../../constants/db.js';
 export default class SalesAnalysis extends BaseComponent {
   constructor({ renderBody, router, services, utils }) {
     super();

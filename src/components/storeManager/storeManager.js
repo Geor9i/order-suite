@@ -1,14 +1,14 @@
-import BaseComponent from "../../framework/baseComponent";
-import { productManagerTemplate } from "./productManagerTemplate";
-import styles from './productManager.module.scss';
+import BaseComponent from "../../framework/baseComponent.js";
+import { productManagerTemplate } from "./storeManagerTemplate.js";
+import styles from './storeManager.scss';
 import w_styles from '../shared/window/window.scss';
 import Window from '../shared/window/window.js';
 import { bus } from "../../constants/busEvents.js";
 import { db } from "../../constants/db.js";
-import { barButtons } from "./constants/productManagerBarButtons.js";
+import { barButtons } from "./constants/storeManagerBarButtons.js";
 import { messages } from "./constants/communication.js";
 
-export default class ProductManager extends BaseComponent {
+export default class StoreManager extends BaseComponent {
     constructor({ renderBody, router, services, utils }) {
         super();
         this.authService = services.authService;

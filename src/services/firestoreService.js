@@ -83,6 +83,15 @@ export default class FirestoreService {
     await updateDoc(documentRef, updates);
     console.log(`Updated Hourly Sales!`);
   }
+  async setDailySales(data, date) {
+    const documentRef = doc(this.db, db.USERS, this.user.uid);
+    const fieldPath = `${db.SALES_DATA}.${db.DAILY_SALES}.${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
+    const updates = {
+      [fieldPath]: data,
+    };
+    await updateDoc(documentRef, updates);
+    console.log(`Updated Daily Sales!`);
+  }
 
 
   _updateState(doc) {

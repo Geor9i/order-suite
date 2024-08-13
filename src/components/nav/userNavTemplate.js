@@ -19,7 +19,7 @@ export const userNavTemplate = (dropDown, logoutHandler, STORE_NAME) => html`
                 <a @click=${dropDown} href="/order-form" class=${styles['menu__selector']}>
                     <p>Place Order</p>
                 </a>
-                <a @click=${dropDown} href="/restaurant" class=${styles['menu__selector']}>
+                <a @click=${dropDown} href="/store-manager" class=${styles['menu__selector']}>
                     <p>My</p>
                     <p>Restaurant</p>
                 </a>
